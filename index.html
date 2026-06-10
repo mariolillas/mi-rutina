@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+<meta name="theme-color" content="#0f1115">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>Mi Rutina</title>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-192.png">
+<style>
+:root{
+  --bg:#0f1115; --card:#1a1e26; --card2:#222734; --line:#2b3140;
+  --txt:#f2f4f8; --sub:#8b919e; --accent:#d7ff3f; --accent-dark:#9fc41a;
+  --green:#3ddc84; --red:#ff5d5d; --orange:#ffb74d;
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{height:100%}
+body{background:var(--bg);color:var(--txt);font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  overscroll-behavior:none;-webkit-user-select:none;user-select:none}
+#app{max-width:520px;margin:0 auto;min-height:100%;padding:env(safe-area-inset-top) 16px calc(24px + env(safe-area-inset-bottom));position:relative}
+h1{font-size:26px;font-weight:800}
+h2{font-size:19px;font-weight:800}
+.sub{color:var(--sub);font-size:13px}
+.chip{display:inline-flex;align-items:center;gap:5px;background:var(--card2);border-radius:999px;padding:5px 12px;font-size:12px;font-weight:600;color:var(--sub)}
+.chip.acc{background:rgba(215,255,63,.12);color:var(--accent)}
+.chip.warn{background:rgba(255,183,77,.12);color:var(--orange)}
+.card{background:var(--card);border-radius:20px;padding:18px}
+.btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;border:none;border-radius:18px;
+  background:var(--accent);color:#10130a;font-size:17px;font-weight:800;padding:17px;cursor:pointer;font-family:inherit}
+.btn:active{transform:scale(.97)}
+.btn.ghost{background:var(--card2);color:var(--txt)}
+.btn.small{width:auto;padding:11px 20px;font-size:14px;border-radius:14px}
+.row{display:flex;align-items:center;gap:12px}
+.grow{flex:1;min-width:0}
+.gifbox{background:#fff;border-radius:18px;overflow:hidden;display:flex;align-items:center;justify-content:center}
+.gifbox img{width:100%;height:100%;object-fit:contain;display:block}
+.thumb{width:64px;height:64px;border-radius:14px;flex-shrink:0;background:#fff}
+.thumb img{width:100%;height:100%;object-fit:cover;border-radius:14px}
+header.app{display:flex;align-items:center;justify-content:space-between;padding:18px 0 14px}
+.iconbtn{background:var(--card);border:none;color:var(--txt);width:42px;height:42px;border-radius:13px;
+  font-size:19px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-family:inherit}
+.fade{animation:fade .25s ease}
+@keyframes fade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.pulse{animation:pulse 1s ease infinite}
+@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.04)}}
+/* progress bar */
+.pbar{height:6px;background:var(--card2);border-radius:99px;overflow:hidden}
+.pbar>div{height:100%;background:var(--accent);border-radius:99px;transition:width .4s ease}
+/* week strip */
+.sesrow{display:flex;align-items:center;gap:12px;background:var(--card);border-radius:18px;padding:14px;margin-bottom:10px;cursor:pointer}
+.sesrow .badge{width:46px;height:46px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:22px;background:var(--card2);flex-shrink:0}
+.sesrow.done{opacity:.55}
+.checkmark{color:var(--green);font-size:20px;font-weight:800}
+/* exercise list */
+.exrow{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--line)}
+.exrow:last-child{border-bottom:none}
+.exrow .nm{font-size:15px;font-weight:700;line-height:1.25}
+.exrow .dt{font-size:12.5px;color:var(--sub);margin-top:2px}
+/* workout player */
+.player{display:flex;flex-direction:column;min-height:100dvh;padding:env(safe-area-inset-top) 0 calc(12px + env(safe-area-inset-bottom))}
+.bigring{position:relative;width:230px;height:230px;margin:0 auto}
+.bigring svg{transform:rotate(-90deg)}
+.bigring .mid{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.bigring .tnum{font-size:58px;font-weight:800;font-variant-numeric:tabular-nums}
+.setdots{display:flex;gap:7px;justify-content:center}
+.setdots span{width:9px;height:9px;border-radius:99px;background:var(--card2)}
+.setdots span.on{background:var(--accent)}
+.setdots span.cur{outline:2px solid var(--accent);outline-offset:2px;background:var(--card2)}
+.notebox{background:rgba(215,255,63,.07);border:1px solid rgba(215,255,63,.18);border-radius:14px;padding:10px 13px;font-size:13px;color:#d9e2bf;line-height:1.45}
+/* prep overlay */
+.overlay{position:fixed;inset:0;background:rgba(10,12,16,.93);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:50}
+.overlay .n{font-size:120px;font-weight:800;color:var(--accent)}
+.hist-row{display:flex;justify-content:space-between;align-items:center;padding:13px 0;border-bottom:1px solid var(--line);font-size:14.5px}
+.hist-row:last-child{border-bottom:none}
+.statgrid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
+.statgrid .card{padding:14px 10px;text-align:center}
+.statgrid .v{font-size:21px;font-weight:800;color:var(--accent)}
+.statgrid .l{font-size:11px;color:var(--sub);margin-top:3px}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<script>
+/* ============================================================
+   DATOS DE LA RUTINA — Ciclo 90 días
+   Fuente: 🏋️ Rutina de Entrenamiento v2.md (fija, no editable)
+   ============================================================ */
+const CYCLE = { start: "2026-06-13", end: "2026-09-03", weeks: 12 };
+
+const PHASES = [
+  { from: 1, to: 3,  label: "Técnica",   tip: "Aprende los movimientos con técnica correcta" },
+  { from: 4, to: 6,  label: "Sube reps", tip: "Aumenta 1-2 reps por ejercicio donde puedas" },
+  { from: 7, to: 9,  label: "Pico",      tip: "Pico del ciclo — sube peso donde la técnica lo permita" },
+  { from: 10, to: 12,label: "Mantén",    tip: "Mantén intensidad máxima · Lab control en agosto" },
+];
+
+// weight puede ser string o función(week) para progresión automática
+const SESSIONS = {
+  upperA: {
+    name: "Upper A", emoji: "💪", weekday: 1,
+    muscles: "Pecho · Espalda · Hombros · Brazos",
+    exercises: [
+      { name: "Press de pecho en piso", gif: "0289", sets: 4, reps: 10, weight: "15kg", rest: 75,
+        note: "En el piso con mancuernas (el GIF muestra banco — mismo movimiento)" },
+      { name: "Remo a un brazo", gif: "0292", sets: 4, reps: 10, perSide: true, weight: "15kg", rest: 75 },
+      { name: "Press militar de pie", gif: "0426", sets: 3, reps: 12, weight: "10kg", rest: 60,
+        note: "Codos ligeramente adelante, no completamente abiertos" },
+      { name: "Elevaciones laterales", gif: "0334", sets: 3, reps: 15, weight: "10kg", rest: 45, star: true,
+        note: "Solo hasta la altura del hombro, baja lento 3 seg" },
+      { name: "Curl de bíceps", gif: "0294", sets: 3, reps: 10, weight: "10kg", rest: 45 },
+      { name: "Extensión tríceps overhead", gif: "2188", sets: 3, reps: 10, weight: "10kg", rest: 45 },
+      { name: "Plancha", gif: "2135", sets: 3, timeSec: 45, rest: 20, core: true },
+    ],
+  },
+  lowerA: {
+    name: "Lower A", emoji: "🦵", weekday: 2,
+    muscles: "Cuádriceps · Glúteos · Isquios · Pantorrilla",
+    exercises: [
+      { name: "Sentadilla goblet", gif: "1760", sets: 4, reps: 12, weight: "15kg", rest: 75 },
+      { name: "Zancada hacia atrás", gif: "0381", sets: 3, reps: 12, perSide: true, weight: "10kg", rest: 60 },
+      { name: "Hip thrust / Puente de caderas", gif: "1409", sets: 4, reps: 15, weight: "15kg", rest: 60,
+        note: "Espalda alta en el suelo, mancuerna encima de caderas, aprieta glúteos 1 seg arriba" },
+      { name: "Curl de pierna de pie", gif: "0795", sets: 3, reps: 20, perSide: true, weight: "10kg", rest: 45,
+        note: "Pared para apoyo, talón al glúteo, baja lento" },
+      { name: "Elevación talones una pierna", gif: "0409", sets: 4, reps: 20, perSide: true, weight: "15kg", rest: 30,
+        note: "Baja el talón COMPLETAMENTE en cada rep" },
+      { name: "Insecto muerto", gif: "0276", sets: 3, reps: 12, rest: 20, core: true },
+    ],
+  },
+  upperB: {
+    name: "Upper B", emoji: "💪", weekday: 4,
+    muscles: "Pecho · Espalda · Hombros · Brazos (ángulos diferentes)",
+    exercises: [
+      { name: "Press inclinado en piso", gif: "0314", sets: 4, reps: 10, weight: "15kg", rest: 75,
+        note: "Usa el respaldo de un cojín para el ángulo inclinado" },
+      { name: "Remo dos manos", gif: "0293", sets: 4, reps: 10, weight: "15kg", rest: 75 },
+      { name: "Press Arnold", gif: "2137", sets: 3, reps: 12, weight: "10kg", rest: 60,
+        note: "Rota las palmas durante el movimiento — excelente para los 3 deltoides" },
+      { name: "Elevaciones laterales", gif: "0334", sets: 3, reps: 15, weight: "10kg", rest: 45, star: true,
+        note: "Solo hasta la altura del hombro, baja lento 3 seg" },
+      { name: "Curl martillo", gif: "0313", sets: 3, reps: 10, weight: "10kg", rest: 45 },
+      { name: "Skullcrusher en suelo", gif: "0351", sets: 3, reps: 10, weight: "10kg", rest: 45 },
+      { name: "Escalador", gif: "0630", sets: 3, reps: 30, rest: 20, core: true },
+    ],
+  },
+  lowerB: {
+    name: "Lower B", emoji: "🦵", weekday: 5,
+    muscles: "Glúteos · Cuádriceps · Isquios · Pantorrilla",
+    exercises: [
+      { name: "Sentadilla sumo", gif: "3142", sets: 3, reps: 15, weight: "15kg", rest: 60,
+        note: "Con mancuerna al centro (el GIF muestra máquina — misma postura sumo)" },
+      { name: "Sentadilla búlgara", gif: "0410", sets: 4, reps: 10, perSide: true, rest: 75, warn: true,
+        weightFn: w => w >= 3 ? "15kg" : "10kg",
+        note: "Semanas 1-2 con 10kg, desde semana 3 sube a 15kg. Va en posición 2 para calentar el tendón cuadricipital" },
+      { name: "Zancada inversa", gif: "0381", sets: 3, reps: 12, perSide: true, weight: "10kg", rest: 60 },
+      { name: "Puente glúteos una pierna", gif: "3645", sets: 3, reps: 15, perSide: true, weight: "15kg", rest: 45 },
+      { name: "Elevación talones dos piernas", gif: "0417", sets: 4, reps: 25, weight: "15kg", rest: 30,
+        note: "Baja el talón COMPLETAMENTE en cada rep" },
+      { name: "Plancha estrella", gif: "0705", sets: 3, timeSec: 45, rest: 20, core: true,
+        note: "Plancha lateral con brazo y pierna elevados (el GIF muestra la base del movimiento)" },
+    ],
+  },
+};
+const ORDER = ["upperA", "lowerA", "upperB", "lowerB"];
+const WEEKDAY_MAP = { 1: "upperA", 2: "lowerA", 4: "upperB", 5: "lowerB" };
+const DAYNAMES = ["Domingo","Lunes","Martes","Miércoles","Jueves","Viernes","Sábado"];
+const MONTHS = ["ene","feb","mar","abr","may","jun","jul","ago","sep","oct","nov","dic"];
+
+/* ============================ STORAGE ============================ */
+const DB_KEY = "rutina_v1";
+function loadDB(){ try { return JSON.parse(localStorage.getItem(DB_KEY)) || { history: [] }; } catch { return { history: [] }; } }
+function saveDB(db){ localStorage.setItem(DB_KEY, JSON.stringify(db)); }
+let db = loadDB();
+
+/* ============================ FECHAS / CICLO ============================ */
+function today(){ return new Date(); }
+function dateKey(d){ return d.getFullYear() + "-" + String(d.getMonth()+1).padStart(2,"0") + "-" + String(d.getDate()).padStart(2,"0"); }
+function parseKey(k){ const [y,m,d] = k.split("-").map(Number); return new Date(y, m-1, d); }
+function mondayOf(d){ const x = new Date(d); const dow = (x.getDay() + 6) % 7; x.setDate(x.getDate() - dow); x.setHours(0,0,0,0); return x; }
+function weekKey(d){ return dateKey(mondayOf(d)); }
+function cycleWeek(d = today()){
+  const start = parseKey(CYCLE.start);
+  const diff = Math.floor((mondayOf(d) - mondayOf(start)) / (7 * 864e5)) + 1;
+  return Math.max(1, Math.min(CYCLE.weeks, diff));
+}
+function cycleStarted(){ return today() >= parseKey(CYCLE.start); }
+function phaseOf(w){ return PHASES.find(p => w >= p.from && w <= p.to) || PHASES[PHASES.length-1]; }
+function exWeight(ex){ return ex.weightFn ? ex.weightFn(cycleWeek()) : (ex.weight || null); }
+
+function doneThisWeek(sid){
+  const wk = weekKey(today());
+  return db.history.find(h => h.session === sid && weekKey(parseKey(h.date)) === wk);
+}
+function suggestedSession(){
+  const dow = today().getDay();
+  const todays = WEEKDAY_MAP[dow];
+  if (todays && !doneThisWeek(todays)) return { sid: todays, why: "hoy" };
+  for (const sid of ORDER) if (!doneThisWeek(sid)) return { sid, why: todays ? "siguiente" : "adelantar" };
+  return null;
+}
+function estMinutes(s){
+  let sec = 0;
+  for (const ex of s.exercises){
+    const work = ex.timeSec ? ex.timeSec : ex.reps * (ex.perSide ? 6 : 3.2);
+    sec += ex.sets * (work + ex.rest) + 25;
+  }
+  return Math.round(sec / 60 / 5) * 5;
+}
+function fmtDur(sec){ const m = Math.floor(sec/60), s = sec % 60; return m + ":" + String(s).padStart(2,"0"); }
+
+/* ============================ AUDIO ============================ */
+let AC = null;
+function audio(){ if (!AC) AC = new (window.AudioContext || window.webkitAudioContext)(); if (AC.state === "suspended") AC.resume(); return AC; }
+function beep(freq = 880, dur = 0.12, vol = 0.2){
+  try {
+    const ctx = audio(), o = ctx.createOscillator(), g = ctx.createGain();
+    o.type = "sine"; o.frequency.value = freq;
+    o.connect(g); g.connect(ctx.destination);
+    g.gain.setValueAtTime(vol, ctx.currentTime);
+    g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + dur);
+    o.start(); o.stop(ctx.currentTime + dur);
+  } catch {}
+}
+function beepFinal(){ beep(1175, 0.16, 0.25); setTimeout(() => beep(1568, 0.3, 0.25), 170); }
+
+/* ============================ WAKE LOCK ============================ */
+let wakeLock = null;
+async function lockScreen(){ try { wakeLock = await navigator.wakeLock?.request("screen"); } catch {} }
+function unlockScreen(){ try { wakeLock?.release(); wakeLock = null; } catch {} }
+document.addEventListener("visibilitychange", () => {
+  if (document.visibilityState === "visible" && state.view === "workout") lockScreen();
+});
+
+/* ============================ ESTADO / ROUTER ============================ */
+const state = { view: "home", previewSid: null, w: null };
+const $app = document.getElementById("app");
+function go(view, extra = {}){ Object.assign(state, { view }, extra); render(); window.scrollTo(0, 0); }
+
+function render(){
+  clearTimers();
+  if (state.view === "home") return renderHome();
+  if (state.view === "preview") return renderPreview(state.previewSid);
+  if (state.view === "workout") return renderWorkout();
+  if (state.view === "finish") return renderFinish();
+  if (state.view === "history") return renderHistory();
+}
+
+/* ============================ HOME ============================ */
+function renderHome(){
+  unlockScreen();
+  const d = today(), week = cycleWeek(), ph = phaseOf(week);
+  const sug = suggestedSession();
+  const wkCount = ORDER.filter(doneThisWeek).length;
+  const total = db.history.length;
+  const last = db.history[db.history.length - 1];
+  const isRest = !WEEKDAY_MAP[d.getDay()];
+  const started = cycleStarted();
+
+  let mainCard;
+  if (sug){
+    const s = SESSIONS[sug.sid];
+    const label = sug.why === "hoy" ? "HOY TE TOCA" : (sug.why === "adelantar" ? "DÍA DE DESCANSO — PUEDES ADELANTAR" : "PENDIENTE ESTA SEMANA");
+    mainCard = `
+      <div class="card fade" style="background:linear-gradient(145deg,#222a14,#1a1e26);border:1px solid rgba(215,255,63,.25)">
+        <div class="sub" style="letter-spacing:.12em;font-size:11px;font-weight:700;color:var(--accent)">${label}</div>
+        <div class="row" style="margin-top:10px">
+          <div style="font-size:42px">${s.emoji}</div>
+          <div class="grow">
+            <h1>${s.name}</h1>
+            <div class="sub" style="margin-top:3px">${s.muscles}</div>
+            <div class="sub" style="margin-top:5px">${s.exercises.length} ejercicios · ~${estMinutes(s)} min</div>
+          </div>
+        </div>
+        <div class="row" style="margin-top:16px;gap:10px">
+          <button class="btn" style="flex:1.6" onclick="startWorkout('${sug.sid}')">▶ &nbsp;EMPEZAR</button>
+          <button class="btn ghost" style="flex:1" onclick="go('preview',{previewSid:'${sug.sid}'})">Ver rutina</button>
+        </div>
+      </div>`;
+  } else {
+    mainCard = `
+      <div class="card fade" style="text-align:center;padding:30px 18px">
+        <div style="font-size:46px">🎉</div>
+        <h2 style="margin-top:8px">Semana completa</h2>
+        <div class="sub" style="margin-top:6px">Hiciste tus 4 sesiones. ${isRest ? "Hoy descansa." : "Descansa y recupera."}</div>
+      </div>`;
+  }
+
+  $app.innerHTML = `
+    <header class="app">
+      <div>
+        <div class="sub">${DAYNAMES[d.getDay()]} ${d.getDate()} ${MONTHS[d.getMonth()]}</div>
+        <h2 style="margin-top:2px">Mi Rutina</h2>
+      </div>
+      <button class="iconbtn" onclick="go('history')">📊</button>
+    </header>
+
+    <div class="row" style="gap:8px;flex-wrap:wrap;margin-bottom:14px">
+      <span class="chip acc">${started ? `Semana ${week} de ${CYCLE.weeks}` : "Ciclo inicia 13 jun"} · ${ph.label}</span>
+      ${isRest && sug ? "" : isRest ? `<span class="chip">😴 Día de descanso</span>` : ""}
+    </div>
+    ${started ? `<div class="sub" style="margin:-6px 2px 14px;font-size:12px">💡 ${ph.tip}</div>` : ""}
+
+    ${mainCard}
+
+    <div class="row" style="justify-content:space-between;margin:22px 2px 10px">
+      <h2>Esta semana</h2>
+      <span class="chip ${wkCount === 4 ? "acc" : ""}">${wkCount}/4</span>
+    </div>
+    ${ORDER.map(sid => {
+      const s = SESSIONS[sid], done = doneThisWeek(sid);
+      const dayName = DAYNAMES[s.weekday].slice(0,3);
+      return `
+      <div class="sesrow ${done ? "done" : ""}" onclick="go('preview',{previewSid:'${sid}'})">
+        <div class="badge">${s.emoji}</div>
+        <div class="grow">
+          <div style="font-weight:800;font-size:15.5px">${s.name} <span class="sub" style="font-weight:600">· ${dayName}</span></div>
+          <div class="sub" style="margin-top:2px;font-size:12.5px">${s.muscles}</div>
+        </div>
+        ${done ? `<div style="text-align:right"><div class="checkmark">✓</div><div class="sub" style="font-size:11px">${fmtShort(done.date)}</div></div>`
+               : `<div class="sub" style="font-size:20px">›</div>`}
+      </div>`;
+    }).join("")}
+
+    <div class="statgrid" style="margin-top:18px">
+      <div class="card"><div class="v">${total}</div><div class="l">sesiones</div></div>
+      <div class="card"><div class="v">${wkCount}/4</div><div class="l">esta semana</div></div>
+      <div class="card"><div class="v">${last ? fmtDur(last.dur) : "—"}</div><div class="l">última duración</div></div>
+    </div>`;
+}
+function fmtShort(k){ const d = parseKey(k); return d.getDate() + " " + MONTHS[d.getMonth()]; }
+
+/* ============================ PREVIEW ============================ */
+function renderPreview(sid){
+  const s = SESSIONS[sid];
+  const done = doneThisWeek(sid);
+  $app.innerHTML = `
+    <header class="app">
+      <button class="iconbtn" onclick="go('home')">←</button>
+      <div style="text-align:center">
+        <h2>${s.emoji} ${s.name}</h2>
+        <div class="sub">${DAYNAMES[s.weekday]} · ${s.exercises.length} ejercicios · ~${estMinutes(s)} min</div>
+      </div>
+      <div style="width:42px"></div>
+    </header>
+    ${done ? `<div class="chip acc" style="margin-bottom:12px">✓ Completada el ${fmtShort(done.date)} esta semana</div>` : ""}
+    <div class="card fade">
+      ${s.exercises.map((ex, i) => `
+        <div class="exrow">
+          <div class="thumb gifbox"><img src="gifs/${ex.gif}.gif" loading="lazy" alt=""></div>
+          <div class="grow">
+            <div class="nm">${ex.name}${ex.star ? " ⭐" : ""}${ex.warn ? " ⚠️" : ""}${ex.core ? ` <span class="chip" style="padding:2px 8px;font-size:10px">CORE</span>` : ""}</div>
+            <div class="dt">${exDetail(ex)}</div>
+          </div>
+        </div>`).join("")}
+    </div>
+    <div style="height:90px"></div>
+    <div style="position:fixed;bottom:0;left:0;right:0;padding:14px 16px calc(14px + env(safe-area-inset-bottom));background:linear-gradient(transparent,var(--bg) 35%)">
+      <div style="max-width:520px;margin:0 auto">
+        <button class="btn" onclick="startWorkout('${sid}')">▶ &nbsp;EMPEZAR ${done ? "DE NUEVO" : ""}</button>
+      </div>
+    </div>`;
+}
+function exDetail(ex){
+  const w = exWeight(ex);
+  const parts = [];
+  parts.push(ex.timeSec ? `${ex.sets}×${ex.timeSec}seg` : `${ex.sets}×${ex.reps}${ex.perSide ? " c/lado" : ""}`);
+  if (w) parts.push(w);
+  parts.push(`descanso ${ex.rest}s`);
+  return parts.join(" · ");
+}
+
+/* ============================ WORKOUT ENGINE ============================ */
+let timers = [];
+function clearTimers(){ timers.forEach(clearInterval); timers.forEach(clearTimeout); timers = []; }
+
+function startWorkout(sid){
+  audio(); // desbloquea audio con el gesto del usuario
+  const s = SESSIONS[sid];
+  state.w = {
+    sid, exIdx: 0, setIdx: 0,
+    phase: "work",
+    startTime: Date.now(),
+    totalSets: s.exercises.reduce((a, e) => a + e.sets, 0),
+    doneSets: 0,
+  };
+  lockScreen();
+  go("workout");
+}
+
+function curEx(){ return SESSIONS[state.w.sid].exercises[state.w.exIdx]; }
+
+function renderWorkout(){
+  const w = state.w; if (!w) return go("home");
+  if (w.phase === "work") return renderWorkScreen();
+  if (w.phase === "rest") return renderRestScreen();
+}
+
+function renderWorkScreen(){
+  const w = state.w, s = SESSIONS[w.sid], ex = curEx();
+  const weight = exWeight(ex);
+  const isTimed = !!ex.timeSec;
+  const elapsed = fmtDur(Math.floor((Date.now() - w.startTime) / 1000));
+  $app.innerHTML = `
+  <div class="player fade">
+    <div class="row" style="padding:12px 0 10px">
+      <button class="iconbtn" onclick="confirmExit()">✕</button>
+      <div class="grow">
+        <div class="pbar"><div style="width:${(w.doneSets / w.totalSets * 100).toFixed(1)}%"></div></div>
+      </div>
+      <span class="chip" id="clock">⏱ ${elapsed}</span>
+    </div>
+
+    <div class="gifbox" style="aspect-ratio:1.15;max-height:44dvh">
+      <img src="gifs/${ex.gif}.gif" alt="${ex.name}">
+    </div>
+
+    <div style="text-align:center;margin-top:14px">
+      <div class="sub" style="font-weight:700;letter-spacing:.08em;font-size:12px">EJERCICIO ${w.exIdx + 1} DE ${s.exercises.length}</div>
+      <h1 style="margin-top:5px;font-size:23px;line-height:1.2">${ex.name}${ex.star ? " ⭐" : ""}</h1>
+      <div class="setdots" style="margin-top:10px">
+        ${Array.from({length: ex.sets}, (_, i) =>
+          `<span class="${i < w.setIdx ? "on" : i === w.setIdx ? "cur" : ""}"></span>`).join("")}
+      </div>
+      <div style="margin-top:12px;font-size:19px;font-weight:800">
+        Serie ${w.setIdx + 1} de ${ex.sets} —
+        ${isTimed ? `${ex.timeSec} seg` : `${ex.reps} reps`}
+        ${weight ? ` · <span style="color:var(--accent)">${weight}</span>` : ""}
+      </div>
+      ${ex.perSide ? `<div class="chip" style="margin-top:8px">🔄 Derecha → izquierda, ambos lados = 1 serie</div>` : ""}
+      ${ex.note ? `<div class="notebox" style="margin-top:10px;text-align:left">💡 ${ex.note}</div>` : ""}
+    </div>
+
+    <div class="grow"></div>
+    <div style="padding-top:14px">
+      ${isTimed
+        ? `<button class="btn" onclick="startTimedSet()">▶ &nbsp;EMPEZAR ${ex.timeSec} SEG</button>`
+        : `<button class="btn" onclick="finishSet()">✓ &nbsp;SERIE HECHA</button>`}
+    </div>
+  </div>`;
+  tickClock();
+}
+
+function tickClock(){
+  const id = setInterval(() => {
+    const el = document.getElementById("clock");
+    if (el && state.w) el.textContent = "⏱ " + fmtDur(Math.floor((Date.now() - state.w.startTime) / 1000));
+  }, 1000);
+  timers.push(id);
+}
+
+/* --- ejercicios por tiempo: 3-2-1 y countdown automático --- */
+function startTimedSet(){
+  const ex = curEx();
+  let n = 3;
+  const ov = document.createElement("div");
+  ov.className = "overlay";
+  ov.innerHTML = `<div class="sub" style="font-size:15px;font-weight:700;margin-bottom:8px">PREPÁRATE</div><div class="n">${n}</div>`;
+  document.body.appendChild(ov);
+  beep(660, 0.1);
+  const id = setInterval(() => {
+    n--;
+    if (n > 0){ ov.querySelector(".n").textContent = n; beep(660, 0.1); }
+    else {
+      clearInterval(id);
+      ov.remove();
+      beep(1175, 0.18, 0.25);
+      runTimedCountdown(ex.timeSec);
+    }
+  }, 1000);
+  timers.push(id);
+}
+
+function runTimedCountdown(totalSec){
+  const w = state.w, ex = curEx();
+  const deadline = Date.now() + totalSec * 1000;
+  let lastBeeped = 99;
+  $app.innerHTML = `
+  <div class="player fade" style="justify-content:center;text-align:center">
+    <div class="sub" style="font-weight:700;letter-spacing:.1em;font-size:12px">MANTÉN — ${ex.name.toUpperCase()}</div>
+    <div class="bigring" style="margin-top:24px">
+      ${ringSVG("#d7ff3f")}
+      <div class="mid"><div class="tnum" id="tnum">${totalSec}</div><div class="sub">segundos</div></div>
+    </div>
+    <div style="margin-top:26px;padding:0 4px">
+      <button class="btn ghost" onclick="endTimedEarly()">Terminar ya</button>
+    </div>
+  </div>`;
+  const circ = document.querySelector(".bigring .fg");
+  const id = setInterval(() => {
+    const left = Math.max(0, Math.ceil((deadline - Date.now()) / 1000));
+    const el = document.getElementById("tnum");
+    if (el) el.textContent = left;
+    if (circ) circ.style.strokeDashoffset = (1 - left / totalSec) * 660;
+    if (left <= 3 && left > 0 && left < lastBeeped){ lastBeeped = left; beep(880, 0.1); }
+    if (left <= 0){ clearInterval(id); beepFinal(); finishSet(); }
+  }, 200);
+  timers.push(id);
+}
+function endTimedEarly(){ clearTimers(); finishSet(); }
+
+function ringSVG(color){
+  return `<svg width="230" height="230" viewBox="0 0 230 230">
+    <circle cx="115" cy="115" r="105" fill="none" stroke="#222734" stroke-width="13"/>
+    <circle class="fg" cx="115" cy="115" r="105" fill="none" stroke="${color}" stroke-width="13"
+      stroke-linecap="round" stroke-dasharray="660" stroke-dashoffset="0" style="transition:stroke-dashoffset .25s linear"/>
+  </svg>`;
+}
+
+/* --- completar serie → descanso o fin --- */
+function finishSet(){
+  clearTimers();
+  const w = state.w, s = SESSIONS[w.sid], ex = curEx();
+  w.doneSets++;
+  const lastSetOfEx = w.setIdx >= ex.sets - 1;
+  const lastEx = w.exIdx >= s.exercises.length - 1;
+  if (lastSetOfEx && lastEx) return finishWorkout();
+  w.restFrom = { exIdx: w.exIdx, setIdx: w.setIdx };
+  if (lastSetOfEx){ w.exIdx++; w.setIdx = 0; } else { w.setIdx++; }
+  w.phase = "rest";
+  render();
+}
+
+function renderRestScreen(){
+  const w = state.w, s = SESSIONS[w.sid];
+  const restEx = s.exercises[w.restFrom.exIdx];
+  const nextEx = curEx();
+  const newEx = w.restFrom.exIdx !== w.exIdx;
+  const total = restEx.rest;
+  w.restDeadline = Date.now() + total * 1000;
+  w.restTotal = total;
+  let lastBeeped = 99;
+
+  $app.innerHTML = `
+  <div class="player fade" style="justify-content:center;text-align:center">
+    <div class="sub" style="font-weight:700;letter-spacing:.12em;font-size:12px;color:var(--accent)">DESCANSO</div>
+    <div class="bigring" style="margin-top:22px">
+      ${ringSVG("#3ddc84")}
+      <div class="mid"><div class="tnum" id="tnum">${total}</div><div class="sub">seg</div></div>
+    </div>
+
+    <div class="card" style="margin-top:26px;text-align:left">
+      <div class="sub" style="font-size:11px;font-weight:700;letter-spacing:.1em">SIGUIENTE${newEx ? " EJERCICIO" : ""}</div>
+      <div class="row" style="margin-top:8px">
+        <div class="thumb gifbox"><img src="gifs/${nextEx.gif}.gif" alt=""></div>
+        <div class="grow">
+          <div style="font-weight:800;font-size:15px">${nextEx.name}</div>
+          <div class="sub" style="margin-top:2px;font-size:13px">
+            Serie ${w.setIdx + 1} de ${nextEx.sets} · ${nextEx.timeSec ? nextEx.timeSec + " seg" : nextEx.reps + " reps"}
+            ${exWeight(nextEx) ? " · " + exWeight(nextEx) : ""}
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row" style="margin-top:18px;gap:10px">
+      <button class="btn ghost" style="flex:1" onclick="addRest()">+15s</button>
+      <button class="btn" style="flex:1" onclick="skipRest()">Saltar ›</button>
+    </div>
+  </div>`;
+
+  const circ = document.querySelector(".bigring .fg");
+  const id = setInterval(() => {
+    const left = Math.max(0, Math.ceil((w.restDeadline - Date.now()) / 1000));
+    const el = document.getElementById("tnum");
+    if (el) el.textContent = left;
+    if (circ) circ.style.strokeDashoffset = (1 - left / w.restTotal) * 660;
+    if (left <= 3 && left > 0 && left < lastBeeped){ lastBeeped = left; beep(880, 0.1); }
+    if (left <= 0){ clearInterval(id); beepFinal(); w.phase = "work"; render(); }
+  }, 200);
+  timers.push(id);
+}
+function addRest(){ state.w.restDeadline += 15000; state.w.restTotal += 15; }
+function skipRest(){ clearTimers(); state.w.phase = "work"; render(); }
+
+function confirmExit(){
+  if (confirm("¿Salir del entrenamiento? El progreso de esta sesión se perderá.")){
+    clearTimers(); state.w = null; unlockScreen(); go("home");
+  }
+}
+
+/* ============================ FIN DE SESIÓN ============================ */
+function finishWorkout(){
+  clearTimers();
+  const w = state.w;
+  const dur = Math.floor((Date.now() - w.startTime) / 1000);
+  db.history.push({ date: dateKey(today()), session: w.sid, dur, sets: w.doneSets });
+  saveDB(db);
+  state.finished = { sid: w.sid, dur, sets: w.doneSets };
+  state.w = null;
+  unlockScreen();
+  beepFinal(); setTimeout(beepFinal, 350);
+  go("finish");
+}
+
+function renderFinish(){
+  const f = state.finished, s = SESSIONS[f.sid];
+  const wkCount = ORDER.filter(doneThisWeek).length;
+  $app.innerHTML = `
+  <div class="player fade" style="justify-content:center;text-align:center">
+    <div style="font-size:74px" class="pulse">🏆</div>
+    <h1 style="margin-top:14px;font-size:30px">¡Sesión completa!</h1>
+    <div class="sub" style="margin-top:6px;font-size:15px">${s.emoji} ${s.name} · ${s.muscles}</div>
+    <div class="statgrid" style="margin-top:26px">
+      <div class="card"><div class="v">${fmtDur(f.dur)}</div><div class="l">duración</div></div>
+      <div class="card"><div class="v">${f.sets}</div><div class="l">series</div></div>
+      <div class="card"><div class="v">${wkCount}/4</div><div class="l">semana</div></div>
+    </div>
+    ${wkCount === 4 ? `<div class="chip acc" style="margin-top:18px">🔥 ¡Semana completa! Las 4 sesiones hechas</div>` : ""}
+    <div style="margin-top:30px"><button class="btn" onclick="go('home')">Listo</button></div>
+  </div>`;
+}
+
+/* ============================ HISTORIAL ============================ */
+function renderHistory(){
+  const hist = [...db.history].reverse();
+  const weeks = {};
+  db.history.forEach(h => { const k = weekKey(parseKey(h.date)); weeks[k] = (weeks[k] || 0) + 1; });
+  const fullWeeks = Object.values(weeks).filter(n => n >= 4).length;
+  $app.innerHTML = `
+    <header class="app">
+      <button class="iconbtn" onclick="go('home')">←</button>
+      <h2>Historial</h2>
+      <div style="width:42px"></div>
+    </header>
+    <div class="statgrid" style="margin-bottom:16px">
+      <div class="card"><div class="v">${db.history.length}</div><div class="l">sesiones</div></div>
+      <div class="card"><div class="v">${fullWeeks}</div><div class="l">semanas 4/4</div></div>
+      <div class="card"><div class="v">${db.history.length ? fmtDur(Math.round(db.history.reduce((a,h) => a + h.dur, 0) / db.history.length)) : "—"}</div><div class="l">promedio</div></div>
+    </div>
+    <div class="card fade">
+      ${hist.length === 0 ? `<div class="sub" style="text-align:center;padding:20px">Aún no hay sesiones registradas.<br>¡Empieza hoy! 💪</div>`
+        : hist.map(h => {
+          const s = SESSIONS[h.session], d = parseKey(h.date);
+          return `<div class="hist-row">
+            <div><b>${s.emoji} ${s.name}</b><div class="sub" style="font-size:12px;margin-top:2px">${DAYNAMES[d.getDay()]} ${d.getDate()} ${MONTHS[d.getMonth()]}</div></div>
+            <div style="text-align:right"><b>${fmtDur(h.dur)}</b><div class="sub" style="font-size:12px;margin-top:2px">${h.sets} series</div></div>
+          </div>`;
+        }).join("")}
+    </div>
+    ${hist.length ? `<div style="text-align:center;margin-top:18px">
+      <button class="btn ghost small" onclick="if(confirm('¿Borrar todo el historial?')){db.history=[];saveDB(db);render()}">Borrar historial</button>
+    </div>` : ""}`;
+}
+
+/* ============================ INIT ============================ */
+window.startWorkout = startWorkout; window.go = go; window.finishSet = finishSet;
+window.startTimedSet = startTimedSet; window.addRest = addRest; window.skipRest = skipRest;
+window.confirmExit = confirmExit; window.endTimedEarly = endTimedEarly;
+render();
+if ("serviceWorker" in navigator && location.protocol !== "file:")
+  navigator.serviceWorker.register("sw.js").catch(() => {});
+</script>
+</body>
+</html>
