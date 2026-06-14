@@ -356,8 +356,8 @@ function renderPreview(sid){
     ${done ? `<div class="chip acc" style="margin-bottom:12px">✓ Completada el ${fmtShort(done.date)} esta semana</div>` : ""}
     <div class="card fade">
       ${s.exercises.map((ex, i) => `
-        <div class="exrow">
-          <div class="thumb gifbox" style="cursor:zoom-in" onclick="openGif('${sid}',${i})"><img src="gifs/${ex.gif}.gif" loading="lazy" alt=""></div>
+        <div class="exrow" style="cursor:zoom-in" onclick="openGif('${sid}',${i})">
+          <div class="thumb gifbox"><img src="gifs/${ex.gif}.gif" loading="lazy" alt=""></div>
           <div class="grow">
             <div class="nm">${ex.name}${ex.star ? " ⭐" : ""}${ex.warn ? " ⚠️" : ""}${ex.core ? ` <span class="chip" style="padding:2px 8px;font-size:10px">CORE</span>` : ""}</div>
             <div class="dt">${exDetail(ex)}</div>
@@ -565,8 +565,8 @@ function renderRestScreen(){
 
     <div class="card" style="margin-top:26px;text-align:left">
       <div class="sub" style="font-size:11px;font-weight:700;letter-spacing:.1em">SIGUIENTE${newEx ? " EJERCICIO" : ""}</div>
-      <div class="row" style="margin-top:8px">
-        <div class="thumb gifbox" style="cursor:zoom-in" onclick="openGif('${w.sid}',${w.exIdx})"><img src="gifs/${nextEx.gif}.gif" alt=""></div>
+      <div class="row" style="margin-top:8px;cursor:zoom-in" onclick="openGif('${w.sid}',${w.exIdx})">
+        <div class="thumb gifbox"><img src="gifs/${nextEx.gif}.gif" alt=""></div>
         <div class="grow">
           <div style="font-weight:800;font-size:15px">${nextEx.name}</div>
           <div class="sub" style="margin-top:2px;font-size:13px">
