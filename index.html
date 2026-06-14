@@ -76,6 +76,13 @@ header.app{display:flex;align-items:center;justify-content:space-between;padding
 .overlay .n{font-size:120px;font-weight:800;color:var(--accent)}
 .hist-row{display:flex;justify-content:space-between;align-items:center;padding:13px 0;border-bottom:1px solid var(--line);font-size:14.5px}
 .hist-row:last-child{border-bottom:none}
+/* lightbox de GIF */
+.lightbox{position:fixed;inset:0;background:rgba(8,10,14,.92);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:80;padding:20px;animation:fade .2s ease;cursor:zoom-out}
+.lightbox .lb-img{width:min(92vw,520px);aspect-ratio:1;background:#fff;border-radius:22px;overflow:hidden;display:flex;align-items:center;justify-content:center}
+.lightbox .lb-img img{width:100%;height:100%;object-fit:contain}
+.lightbox .lb-name{margin-top:16px;font-size:18px;font-weight:800;text-align:center;color:var(--txt)}
+.lightbox .lb-note{margin-top:8px;max-width:520px;font-size:13px;color:var(--sub);text-align:center;line-height:1.45}
+.lightbox .lb-close{position:absolute;top:calc(16px + env(safe-area-inset-top));right:16px}
 .statgrid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
 .statgrid .card{padding:14px 10px;text-align:center}
 .statgrid .v{font-size:21px;font-weight:800;color:var(--accent)}
@@ -350,7 +357,7 @@ function renderPreview(sid){
     <div class="card fade">
       ${s.exercises.map((ex, i) => `
         <div class="exrow">
-          <div class="thumb gifbox"><img src="gifs/${ex.gif}.gif" loading="lazy" alt=""></div>
+          <div class="thumb gifbox" style="cursor:zoom-in" onclick="openGif('${sid}',${i})"><img src="gifs/${ex.gif}.gif" loading="lazy" alt=""></div>
           <div class="grow">
             <div class="nm">${ex.name}${ex.star ? " ⭐" : ""}${ex.warn ? " ⚠️" : ""}${ex.core ? ` <span class="chip" style="padding:2px 8px;font-size:10px">CORE</span>` : ""}</div>
             <div class="dt">${exDetail(ex)}</div>
@@ -364,6 +371,20 @@ function renderPreview(sid){
       </div>
     </div>`;
 }
+function openGif(sid, i){
+  const ex = SESSIONS[sid].exercises[i];
+  const lb = document.createElement("div");
+  lb.className = "lightbox";
+  lb.onclick = closeGif;
+  lb.innerHTML = `
+    <button class="iconbtn lb-close" onclick="closeGif()">✕</button>
+    <div class="lb-img"><img src="gifs/${ex.gif}.gif" alt="${ex.name}"></div>
+    <div class="lb-name">${ex.name}</div>
+    ${ex.note ? `<div class="lb-note">${ex.note}</div>` : ""}`;
+  document.body.appendChild(lb);
+}
+function closeGif(){ const lb = document.querySelector(".lightbox"); if (lb) lb.remove(); }
+
 function exDetail(ex){
   const w = exWeight(ex);
   const parts = [];
@@ -545,7 +566,7 @@ function renderRestScreen(){
     <div class="card" style="margin-top:26px;text-align:left">
       <div class="sub" style="font-size:11px;font-weight:700;letter-spacing:.1em">SIGUIENTE${newEx ? " EJERCICIO" : ""}</div>
       <div class="row" style="margin-top:8px">
-        <div class="thumb gifbox"><img src="gifs/${nextEx.gif}.gif" alt=""></div>
+        <div class="thumb gifbox" style="cursor:zoom-in" onclick="openGif('${w.sid}',${w.exIdx})"><img src="gifs/${nextEx.gif}.gif" alt=""></div>
         <div class="grow">
           <div style="font-weight:800;font-size:15px">${nextEx.name}</div>
           <div class="sub" style="margin-top:2px;font-size:13px">
