@@ -94,6 +94,16 @@ header.app{display:flex;align-items:center;justify-content:space-between;padding
 .statgrid .card{padding:14px 10px;text-align:center}
 .statgrid .v{font-size:21px;font-weight:800;color:var(--accent)}
 .statgrid .l{font-size:11px;color:var(--sub);margin-top:3px}
+/* captura de peso/reps */
+.caprow{display:flex;gap:12px;margin-top:14px;justify-content:center;flex-wrap:wrap}
+.capbox{background:var(--card);border-radius:14px;padding:10px 14px;min-width:130px}
+.caplbl{font-size:10px;font-weight:700;letter-spacing:.1em;color:var(--sub)}
+.capctl{display:flex;align-items:center;gap:10px;margin-top:6px}
+.capctl button{width:36px;height:36px;border-radius:10px;border:none;background:var(--card2);color:var(--txt);
+  font-size:22px;font-weight:800;cursor:pointer;font-family:inherit;line-height:1}
+.capctl button:active{transform:scale(.92)}
+.capval{flex:1;text-align:center;font-size:19px;font-weight:800;font-variant-numeric:tabular-nums}
+.capval .unit{font-size:12px;color:var(--sub);font-weight:600}
 </style>
 </head>
 <body>
@@ -186,9 +196,41 @@ const MONTHS = ["ene","feb","mar","abr","may","jun","jul","ago","sep","oct","nov
 
 /* ============================ STORAGE ============================ */
 const DB_KEY = "rutina_v1";
-function loadDB(){ try { return JSON.parse(localStorage.getItem(DB_KEY)) || { history: [] }; } catch { return { history: [] }; } }
+function loadDB(){
+  let d; try { d = JSON.parse(localStorage.getItem(DB_KEY)); } catch {}
+  if (!d || typeof d !== "object") d = {};
+  if (!Array.isArray(d.history)) d.history = [];
+  if (!d.last || typeof d.last !== "object") d.last = {}; // último peso/reps por ejercicio (para prellenar)
+  return d;
+}
 function saveDB(db){ localStorage.setItem(DB_KEY, JSON.stringify(db)); }
 let db = loadDB();
+
+/* ============================ SYNC A GOOGLE SHEET ============================ */
+// Pega aquí la URL del Web App de Apps Script (termina en /exec). Vacío = no sube (queda en cola).
+const SHEET_ENDPOINT = "";
+const QUEUE_KEY = "rutina_queue";
+function loadQueue(){ try { return JSON.parse(localStorage.getItem(QUEUE_KEY)) || []; } catch { return []; } }
+function saveQueue(q){ localStorage.setItem(QUEUE_KEY, JSON.stringify(q)); }
+function enqueue(p){ const q = loadQueue(); q.push(p); saveQueue(q); }
+let flushing = false;
+async function flushQueue(){
+  if (flushing || !SHEET_ENDPOINT || !navigator.onLine) return;
+  let q = loadQueue();
+  if (!q.length) return;
+  flushing = true;
+  const remaining = [];
+  let sentAny = false;
+  for (const item of q){
+    try {
+      const res = await fetch(SHEET_ENDPOINT, { method: "POST", body: JSON.stringify(item) }); // text/plain → sin preflight CORS
+      if (res.ok) sentAny = true; else remaining.push(item);
+    } catch { remaining.push(item); }
+  }
+  saveQueue(remaining);
+  flushing = false;
+  if (sentAny && !remaining.length) toast("✓ Avance guardado en la hoja");
+}
 
 /* ============================ FECHAS / CICLO ============================ */
 function today(){ return new Date(); }
@@ -400,6 +442,17 @@ function toast(msg){
   setTimeout(() => { t.classList.add("out"); setTimeout(() => t.remove(), 400); }, 2600);
 }
 
+function bump(field, delta){
+  const w = state.w; if (!w || !w.cur) return;
+  if (field === "weight"){
+    w.cur.weight = Math.max(0, Math.round((w.cur.weight + delta) * 10) / 10);
+    const el = document.getElementById("capW"); if (el) el.textContent = w.cur.weight;
+  } else {
+    w.cur.reps = Math.max(0, w.cur.reps + delta);
+    const el = document.getElementById("capR"); if (el) el.textContent = w.cur.reps;
+  }
+}
+
 function exDetail(ex){
   const w = exWeight(ex);
   const parts = [];
@@ -422,6 +475,7 @@ function startWorkout(sid){
     startTime: Date.now(),
     totalSets: s.exercises.reduce((a, e) => a + e.sets, 0),
     doneSets: 0,
+    log: [],
   };
   lockScreen();
   go("workout");
@@ -440,6 +494,23 @@ function renderWorkScreen(){
   const weight = exWeight(ex);
   const isTimed = !!ex.timeSec;
   const elapsed = fmtDur(Math.floor((Date.now() - w.startTime) / 1000));
+  // valores a registrar: último usado para este ejercicio, o el objetivo del plan
+  const lastV = db.last[ex.name] || {};
+  w.cur = {
+    weight: lastV.weight != null ? lastV.weight : (weight ? parseFloat(weight) : null),
+    reps: lastV.reps != null ? lastV.reps : ex.reps,
+  };
+  const capHTML = isTimed ? "" : `
+    <div class="caprow">
+      ${weight ? `<div class="capbox"><div class="caplbl">PESO</div><div class="capctl">
+        <button onclick="bump('weight',-2.5)">−</button>
+        <div class="capval"><span id="capW">${w.cur.weight}</span> <span class="unit">kg</span></div>
+        <button onclick="bump('weight',2.5)">+</button></div></div>` : ""}
+      <div class="capbox"><div class="caplbl">REPS${ex.perSide ? " (c/lado)" : ""}</div><div class="capctl">
+        <button onclick="bump('reps',-1)">−</button>
+        <div class="capval"><span id="capR">${w.cur.reps}</span></div>
+        <button onclick="bump('reps',1)">+</button></div></div>
+    </div>`;
   $app.innerHTML = `
   <div class="player fade">
     <div class="row" style="padding:12px 0 10px">
@@ -463,9 +534,10 @@ function renderWorkScreen(){
       </div>
       <div style="margin-top:12px;font-size:19px;font-weight:800">
         Serie ${w.setIdx + 1} de ${ex.sets} —
-        ${isTimed ? `${ex.timeSec} seg` : `${ex.reps} reps`}
+        ${isTimed ? `${ex.timeSec} seg` : `objetivo ${ex.reps} reps`}
         ${weight ? ` · <span style="color:var(--accent)">${weight}</span>` : ""}
       </div>
+      ${capHTML}
       ${ex.perSide ? `<div class="chip" style="margin-top:8px">🔄 Derecha → izquierda, ambos lados = 1 serie</div>` : ""}
       ${ex.note ? `<div class="notebox" style="margin-top:10px;text-align:left">💡 ${ex.note}</div>` : ""}
     </div>
@@ -551,6 +623,19 @@ function finishSet(){
   clearTimers();
   const w = state.w, s = SESSIONS[w.sid], ex = curEx();
   w.doneSets++;
+  // registrar lo realizado en esta serie
+  const c = w.cur || {};
+  const planW = exWeight(ex);
+  w.log.push({
+    ex: ex.name, set: w.setIdx + 1,
+    weight: ex.timeSec || !planW ? null : c.weight,
+    reps: ex.timeSec ? null : (c.reps != null ? c.reps : ex.reps),
+    sec: ex.timeSec || null,
+  });
+  if (!ex.timeSec){
+    db.last[ex.name] = { weight: planW ? c.weight : undefined, reps: c.reps };
+    saveDB(db);
+  }
   const lastSetOfEx = w.setIdx >= ex.sets - 1;
   const lastEx = w.exIdx >= s.exercises.length - 1;
   if (lastSetOfEx && lastEx) return finishWorkout();
@@ -621,10 +706,23 @@ function confirmExit(){
 /* ============================ FIN DE SESIÓN ============================ */
 function finishWorkout(){
   clearTimers();
-  const w = state.w;
+  const w = state.w, s = SESSIONS[w.sid];
   const dur = Math.floor((Date.now() - w.startTime) / 1000);
-  db.history.push({ date: dateKey(today()), session: w.sid, dur, sets: w.doneSets });
+  db.history.push({ date: dateKey(today()), session: w.sid, dur, sets: w.doneSets, log: w.log });
   saveDB(db);
+  // armar fila(s) para la hoja de cálculo y encolar
+  enqueue({
+    ts: new Date().toISOString(),
+    date: dateKey(today()),
+    weekday: DAYNAMES[today().getDay()],
+    sid: w.sid,
+    session: s.name,
+    cycleWeek: cycleWeek(),
+    durSec: dur,
+    durFmt: fmtDur(dur),
+    sets: w.log,
+  });
+  flushQueue();
   state.finished = { sid: w.sid, dur, sets: w.doneSets };
   state.w = null;
   unlockScreen();
@@ -686,7 +784,10 @@ function renderHistory(){
 window.startWorkout = startWorkout; window.go = go; window.finishSet = finishSet;
 window.startTimedSet = startTimedSet; window.addRest = addRest; window.skipRest = skipRest;
 window.confirmExit = confirmExit; window.endTimedEarly = endTimedEarly;
+window.bump = bump;
 render();
+flushQueue();
+window.addEventListener("online", flushQueue);
 if ("serviceWorker" in navigator && location.protocol !== "file:") {
   // avisa si acabamos de recargar por una actualización
   if (sessionStorage.getItem("justUpdated")) {
