@@ -672,8 +672,16 @@ window.startWorkout = startWorkout; window.go = go; window.finishSet = finishSet
 window.startTimedSet = startTimedSet; window.addRest = addRest; window.skipRest = skipRest;
 window.confirmExit = confirmExit; window.endTimedEarly = endTimedEarly;
 render();
-if ("serviceWorker" in navigator && location.protocol !== "file:")
+if ("serviceWorker" in navigator && location.protocol !== "file:") {
+  // recarga automática cuando un SW nuevo toma control (actualiza en 1 relanzamiento)
+  let swReloaded = false;
+  navigator.serviceWorker.addEventListener("controllerchange", () => {
+    if (swReloaded) return;
+    swReloaded = true;
+    location.reload();
+  });
   navigator.serviceWorker.register("sw.js").catch(() => {});
+}
 </script>
 </body>
 </html>
