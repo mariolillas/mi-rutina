@@ -114,7 +114,7 @@ header.app{display:flex;align-items:center;justify-content:space-between;padding
    Fuente: 🏋️ Rutina de Entrenamiento v2.md (fija, no editable)
    ============================================================ */
 const CYCLE = { start: "2026-06-13", end: "2026-09-03", weeks: 12 };
-const APP_VERSION = "v10"; // debe coincidir con VERSION en sw.js (rutina-vN)
+const APP_VERSION = "v11"; // debe coincidir con VERSION en sw.js (rutina-vN)
 
 const PHASES = [
   { from: 1, to: 3,  label: "Técnica",   tip: "Aprende los movimientos con técnica correcta" },
@@ -884,7 +884,7 @@ function finishWorkout(){
     session: s.name,
     cycleWeek: cycleWeek(),
     durSec: dur,
-    durFmt: fmtDur(dur),
+    durFmt: Math.floor(dur / 60) + "m " + (dur % 60) + "s", // texto, evita que Sheets lo lea como hora
     sets: w.log,
   });
   flushQueue();

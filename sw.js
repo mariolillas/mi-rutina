@@ -1,4 +1,4 @@
-const VERSION = "rutina-v10";
+const VERSION = "rutina-v11";
 const ASSETS = [
   "./",
   "./index.html",
