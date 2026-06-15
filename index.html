@@ -208,7 +208,7 @@ let db = loadDB();
 
 /* ============================ SYNC A GOOGLE SHEET ============================ */
 // Pega aquí la URL del Web App de Apps Script (termina en /exec). Vacío = no sube (queda en cola).
-const SHEET_ENDPOINT = "";
+const SHEET_ENDPOINT = "https://script.google.com/macros/s/AKfycbzpZLbZJmSxp0mxTFR-U8Z52BnRz3WAY0Cfx2sDPkAQbhf2GhNjyn3xc304LEnw4NHr/exec";
 const QUEUE_KEY = "rutina_queue";
 function loadQueue(){ try { return JSON.parse(localStorage.getItem(QUEUE_KEY)) || []; } catch { return []; } }
 function saveQueue(q){ localStorage.setItem(QUEUE_KEY, JSON.stringify(q)); }
