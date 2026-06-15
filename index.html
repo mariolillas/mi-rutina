@@ -191,6 +191,39 @@ const SESSIONS = {
 };
 const ORDER = ["upperA", "lowerA", "upperB", "lowerB"];
 const WEEKDAY_MAP = { 1: "upperA", 2: "lowerA", 4: "upperB", 5: "lowerB" };
+
+/* Calentamiento (dinámico) y enfriamiento (estiramiento estático) por tipo de día.
+   sec = duración; perSide = dobla el tiempo y avisa a la mitad para cambiar de lado. */
+const WARMUP = {
+  upper: [
+    { name: "Rodillas al frente", gif: "3636", sec: 40, note: "Marcha/trote elevando rodillas para subir el pulso" },
+    { name: "Inchworm (gusano)", gif: "1471", sec: 40, note: "Camina con las manos hasta plancha y regresa; moviliza hombros y core" },
+    { name: "Flexión lateral de tronco", gif: "0002", sec: 30, note: "Inclínate a cada lado alternando, sin peso; calienta dorsales y oblicuos" },
+    { name: "Apertura dinámica de pecho", gif: "1167", sec: 30, note: "Abre y cierra los brazos para activar pecho y hombros" },
+  ],
+  lower: [
+    { name: "Rodillas al frente", gif: "3636", sec: 40, note: "Marcha/trote elevando rodillas para subir el pulso" },
+    { name: "Sentadilla sin peso", gif: "3533", sec: 40, note: "Profunda y controlada; activa cuádriceps y glúteos" },
+    { name: "World's greatest stretch", gif: "1604", sec: 30, perSide: true, note: "Zancada + rotación; abre cadera e isquios" },
+    { name: "Puente de glúteo con marcha", gif: "3561", sec: 30, note: "Puente y alterna piernas; activa glúteos" },
+    { name: "Círculos de tobillo", gif: "1368", sec: 30, perSide: true, note: "Prepara tobillo y pantorrilla" },
+  ],
+};
+const COOLDOWN = {
+  upper: [
+    { name: "Estiramiento de pecho y hombro", gif: "1271", sec: 30, note: "Sostén sin rebotar, respira profundo" },
+    { name: "Tríceps sobre la cabeza", gif: "0643", sec: 30, perSide: true, note: "Lleva el codo atrás suavemente" },
+    { name: "Estiramiento de espalda alta", gif: "1365", sec: 30, note: "Redondea la espalda llevando los brazos al frente" },
+    { name: "Cuello lateral", gif: "0713", sec: 30, perSide: true, note: "Inclina la cabeza hacia el hombro sin forzar" },
+  ],
+  lower: [
+    { name: "Cuádriceps acostado", gif: "0613", sec: 30, perSide: true, note: "Lleva el talón al glúteo, rodillas juntas" },
+    { name: "Isquiotibiales", gif: "1511", sec: 30, perSide: true, note: "Pierna estirada, lleva el pecho al muslo" },
+    { name: "Glúteo sentado", gif: "1424", sec: 30, perSide: true, note: "Cruza el tobillo sobre la rodilla y empuja suave" },
+    { name: "Pantorrilla en pared", gif: "1377", sec: 30, perSide: true, note: "Talón al suelo, pierna atrás estirada" },
+  ],
+};
+function sessionType(sid){ return sid.indexOf("upper") === 0 ? "upper" : "lower"; }
 const DAYNAMES = ["Domingo","Lunes","Martes","Miércoles","Jueves","Viernes","Sábado"];
 const MONTHS = ["ene","feb","mar","abr","may","jun","jul","ago","sep","oct","nov","dic"];
 
@@ -300,6 +333,7 @@ function render(){
   clearTimers();
   if (state.view === "home") return renderHome();
   if (state.view === "preview") return renderPreview(state.previewSid);
+  if (state.view === "flow") return renderFlow();
   if (state.view === "workout") return renderWorkout();
   if (state.view === "finish") return renderFinish();
   if (state.view === "history") return renderHistory();
@@ -332,7 +366,7 @@ function renderHome(){
           </div>
         </div>
         <div class="row" style="margin-top:16px;gap:10px">
-          <button class="btn" style="flex:1.6" onclick="startWorkout('${sug.sid}')">▶ &nbsp;EMPEZAR</button>
+          <button class="btn" style="flex:1.6" onclick="startSession('${sug.sid}')">▶ &nbsp;EMPEZAR</button>
           <button class="btn ghost" style="flex:1" onclick="go('preview',{previewSid:'${sug.sid}'})">Ver rutina</button>
         </div>
       </div>`;
@@ -416,7 +450,7 @@ function renderPreview(sid){
     <div style="height:90px"></div>
     <div style="position:fixed;bottom:0;left:0;right:0;padding:14px 16px calc(14px + env(safe-area-inset-bottom));background:linear-gradient(transparent,var(--bg) 35%)">
       <div style="max-width:520px;margin:0 auto">
-        <button class="btn" onclick="startWorkout('${sid}')">▶ &nbsp;EMPEZAR ${done ? "DE NUEVO" : ""}</button>
+        <button class="btn" onclick="startSession('${sid}')">▶ &nbsp;EMPEZAR ${done ? "DE NUEVO" : ""}</button>
       </div>
     </div>`;
 }
@@ -465,6 +499,112 @@ function exDetail(ex){
 /* ============================ WORKOUT ENGINE ============================ */
 let timers = [];
 function clearTimers(){ timers.forEach(clearInterval); timers.forEach(clearTimeout); timers = []; }
+
+/* --- Calentamiento / enfriamiento guiado (reproductor de movimientos por tiempo) --- */
+function startSession(sid){
+  audio();
+  state.flow = { kind: "warmup", sid, list: WARMUP[sessionType(sid)], idx: 0 };
+  lockScreen();
+  go("flow");
+}
+function startCooldown(sid){
+  audio();
+  state.flow = { kind: "cooldown", sid, list: COOLDOWN[sessionType(sid)], idx: 0 };
+  lockScreen();
+  go("flow");
+}
+function flowDone(){
+  const f = state.flow; state.flow = null;
+  if (f.kind === "warmup") return startWorkout(f.sid); // tras calentar → entrenamiento
+  unlockScreen(); go("home");                          // tras enfriar → inicio
+}
+function flowSkip(){
+  const f = state.flow;
+  if (f.kind === "warmup"){ state.flow = null; return startWorkout(f.sid); }
+  flowDone();
+}
+function flowExit(){
+  clearTimers();
+  if (confirm("¿Salir?")){ state.flow = null; unlockScreen(); go("home"); }
+}
+function renderFlow(){
+  const f = state.flow; if (!f) return go("home");
+  const mv = f.list[f.idx], isWarm = f.kind === "warmup";
+  const total = mv.perSide ? mv.sec * 2 : mv.sec;
+  $app.innerHTML = `
+  <div class="player fade">
+    <div class="row" style="padding:12px 0 10px">
+      <button class="iconbtn" onclick="flowExit()">✕</button>
+      <div class="grow" style="text-align:center">
+        <div class="sub" style="font-weight:700;letter-spacing:.12em;font-size:12px;color:${isWarm ? "var(--accent)" : "#3ddc84"}">
+          ${isWarm ? "🔥 CALENTAMIENTO" : "🧊 ENFRIAMIENTO"}</div>
+      </div>
+      <div style="width:42px"></div>
+    </div>
+    <div class="gifbox" style="aspect-ratio:1.15;max-height:42dvh"><img src="gifs/${mv.gif}.gif" alt="${mv.name}"></div>
+    <div style="text-align:center;margin-top:14px">
+      <div class="sub" style="font-weight:700;letter-spacing:.08em;font-size:12px">MOVIMIENTO ${f.idx + 1} DE ${f.list.length}</div>
+      <h1 style="margin-top:5px;font-size:23px;line-height:1.2">${mv.name}</h1>
+      <div style="margin-top:10px;font-size:19px;font-weight:800">${mv.perSide ? mv.sec + " seg c/lado" : mv.sec + " seg"}</div>
+      ${mv.perSide ? `<div class="chip" style="margin-top:8px">🔄 Cambia de lado a la mitad</div>` : ""}
+      ${mv.note ? `<div class="notebox" style="margin-top:10px;text-align:left">💡 ${mv.note}</div>` : ""}
+    </div>
+    <div class="grow"></div>
+    <div style="padding-top:14px;display:flex;gap:10px">
+      <button class="btn ghost" style="flex:1" onclick="flowSkip()">Saltar ${isWarm ? "calent." : "enfri."} ›</button>
+      <button class="btn" style="flex:1.6" onclick="flowPrep()">▶ Empezar ${total} seg</button>
+    </div>
+  </div>`;
+}
+function flowPrep(){
+  let n = 3;
+  const ov = document.createElement("div");
+  ov.className = "overlay";
+  ov.innerHTML = `<div class="sub" style="font-size:15px;font-weight:700;margin-bottom:8px">PREPÁRATE</div><div class="n">${n}</div>`;
+  document.body.appendChild(ov);
+  beep(660, 0.1);
+  const id = setInterval(() => {
+    n--;
+    if (n > 0){ ov.querySelector(".n").textContent = n; beep(660, 0.1); }
+    else { clearInterval(id); ov.remove(); beep(1175, 0.18, 0.25); flowCountdown(); }
+  }, 1000);
+  timers.push(id);
+}
+function flowCountdown(){
+  const f = state.flow, mv = f.list[f.idx], isWarm = f.kind === "warmup";
+  const total = mv.perSide ? mv.sec * 2 : mv.sec;
+  const deadline = Date.now() + total * 1000;
+  let lastBeeped = 99, switched = false;
+  $app.innerHTML = `
+  <div class="player fade" style="justify-content:center;text-align:center">
+    <div class="sub" style="font-weight:700;letter-spacing:.1em;font-size:12px">${mv.name.toUpperCase()}</div>
+    <div class="bigring" style="margin-top:24px">
+      ${ringSVG(isWarm ? "#d7ff3f" : "#3ddc84")}
+      <div class="mid"><div class="tnum" id="tnum">${total}</div><div class="sub">segundos</div></div>
+    </div>
+    ${mv.perSide ? `<div class="chip" id="sideChip" style="margin-top:18px">Lado 1 — cambia al sonar</div>` : ""}
+    <div style="margin-top:22px;padding:0 4px"><button class="btn ghost" onclick="flowAdvance()">Saltar movimiento ›</button></div>
+  </div>`;
+  const circ = document.querySelector(".bigring .fg");
+  const id = setInterval(() => {
+    const left = Math.max(0, Math.ceil((deadline - Date.now()) / 1000));
+    const el = document.getElementById("tnum");
+    if (el) el.textContent = left;
+    if (circ) circ.style.strokeDashoffset = (1 - left / total) * 660;
+    if (mv.perSide && !switched && left <= mv.sec){ switched = true; beep(988, 0.2, 0.25);
+      const sc = document.getElementById("sideChip"); if (sc) sc.textContent = "Lado 2"; }
+    if (left <= 3 && left > 0 && left < lastBeeped){ lastBeeped = left; beep(880, 0.1); }
+    if (left <= 0){ clearInterval(id); beepFinal(); flowAdvance(); }
+  }, 200);
+  timers.push(id);
+}
+function flowAdvance(){
+  clearTimers();
+  const f = state.flow; if (!f) return;
+  f.idx++;
+  if (f.idx >= f.list.length) return flowDone();
+  go("flow");
+}
 
 function startWorkout(sid){
   audio(); // desbloquea audio con el gesto del usuario
@@ -744,7 +884,10 @@ function renderFinish(){
       <div class="card"><div class="v">${wkCount}/4</div><div class="l">semana</div></div>
     </div>
     ${wkCount === 4 ? `<div class="chip acc" style="margin-top:18px">🔥 ¡Semana completa! Las 4 sesiones hechas</div>` : ""}
-    <div style="margin-top:30px"><button class="btn" onclick="go('home')">Listo</button></div>
+    <div style="margin-top:30px;display:flex;flex-direction:column;gap:10px">
+      <button class="btn" onclick="startCooldown('${f.sid}')">🧊 &nbsp;ENFRIAMIENTO (estiramientos)</button>
+      <button class="btn ghost" onclick="go('home')">Listo, terminar</button>
+    </div>
   </div>`;
 }
 
@@ -785,6 +928,8 @@ window.startWorkout = startWorkout; window.go = go; window.finishSet = finishSet
 window.startTimedSet = startTimedSet; window.addRest = addRest; window.skipRest = skipRest;
 window.confirmExit = confirmExit; window.endTimedEarly = endTimedEarly;
 window.bump = bump;
+window.startSession = startSession; window.startCooldown = startCooldown;
+window.flowPrep = flowPrep; window.flowSkip = flowSkip; window.flowExit = flowExit; window.flowAdvance = flowAdvance;
 render();
 flushQueue();
 window.addEventListener("online", flushQueue);
