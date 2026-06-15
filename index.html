@@ -114,6 +114,7 @@ header.app{display:flex;align-items:center;justify-content:space-between;padding
    Fuente: 🏋️ Rutina de Entrenamiento v2.md (fija, no editable)
    ============================================================ */
 const CYCLE = { start: "2026-06-13", end: "2026-09-03", weeks: 12 };
+const APP_VERSION = "v10"; // debe coincidir con VERSION en sw.js (rutina-vN)
 
 const PHASES = [
   { from: 1, to: 3,  label: "Técnica",   tip: "Aprende los movimientos con técnica correcta" },
@@ -419,7 +420,8 @@ function renderHome(){
       <div class="card"><div class="v">${total}</div><div class="l">sesiones</div></div>
       <div class="card"><div class="v">${wkCount}/4</div><div class="l">esta semana</div></div>
       <div class="card"><div class="v">${last ? fmtDur(last.dur) : "—"}</div><div class="l">última duración</div></div>
-    </div>`;
+    </div>
+    <div class="sub" style="text-align:center;margin-top:18px;font-size:11px;opacity:.6">Mi Rutina ${APP_VERSION}</div>`;
 }
 function fmtShort(k){ const d = parseKey(k); return d.getDate() + " " + MONTHS[d.getMonth()]; }
 
