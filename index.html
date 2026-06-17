@@ -50,6 +50,10 @@ header.app{display:flex;align-items:center;justify-content:space-between;padding
 /* progress bar */
 .pbar{height:6px;background:var(--card2);border-radius:99px;overflow:hidden}
 .pbar>div{height:100%;background:var(--accent);border-radius:99px;transition:width .4s ease}
+/* segmented progress bar (un bloque por ejercicio) */
+.segbar{display:flex;gap:4px;width:100%}
+.segbar .seg{flex:1;height:6px;border-radius:99px;background:var(--card2);overflow:hidden}
+.segbar .seg>i{display:block;height:100%;background:var(--accent);border-radius:99px;transition:width .4s ease}
 /* week strip */
 .sesrow{display:flex;align-items:center;gap:12px;background:var(--card);border-radius:18px;padding:14px;margin-bottom:10px;cursor:pointer}
 .sesrow .badge{width:46px;height:46px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:22px;background:var(--card2);flex-shrink:0}
@@ -77,12 +81,19 @@ header.app{display:flex;align-items:center;justify-content:space-between;padding
 .hist-row{display:flex;justify-content:space-between;align-items:center;padding:13px 0;border-bottom:1px solid var(--line);font-size:14.5px}
 .hist-row:last-child{border-bottom:none}
 /* lightbox de GIF */
-.lightbox{position:fixed;inset:0;background:rgba(8,10,14,.92);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:80;padding:20px;animation:fade .2s ease;cursor:zoom-out}
-.lightbox .lb-img{width:min(92vw,520px);aspect-ratio:1;background:#fff;border-radius:22px;overflow:hidden;display:flex;align-items:center;justify-content:center}
+.lightbox{position:fixed;inset:0;background:rgba(8,10,14,.94);display:flex;flex-direction:column;align-items:center;justify-content:flex-start;z-index:80;padding:calc(64px + env(safe-area-inset-top)) 20px calc(24px + env(safe-area-inset-bottom));animation:fade .2s ease;cursor:zoom-out;overflow-y:auto;-webkit-overflow-scrolling:touch}
+.lightbox .lb-inner{width:min(92vw,520px);margin:auto 0;cursor:default}
+.lightbox .lb-img{width:100%;aspect-ratio:1;background:#fff;border-radius:22px;overflow:hidden;display:flex;align-items:center;justify-content:center}
+.lightbox.has-steps .lb-img{width:min(64vw,300px);margin:0 auto;aspect-ratio:1}
 .lightbox .lb-img img{width:100%;height:100%;object-fit:contain}
 .lightbox .lb-name{margin-top:16px;font-size:18px;font-weight:800;text-align:center;color:var(--txt)}
-.lightbox .lb-note{margin-top:8px;max-width:520px;font-size:13px;color:var(--sub);text-align:center;line-height:1.45}
-.lightbox .lb-close{position:absolute;top:calc(16px + env(safe-area-inset-top));right:16px}
+.lightbox .lb-note{margin-top:8px;font-size:13px;color:var(--sub);text-align:center;line-height:1.45}
+.lightbox .lb-steps{margin-top:18px;list-style:none;text-align:left;counter-reset:step}
+.lightbox .lb-steps li{counter-increment:step;display:flex;gap:12px;padding:9px 0;border-bottom:1px solid var(--line);font-size:14px;line-height:1.45;color:var(--txt)}
+.lightbox .lb-steps li:last-child{border-bottom:none}
+.lightbox .lb-steps li::before{content:counter(step,decimal-leading-zero);color:var(--accent);font-weight:800;font-variant-numeric:tabular-nums;flex-shrink:0;min-width:24px}
+.lightbox .lb-steps li>span{flex:1;min-width:0}
+.lightbox .lb-close{position:fixed;top:calc(16px + env(safe-area-inset-top));right:16px;z-index:1}
 /* toast */
 .toast{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom));transform:translateX(-50%);
   background:var(--accent);color:#10130a;font-weight:800;font-size:14px;padding:12px 18px;border-radius:14px;
@@ -114,7 +125,7 @@ header.app{display:flex;align-items:center;justify-content:space-between;padding
    Fuente: 🏋️ Rutina de Entrenamiento v2.md (fija, no editable)
    ============================================================ */
 const CYCLE = { start: "2026-06-13", end: "2026-09-03", weeks: 12 };
-const APP_VERSION = "v11"; // debe coincidir con VERSION en sw.js (rutina-vN)
+const APP_VERSION = "v13"; // debe coincidir con VERSION en sw.js (rutina-vN)
 
 const PHASES = [
   { from: 1, to: 3,  label: "Técnica",   tip: "Aprende los movimientos con técnica correcta" },
@@ -192,6 +203,163 @@ const SESSIONS = {
 };
 const ORDER = ["upperA", "lowerA", "upperB", "lowerB"];
 const WEEKDAY_MAP = { 1: "upperA", 2: "lowerA", 4: "upperB", 5: "lowerB" };
+
+/* Pasos guiados por ejercicio (solo principales). Clave = name exacto de SESSIONS.
+   Español, adaptados a la ejecución real de Mario (piso/mancuernas/cojín). */
+const STEPS = {
+  "Press de pecho en piso": [
+    "Acuéstate boca arriba en el piso con una mancuerna en cada mano y las rodillas flexionadas.",
+    "Lleva los brazos arriba del pecho con las palmas hacia los pies; codos casi extendidos.",
+    "Baja las mancuernas controlando hasta que los codos toquen suavemente el suelo (ángulo ~45°).",
+    "Empuja hacia arriba apretando el pecho hasta juntar casi las mancuernas. Repite.",
+  ],
+  "Press inclinado en piso": [
+    "Apoya la espalda alta sobre un cojín firme para crear un ligero ángulo inclinado.",
+    "Sostén una mancuerna en cada mano a la altura del pecho alto, palmas hacia los pies.",
+    "Empuja hacia arriba y un poco atrás hasta extender los brazos, apretando el pecho superior.",
+    "Baja lento hasta sentir estiramiento en la parte alta del pecho. Repite.",
+  ],
+  "Remo a un brazo": [
+    "Apoya rodilla y mano del mismo lado sobre un banco o silla; espalda recta y paralela al suelo.",
+    "Sostén la mancuerna con el brazo libre colgando, palma hacia el cuerpo.",
+    "Tira del codo hacia la cadera llevando la mancuerna al costado; aprieta la espalda 1 seg.",
+    "Baja controlando hasta extender el brazo. Termina todas las reps y cambia de lado.",
+  ],
+  "Remo dos manos": [
+    "De pie, flexiona caderas y rodillas; tronco inclinado adelante con la espalda recta.",
+    "Sostén una mancuerna en cada mano colgando, palmas hacia el cuerpo.",
+    "Tira de ambos codos hacia atrás llevando las mancuernas al abdomen; junta los omóplatos.",
+    "Baja lento hasta extender los brazos sin redondear la espalda. Repite.",
+  ],
+  "Press militar de pie": [
+    "De pie, pies al ancho de hombros, mancuernas a la altura de los hombros, palmas al frente.",
+    "Aprieta el abdomen y los glúteos para estabilizar el tronco (no arquees la zona lumbar).",
+    "Empuja las mancuernas hacia arriba con los codos ligeramente adelante hasta extender los brazos.",
+    "Baja controlando hasta los hombros. Repite.",
+  ],
+  "Press Arnold": [
+    "Sentado o de pie, sostén las mancuernas frente a los hombros con las palmas hacia ti.",
+    "Sube las mancuernas rotando las palmas hacia afuera durante el recorrido.",
+    "Termina con los brazos extendidos arriba y las palmas mirando al frente.",
+    "Baja invirtiendo la rotación hasta volver a las palmas hacia ti. Repite.",
+  ],
+  "Elevaciones laterales": [
+    "De pie, mancuernas a los costados con una ligera flexión de codos.",
+    "Sube los brazos hacia los lados, guiando con los codos, solo hasta la altura del hombro.",
+    "Mantén un instante arriba sin encoger los hombros hacia las orejas.",
+    "Baja lento contando 3 segundos. Repite.",
+  ],
+  "Curl de bíceps": [
+    "De pie, mancuernas a los costados con las palmas hacia el frente.",
+    "Flexiona los codos subiendo las mancuernas hacia los hombros sin mover los codos del costado.",
+    "Aprieta el bíceps un instante arriba.",
+    "Baja controlando hasta extender los brazos. Repite.",
+  ],
+  "Curl martillo": [
+    "De pie, mancuernas a los costados con las palmas mirándose entre sí (agarre neutro).",
+    "Flexiona los codos manteniendo las palmas neutras durante todo el movimiento.",
+    "Aprieta arriba sin balancear el cuerpo ni mover los codos.",
+    "Baja lento hasta extender los brazos. Repite.",
+  ],
+  "Extensión tríceps overhead": [
+    "Sentado o de pie, sostén una mancuerna con ambas manos por encima de la cabeza, brazos extendidos.",
+    "Mantén los codos apuntando al frente y cerca de la cabeza.",
+    "Baja la mancuerna por detrás de la cabeza flexionando solo los codos.",
+    "Extiende los brazos apretando el tríceps hasta arriba. Repite.",
+  ],
+  "Kickback de tríceps": [
+    "Inclina el tronco al frente desde las caderas con la espalda recta, una mancuerna en cada mano.",
+    "Lleva los codos pegados al costado, flexionados a 90°.",
+    "Extiende los antebrazos hacia atrás hasta estirar los brazos, apretando el tríceps.",
+    "Pausa arriba y baja lento a 90° sin mover los codos. Repite.",
+  ],
+  "Sentadilla goblet": [
+    "De pie, pies al ancho de hombros, sostén una mancuerna vertical contra el pecho con ambas manos.",
+    "Baja flexionando rodillas y caderas, llevando los glúteos atrás; espalda recta y pecho alto.",
+    "Baja hasta que los muslos queden paralelos al suelo (o lo que permita tu movilidad).",
+    "Empuja con los talones para subir hasta extender. Repite.",
+  ],
+  "Sentadilla sumo": [
+    "De pie con los pies más anchos que los hombros y las puntas giradas hacia afuera.",
+    "Sostén una mancuerna colgando con ambas manos al centro, entre las piernas.",
+    "Baja flexionando rodillas (que sigan la línea de las puntas) y caderas, pecho alto.",
+    "Empuja con los talones apretando glúteos para subir. Repite.",
+  ],
+  "Sentadilla búlgara": [
+    "Apoya el empeine del pie trasero sobre un banco/silla; el pie de adelante un paso al frente.",
+    "Sostén una mancuerna en cada mano a los costados; tronco erguido.",
+    "Baja flexionando la rodilla delantera hasta que el muslo quede casi paralelo al suelo.",
+    "La rodilla delantera sigue la línea del pie, sin pasarse demasiado de la punta.",
+    "Empuja con el talón delantero para subir. Termina las reps y cambia de pierna.",
+  ],
+  "Zancada hacia atrás": [
+    "De pie, mancuernas a los costados, pies al ancho de cadera.",
+    "Da un paso atrás con una pierna y baja hasta que ambas rodillas formen ~90°.",
+    "El tronco se mantiene erguido; la rodilla trasera baja cerca del suelo sin tocarlo.",
+    "Empuja con el talón delantero para volver de pie. Alterna o termina un lado y cambia.",
+  ],
+  "Zancada inversa": [
+    "De pie, mancuernas a los costados, pies al ancho de cadera.",
+    "Da un paso atrás con una pierna y baja hasta que ambas rodillas formen ~90°.",
+    "El tronco se mantiene erguido; la rodilla trasera baja cerca del suelo sin tocarlo.",
+    "Empuja con el talón delantero para volver de pie. Termina las reps y cambia de pierna.",
+  ],
+  "Hip thrust / Puente de caderas": [
+    "Apoya la espalda alta sobre un banco/sofá; pies firmes en el suelo al ancho de cadera.",
+    "Coloca una mancuerna sobre las caderas, sujetándola con las manos.",
+    "Empuja con los talones subiendo la cadera hasta alinear hombros, cadera y rodillas.",
+    "Aprieta los glúteos 1 seg arriba y baja controlando sin tocar el suelo. Repite.",
+  ],
+  "Puente glúteos una pierna": [
+    "Boca arriba, una rodilla flexionada con el pie en el suelo; la otra pierna extendida.",
+    "Coloca una mancuerna sobre la cadera del lado que trabaja.",
+    "Empuja con el talón apoyado subiendo la cadera hasta alinear el cuerpo.",
+    "Aprieta el glúteo arriba y baja lento. Termina las reps y cambia de pierna.",
+  ],
+  "Curl de pierna de pie": [
+    "De pie frente a una pared para apoyarte; sujeta una mancuerna entre los pies si puedes.",
+    "Flexiona una rodilla llevando el talón hacia el glúteo, muslo casi quieto.",
+    "Aprieta el isquio arriba un instante.",
+    "Baja lento controlando. Termina las reps y cambia de pierna.",
+  ],
+  "Elevación talones una pierna": [
+    "De pie sobre una pierna, con la punta del pie en un escalón o el suelo; apóyate en una pared.",
+    "Sostén una mancuerna del mismo lado para añadir carga.",
+    "Sube el talón lo más alto posible poniéndote de puntillas.",
+    "Baja el talón COMPLETAMENTE hasta sentir estiramiento. Termina y cambia de pierna.",
+  ],
+  "Elevación talones dos piernas": [
+    "De pie con las puntas de los pies en un escalón o el suelo; una mancuerna en cada mano.",
+    "Sube ambos talones lo más alto posible poniéndote de puntillas.",
+    "Aprieta las pantorrillas un instante arriba.",
+    "Baja los talones COMPLETAMENTE en cada rep. Repite.",
+  ],
+  "Plancha": [
+    "Apóyate sobre antebrazos y puntas de los pies; codos bajo los hombros.",
+    "Alinea cabeza, espalda y cadera en línea recta; no dejes caer la zona lumbar.",
+    "Aprieta abdomen y glúteos y respira de forma constante.",
+    "Mantén la posición todo el tiempo indicado.",
+  ],
+  "Plancha estrella": [
+    "Colócate en plancha lateral apoyando un antebrazo; cuerpo en línea recta de lado.",
+    "Eleva la cadera para que el cuerpo forme una línea firme.",
+    "Sube el brazo y la pierna de arriba abriéndolos como una estrella, si tu equilibrio lo permite.",
+    "Mantén el tiempo indicado y cambia de lado.",
+  ],
+  "Insecto muerto": [
+    "Boca arriba, brazos extendidos hacia el techo y rodillas flexionadas a 90° (mesa).",
+    "Pega la zona lumbar al suelo apretando el abdomen.",
+    "Baja a la vez el brazo y la pierna OPUESTOS hasta casi tocar el suelo, sin arquear la espalda.",
+    "Regresa al centro y alterna el otro lado. Cada par cuenta como una rep.",
+  ],
+  "Escalador": [
+    "Colócate en posición de plancha alta con las manos bajo los hombros.",
+    "Mantén el cuerpo en línea y el abdomen apretado.",
+    "Lleva una rodilla hacia el pecho y regrésala, alternando rápido como si corrieras.",
+    "Mantén el ritmo controlado sin levantar la cadera. Cada par de rodillas cuenta.",
+  ],
+};
+function exSteps(ex){ return STEPS[ex.name] || null; }
 
 /* Calentamiento (dinámico) y enfriamiento (estiramiento estático) por tipo de día.
    sec = duración; perSide = dobla el tiempo y avisa a la mitad para cambiar de lado. */
@@ -481,14 +649,18 @@ function renderPreview(sid){
 function openGif(sid, i){ openGifObj(SESSIONS[sid].exercises[i]); }
 function openFlowGif(kind, type, i){ openGifObj((kind === "warmup" ? WARMUP : COOLDOWN)[type][i]); }
 function openGifObj(ex){
+  const steps = exSteps(ex);
   const lb = document.createElement("div");
-  lb.className = "lightbox";
+  lb.className = "lightbox" + (steps ? " has-steps" : "");
   lb.onclick = closeGif;
   lb.innerHTML = `
     <button class="iconbtn lb-close" onclick="closeGif()">✕</button>
-    <div class="lb-img"><img src="gifs/${ex.gif}.gif" alt="${ex.name}"></div>
-    <div class="lb-name">${ex.name}</div>
-    ${ex.note ? `<div class="lb-note">${ex.note}</div>` : ""}`;
+    <div class="lb-inner" onclick="event.stopPropagation()">
+      <div class="lb-img"><img src="gifs/${ex.gif}.gif" alt="${ex.name}"></div>
+      <div class="lb-name">${ex.name}</div>
+      ${ex.note ? `<div class="lb-note">💡 ${ex.note}</div>` : ""}
+      ${steps ? `<ol class="lb-steps">${steps.map(s => `<li><span>${s}</span></li>`).join("")}</ol>` : ""}
+    </div>`;
   document.body.appendChild(lb);
 }
 function closeGif(){ const lb = document.querySelector(".lightbox"); if (lb) lb.remove(); }
@@ -519,6 +691,25 @@ function exDetail(ex){
   if (w) parts.push(w);
   parts.push(`descanso ${ex.rest}s`);
   return parts.join(" · ");
+}
+
+/* Barra de progreso segmentada: un bloque por ejercicio principal.
+   Cada bloque se rellena según las series completadas de ese ejercicio. */
+function segBar(w, s){
+  const segs = s.exercises.map((ex, i) => {
+    let pct = 0;
+    if (i < w.exIdx) pct = 100;
+    else if (i === w.exIdx) pct = Math.min(100, (w.setIdx / ex.sets) * 100);
+    return `<div class="seg"><i style="width:${pct}%"></i></div>`;
+  }).join("");
+  return `<div class="segbar">${segs}</div>`;
+}
+function workoutTopBar(w, s, elapsed){
+  return `<div class="row" style="padding:12px 0 10px">
+      <button class="iconbtn" onclick="confirmExit()">✕</button>
+      <div class="grow">${segBar(w, s)}</div>
+      <span class="chip" id="clock">⏱ ${elapsed}</span>
+    </div>`;
 }
 
 /* ============================ WORKOUT ENGINE ============================ */
@@ -678,16 +869,13 @@ function renderWorkScreen(){
     </div>`;
   $app.innerHTML = `
   <div class="player fade">
-    <div class="row" style="padding:12px 0 10px">
-      <button class="iconbtn" onclick="confirmExit()">✕</button>
-      <div class="grow">
-        <div class="pbar"><div style="width:${(w.doneSets / w.totalSets * 100).toFixed(1)}%"></div></div>
-      </div>
-      <span class="chip" id="clock">⏱ ${elapsed}</span>
-    </div>
+    ${workoutTopBar(w, s, elapsed)}
 
-    <div class="gifbox" style="aspect-ratio:1.15;max-height:44dvh">
-      <img src="gifs/${ex.gif}.gif" alt="${ex.name}">
+    <div style="position:relative">
+      <div class="gifbox" style="aspect-ratio:1.15;max-height:44dvh">
+        <img src="gifs/${ex.gif}.gif" alt="${ex.name}">
+      </div>
+      <button class="iconbtn" style="position:absolute;top:8px;left:8px;width:38px;height:38px;background:rgba(15,17,21,.72);font-style:normal;font-weight:800" onclick="openGif('${w.sid}',${w.exIdx})" aria-label="Ver pasos">ⓘ</button>
     </div>
 
     <div style="text-align:center;margin-top:14px">
@@ -819,9 +1007,13 @@ function renderRestScreen(){
   w.restDeadline = Date.now() + total * 1000;
   w.restTotal = total;
   let lastBeeped = 99;
+  const elapsed = fmtDur(Math.floor((Date.now() - w.startTime) / 1000));
 
   $app.innerHTML = `
-  <div class="player fade" style="justify-content:center;text-align:center">
+  <div class="player fade">
+    ${workoutTopBar(w, s, elapsed)}
+    <div class="grow"></div>
+    <div style="text-align:center">
     <div class="sub" style="font-weight:700;letter-spacing:.12em;font-size:12px;color:var(--accent)">DESCANSO</div>
     <div class="bigring" style="margin-top:22px">
       ${ringSVG("#3ddc84")}
@@ -841,6 +1033,8 @@ function renderRestScreen(){
         </div>
       </div>
     </div>
+    </div>
+    <div class="grow"></div>
 
     <div class="row" style="margin-top:18px;gap:10px">
       <button class="btn ghost" style="flex:1" onclick="addRest()">+15s</button>
@@ -853,6 +1047,8 @@ function renderRestScreen(){
     const left = Math.max(0, Math.ceil((w.restDeadline - Date.now()) / 1000));
     const el = document.getElementById("tnum");
     if (el) el.textContent = left;
+    const ck = document.getElementById("clock");
+    if (ck) ck.textContent = "⏱ " + fmtDur(Math.floor((Date.now() - w.startTime) / 1000));
     if (circ) circ.style.strokeDashoffset = (1 - left / w.restTotal) * 660;
     if (left <= 3 && left > 0 && left < lastBeeped){ lastBeeped = left; beep(880, 0.1); }
     if (left <= 0){ clearInterval(id); beepFinal(); w.phase = "work"; render(); }
