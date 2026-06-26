@@ -115,6 +115,13 @@ header.app{display:flex;align-items:center;justify-content:space-between;padding
 .capctl button:active{transform:scale(.92)}
 .capval{flex:1;text-align:center;font-size:19px;font-weight:800;font-variant-numeric:tabular-nums}
 .capval .unit{font-size:12px;color:var(--sub);font-weight:600}
+/* toggle Modo Viaje */
+.travelbar{display:flex;align-items:center;gap:12px;background:var(--card);border-radius:16px;padding:13px 16px;margin-bottom:14px;cursor:pointer;border:1px solid transparent;transition:border-color .2s,background .2s}
+.travelbar.on{border-color:rgba(215,255,63,.4);background:linear-gradient(145deg,#222a14,#1a1e26)}
+.switch{width:46px;height:27px;border-radius:99px;background:var(--card2);position:relative;flex-shrink:0;transition:background .2s}
+.switch.on{background:var(--accent)}
+.switch>i{position:absolute;top:3px;left:3px;width:21px;height:21px;border-radius:99px;background:#fff;transition:transform .2s}
+.switch.on>i{transform:translateX(19px)}
 </style>
 </head>
 <body>
@@ -125,7 +132,7 @@ header.app{display:flex;align-items:center;justify-content:space-between;padding
    Fuente: 🏋️ Rutina de Entrenamiento v2.md (fija, no editable)
    ============================================================ */
 const CYCLE = { start: "2026-06-13", end: "2026-09-03", weeks: 12 };
-const APP_VERSION = "v13"; // debe coincidir con VERSION en sw.js (rutina-vN)
+const APP_VERSION = "v14"; // debe coincidir con VERSION en sw.js (rutina-vN)
 
 const PHASES = [
   { from: 1, to: 3,  label: "Técnica",   tip: "Aprende los movimientos con técnica correcta" },
@@ -203,6 +210,97 @@ const SESSIONS = {
 };
 const ORDER = ["upperA", "lowerA", "upperB", "lowerB"];
 const WEEKDAY_MAP = { 1: "upperA", 2: "lowerA", 4: "upperB", 5: "lowerB" };
+
+/* ============================================================
+   MODO VIAJE — versión bodyweight (sin equipo)
+   Fuente: 🧳 Rutina Modo Viaje v2.md (fija, no editable)
+   Mismas claves/días que SESSIONS; miércoles sigue siendo descanso.
+   Toggle persistente desde la pantalla de inicio.
+   ============================================================ */
+const TRAVEL_SESSIONS = {
+  upperA: {
+    name: "Upper A", emoji: "💪", weekday: 1,
+    muscles: "Pecho · Espalda · Hombros · Brazos",
+    exercises: [
+      { name: "Push-up estándar", gif: "0662", sets: 4, reps: 12, rest: 75,
+        note: "Cuerpo recto, baja hasta que el pecho casi toque el suelo" },
+      { name: "Superman", gif: "0489", sets: 4, reps: 15, rest: 75,
+        note: "Sin banco: boca abajo en el piso, levanta brazos y piernas a la vez y aguanta 1 seg arriba (el GIF muestra banco — mismo movimiento de espalda baja)" },
+      { name: "Pike push-up", gif: "1296", sets: 3, reps: 10, rest: 60,
+        note: "Sin balón: pies en el piso, cadera bien arriba formando una V, baja la cabeza entre las manos (el GIF usa balón — misma mecánica de hombro)" },
+      { name: "Elevación lateral sin peso", gif: "0334", sets: 3, reps: 20, rest: 45, star: true,
+        note: "Sin mancuerna: muy lentas y controladas, solo hasta la altura del hombro" },
+      { name: "Curl con toalla", gif: "0294", sets: 3, reps: 12, perSide: true, rest: 45,
+        note: "Pisa un extremo de la toalla y jala con la mano resistiendo con el pie (el GIF muestra mancuerna)" },
+      { name: "Fondos de tríceps en silla", gif: "0129", sets: 3, reps: 12, rest: 45,
+        note: "Manos en el borde de la silla, baja flexionando los codos hacia atrás" },
+      { name: "Plancha", gif: "2135", sets: 3, timeSec: 45, rest: 20, core: true },
+    ],
+  },
+  lowerA: {
+    name: "Lower A", emoji: "🦵", weekday: 2,
+    muscles: "Cuádriceps · Glúteos · Isquios · Pantorrilla",
+    exercises: [
+      { name: "Sentadilla bodyweight", gif: "3533", sets: 4, reps: 20, rest: 75,
+        note: "Profunda y controlada, peso en los talones" },
+      { name: "Zancada hacia atrás", gif: "0381", sets: 3, reps: 15, perSide: true, rest: 60 },
+      { name: "Hip thrust en cama", gif: "1409", sets: 4, reps: 20, rest: 60,
+        note: "Espalda alta apoyada en la cama del hotel, sube la cadera apretando glúteos (el GIF usa mancuerna — hazlo sin peso)" },
+      { name: "Curl isquiotibial de pie", gif: "0795", sets: 3, reps: 20, perSide: true, rest: 45,
+        note: "Sin peso: lleva el talón al glúteo, baja lento" },
+      { name: "Elevación talones una pierna", gif: "0409", sets: 4, reps: 25, perSide: true, rest: 30,
+        note: "Borde de la tina o escalón; baja el talón COMPLETAMENTE" },
+      { name: "Insecto muerto", gif: "0276", sets: 3, reps: 12, rest: 20, core: true },
+    ],
+  },
+  upperB: {
+    name: "Upper B", emoji: "💪", weekday: 4,
+    muscles: "Pecho · Espalda · Hombros · Brazos (ángulos diferentes)",
+    exercises: [
+      { name: "Push-up pies elevados en cama", gif: "0279", sets: 4, reps: 10, rest: 75,
+        note: "Pies sobre la cama: simula el press inclinado, trabaja el pecho alto" },
+      { name: "Extensión dorsal en Y", gif: "0489", sets: 4, reps: 15, rest: 75,
+        note: "Boca abajo en el piso, brazos extendidos en forma de Y; levanta y baja controlado (el GIF muestra banco — mismo movimiento)" },
+      { name: "Push-up wide", gif: "1311", sets: 3, reps: 12, rest: 60,
+        note: "Manos más anchas que los hombros, más énfasis en el pecho" },
+      { name: "Elevación lateral sin peso", gif: "0334", sets: 3, reps: 20, rest: 45, star: true,
+        note: "Sin mancuerna: muy lentas y controladas, solo hasta la altura del hombro" },
+      { name: "Curl con toalla", gif: "0294", sets: 3, reps: 12, perSide: true, rest: 45,
+        note: "Pisa un extremo de la toalla y jala con la mano resistiendo con el pie (el GIF muestra mancuerna)" },
+      { name: "Extensión tríceps overhead con toalla", gif: "2188", sets: 3, reps: 12, rest: 45,
+        note: "Toalla detrás de la cabeza, codos fijos, extiende hacia arriba (el GIF muestra mancuerna)" },
+      { name: "Escalador", gif: "0630", sets: 3, reps: 30, rest: 20, core: true },
+    ],
+  },
+  lowerB: {
+    name: "Lower B", emoji: "🦵", weekday: 5,
+    muscles: "Glúteos · Cuádriceps · Isquios · Pantorrilla",
+    exercises: [
+      { name: "Sentadilla sumo bodyweight", gif: "3142", sets: 3, reps: 20, rest: 60,
+        note: "Pies anchos, puntas hacia afuera; sin peso (el GIF muestra máquina — misma postura sumo)" },
+      { name: "Sentadilla búlgara en silla", gif: "0410", sets: 4, reps: 12, perSide: true, rest: 75, warn: true,
+        note: "Empeine del pie trasero en el asiento de la silla; sin peso, tempo lento" },
+      { name: "Zancada inversa", gif: "0381", sets: 3, reps: 15, perSide: true, rest: 60 },
+      { name: "Puente glúteos una pierna", gif: "3645", sets: 3, reps: 20, perSide: true, rest: 45,
+        note: "Sin peso: una pierna extendida, sube la cadera apretando el glúteo" },
+      { name: "Elevación talones dos piernas", gif: "0417", sets: 4, reps: 30, rest: 30,
+        note: "Sin escalón puedes hacerla plana con más reps" },
+      { name: "Plancha estrella", gif: "0705", sets: 3, timeSec: 45, rest: 20, core: true,
+        note: "Plancha lateral con brazo y pierna elevados (el GIF muestra la base del movimiento)" },
+    ],
+  },
+};
+
+/* Modo Viaje: toggle persistente. Cambia el set de rutinas activo (mismas claves/días).
+   S() es el set vigente — todo el resto de la app lee de aquí. */
+let travelMode = localStorage.getItem("rutina_travel") === "1";
+function S(){ return travelMode ? TRAVEL_SESSIONS : SESSIONS; }
+function toggleTravel(){
+  travelMode = !travelMode;
+  localStorage.setItem("rutina_travel", travelMode ? "1" : "0");
+  toast(travelMode ? "🧳 Modo Viaje activado — rutina sin equipo" : "🏋️ Modo normal — con mancuernas");
+  render();
+}
 
 /* Pasos guiados por ejercicio (solo principales). Clave = name exacto de SESSIONS.
    Español, adaptados a la ejecución real de Mario (piso/mancuernas/cojín). */
@@ -521,7 +619,7 @@ function renderHome(){
 
   let mainCard;
   if (sug){
-    const s = SESSIONS[sug.sid];
+    const s = S()[sug.sid];
     const label = sug.why === "hoy" ? "HOY TE TOCA" : (sug.why === "adelantar" ? "DÍA DE DESCANSO — PUEDES ADELANTAR" : "PENDIENTE ESTA SEMANA");
     mainCard = `
       <div class="card fade" style="background:linear-gradient(145deg,#222a14,#1a1e26);border:1px solid rgba(215,255,63,.25)">
@@ -563,6 +661,14 @@ function renderHome(){
     </div>
     ${started ? `<div class="sub" style="margin:-6px 2px 14px;font-size:12px">💡 ${ph.tip}</div>` : ""}
 
+    <div class="travelbar ${travelMode ? "on" : ""}" onclick="toggleTravel()">
+      <div class="grow">
+        <div style="font-weight:800;font-size:14.5px">🧳 Modo Viaje</div>
+        <div class="sub" style="font-size:12px;margin-top:1px">${travelMode ? "Rutina sin equipo (peso corporal)" : "Actívalo para entrenar en el hotel, sin equipo"}</div>
+      </div>
+      <span class="switch ${travelMode ? "on" : ""}"><i></i></span>
+    </div>
+
     ${mainCard}
 
     <div class="row" style="justify-content:space-between;margin:22px 2px 10px">
@@ -570,7 +676,7 @@ function renderHome(){
       <span class="chip ${wkCount === 4 ? "acc" : ""}">${wkCount}/4</span>
     </div>
     ${ORDER.map(sid => {
-      const s = SESSIONS[sid], done = doneThisWeek(sid);
+      const s = S()[sid], done = doneThisWeek(sid);
       const dayName = DAYNAMES[s.weekday].slice(0,3);
       return `
       <div class="sesrow ${done ? "done" : ""}" onclick="go('preview',{previewSid:'${sid}'})">
@@ -606,7 +712,7 @@ function flowRows(list, kind, type){
 }
 function seclabel(txt){ return `<div class="sub" style="font-weight:700;letter-spacing:.1em;font-size:11px;margin:18px 2px 8px">${txt}</div>`; }
 function renderPreview(sid){
-  const s = SESSIONS[sid];
+  const s = S()[sid];
   const done = doneThisWeek(sid);
   const type = sessionType(sid);
   const warm = WARMUP[type], cool = COOLDOWN[type];
@@ -619,6 +725,7 @@ function renderPreview(sid){
       </div>
       <div style="width:42px"></div>
     </header>
+    ${travelMode ? `<div class="chip acc" style="margin-bottom:12px">🧳 Modo Viaje · sin equipo</div>` : ""}
     ${done ? `<div class="chip acc" style="margin-bottom:12px">✓ Completada el ${fmtShort(done.date)} esta semana</div>` : ""}
 
     ${seclabel("🔥 CALENTAMIENTO")}
@@ -646,7 +753,7 @@ function renderPreview(sid){
       </div>
     </div>`;
 }
-function openGif(sid, i){ openGifObj(SESSIONS[sid].exercises[i]); }
+function openGif(sid, i){ openGifObj(S()[sid].exercises[i]); }
 function openFlowGif(kind, type, i){ openGifObj((kind === "warmup" ? WARMUP : COOLDOWN)[type][i]); }
 function openGifObj(ex){
   const steps = exSteps(ex);
@@ -824,7 +931,7 @@ function flowAdvance(){
 
 function startWorkout(sid){
   audio(); // desbloquea audio con el gesto del usuario
-  const s = SESSIONS[sid];
+  const s = S()[sid];
   state.w = {
     sid, exIdx: 0, setIdx: 0,
     phase: "work",
@@ -837,7 +944,7 @@ function startWorkout(sid){
   go("workout");
 }
 
-function curEx(){ return SESSIONS[state.w.sid].exercises[state.w.exIdx]; }
+function curEx(){ return S()[state.w.sid].exercises[state.w.exIdx]; }
 
 function renderWorkout(){
   const w = state.w; if (!w) return go("home");
@@ -846,7 +953,7 @@ function renderWorkout(){
 }
 
 function renderWorkScreen(){
-  const w = state.w, s = SESSIONS[w.sid], ex = curEx();
+  const w = state.w, s = S()[w.sid], ex = curEx();
   const weight = exWeight(ex);
   const isTimed = !!ex.timeSec;
   const elapsed = fmtDur(Math.floor((Date.now() - w.startTime) / 1000));
@@ -974,7 +1081,7 @@ function ringSVG(color){
 /* --- completar serie → descanso o fin --- */
 function finishSet(){
   clearTimers();
-  const w = state.w, s = SESSIONS[w.sid], ex = curEx();
+  const w = state.w, s = S()[w.sid], ex = curEx();
   w.doneSets++;
   // registrar lo realizado en esta serie
   const c = w.cur || {};
@@ -999,7 +1106,7 @@ function finishSet(){
 }
 
 function renderRestScreen(){
-  const w = state.w, s = SESSIONS[w.sid];
+  const w = state.w, s = S()[w.sid];
   const restEx = s.exercises[w.restFrom.exIdx];
   const nextEx = curEx();
   const newEx = w.restFrom.exIdx !== w.exIdx;
@@ -1067,9 +1174,9 @@ function confirmExit(){
 /* ============================ FIN DE SESIÓN ============================ */
 function finishWorkout(){
   clearTimers();
-  const w = state.w, s = SESSIONS[w.sid];
+  const w = state.w, s = S()[w.sid];
   const dur = Math.floor((Date.now() - w.startTime) / 1000);
-  db.history.push({ date: dateKey(today()), session: w.sid, dur, sets: w.doneSets, log: w.log });
+  db.history.push({ date: dateKey(today()), session: w.sid, dur, sets: w.doneSets, log: w.log, travel: travelMode });
   saveDB(db);
   // armar fila(s) para la hoja de cálculo y encolar
   enqueue({
@@ -1078,6 +1185,7 @@ function finishWorkout(){
     weekday: DAYNAMES[today().getDay()],
     sid: w.sid,
     session: s.name,
+    mode: travelMode ? "viaje" : "normal",
     cycleWeek: cycleWeek(),
     durSec: dur,
     durFmt: Math.floor(dur / 60) + "m " + (dur % 60) + "s", // texto, evita que Sheets lo lea como hora
@@ -1092,7 +1200,7 @@ function finishWorkout(){
 }
 
 function renderFinish(){
-  const f = state.finished, s = SESSIONS[f.sid];
+  const f = state.finished, s = S()[f.sid];
   const wkCount = ORDER.filter(doneThisWeek).length;
   $app.innerHTML = `
   <div class="player fade" style="justify-content:center;text-align:center">
@@ -1132,9 +1240,9 @@ function renderHistory(){
     <div class="card fade">
       ${hist.length === 0 ? `<div class="sub" style="text-align:center;padding:20px">Aún no hay sesiones registradas.<br>¡Empieza hoy! 💪</div>`
         : hist.map(h => {
-          const s = SESSIONS[h.session], d = parseKey(h.date);
+          const s = (h.travel ? TRAVEL_SESSIONS : SESSIONS)[h.session], d = parseKey(h.date);
           return `<div class="hist-row">
-            <div><b>${s.emoji} ${s.name}</b><div class="sub" style="font-size:12px;margin-top:2px">${DAYNAMES[d.getDay()]} ${d.getDate()} ${MONTHS[d.getMonth()]}</div></div>
+            <div><b>${s.emoji} ${s.name}${h.travel ? " 🧳" : ""}</b><div class="sub" style="font-size:12px;margin-top:2px">${DAYNAMES[d.getDay()]} ${d.getDate()} ${MONTHS[d.getMonth()]}</div></div>
             <div style="text-align:right"><b>${fmtDur(h.dur)}</b><div class="sub" style="font-size:12px;margin-top:2px">${h.sets} series</div></div>
           </div>`;
         }).join("")}
@@ -1151,6 +1259,7 @@ window.confirmExit = confirmExit; window.endTimedEarly = endTimedEarly;
 window.bump = bump;
 window.openFlowGif = openFlowGif;
 window.startSession = startSession; window.startCooldown = startCooldown;
+window.toggleTravel = toggleTravel;
 window.flowPrep = flowPrep; window.flowSkip = flowSkip; window.flowExit = flowExit; window.flowAdvance = flowAdvance;
 render();
 flushQueue();

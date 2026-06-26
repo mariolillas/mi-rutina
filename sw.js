@@ -1,4 +1,4 @@
-const VERSION = "rutina-v13";
+const VERSION = "rutina-v14";
 const ASSETS = [
   "./",
   "./index.html",
@@ -10,7 +10,9 @@ const ASSETS = [
       "2137","2188","3142","3645",
       // calentamiento / enfriamiento
       "3636","1471","0002","1167","3533","1604","3561","1368",
-      "1271","0643","1365","0713","0613","1511","1424","1377"].map(id => `./gifs/${id}.gif`),
+      "1271","0643","1365","0713","0613","1511","1424","1377",
+      // Modo Viaje (bodyweight)
+      "0662","0279","1311","0129","0489","1296"].map(id => `./gifs/${id}.gif`),
 ];
 
 self.addEventListener("install", e => {
