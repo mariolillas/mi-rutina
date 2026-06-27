@@ -1,4 +1,4 @@
-const VERSION = "rutina-v14";
+const VERSION = "rutina-v15";
 const ASSETS = [
   "./",
   "./index.html",
@@ -12,7 +12,7 @@ const ASSETS = [
       "3636","1471","0002","1167","3533","1604","3561","1368",
       "1271","0643","1365","0713","0613","1511","1424","1377",
       // Modo Viaje (bodyweight)
-      "0662","0279","1311","0129","0489","1296"].map(id => `./gifs/${id}.gif`),
+      "0662","0279","1311","0129","3433","1296"].map(id => `./gifs/${id}.gif`),
 ];
 
 self.addEventListener("install", e => {

@@ -132,7 +132,7 @@ header.app{display:flex;align-items:center;justify-content:space-between;padding
    Fuente: 🏋️ Rutina de Entrenamiento v2.md (fija, no editable)
    ============================================================ */
 const CYCLE = { start: "2026-06-13", end: "2026-09-03", weeks: 12 };
-const APP_VERSION = "v14"; // debe coincidir con VERSION en sw.js (rutina-vN)
+const APP_VERSION = "v15"; // debe coincidir con VERSION en sw.js (rutina-vN)
 
 const PHASES = [
   { from: 1, to: 3,  label: "Técnica",   tip: "Aprende los movimientos con técnica correcta" },
@@ -224,8 +224,8 @@ const TRAVEL_SESSIONS = {
     exercises: [
       { name: "Push-up estándar", gif: "0662", sets: 4, reps: 12, rest: 75,
         note: "Cuerpo recto, baja hasta que el pecho casi toque el suelo" },
-      { name: "Superman", gif: "0489", sets: 4, reps: 15, rest: 75,
-        note: "Sin banco: boca abajo en el piso, levanta brazos y piernas a la vez y aguanta 1 seg arriba (el GIF muestra banco — mismo movimiento de espalda baja)" },
+      { name: "Superman", gif: "3433", sets: 4, reps: 15, rest: 75,
+        note: "Boca abajo en el piso, levanta brazos y piernas a la vez y aguanta 1 seg arriba" },
       { name: "Pike push-up", gif: "1296", sets: 3, reps: 10, rest: 60,
         note: "Sin balón: pies en el piso, cadera bien arriba formando una V, baja la cabeza entre las manos (el GIF usa balón — misma mecánica de hombro)" },
       { name: "Elevación lateral sin peso", gif: "0334", sets: 3, reps: 20, rest: 45, star: true,
@@ -259,8 +259,8 @@ const TRAVEL_SESSIONS = {
     exercises: [
       { name: "Push-up pies elevados en cama", gif: "0279", sets: 4, reps: 10, rest: 75,
         note: "Pies sobre la cama: simula el press inclinado, trabaja el pecho alto" },
-      { name: "Extensión dorsal en Y", gif: "0489", sets: 4, reps: 15, rest: 75,
-        note: "Boca abajo en el piso, brazos extendidos en forma de Y; levanta y baja controlado (el GIF muestra banco — mismo movimiento)" },
+      { name: "Extensión dorsal en Y", gif: "3433", sets: 4, reps: 15, rest: 75,
+        note: "Boca abajo en el piso, brazos extendidos en forma de Y; levanta y baja controlado (el GIF muestra los brazos al frente — abre los tuyos en Y)" },
       { name: "Push-up wide", gif: "1311", sets: 3, reps: 12, rest: 60,
         note: "Manos más anchas que los hombros, más énfasis en el pecho" },
       { name: "Elevación lateral sin peso", gif: "0334", sets: 3, reps: 20, rest: 45, star: true,
