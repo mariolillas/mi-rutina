@@ -1,0 +1,661 @@
+<title>Portafolio de muestra</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600..800&family=Instrument+Sans:wght@400..700&family=IBM+Plex+Mono:wght@400;500&family=Playfair+Display:ital,wght@0,600..800;1,600..800&family=Lato:wght@400;700&family=Fraunces:opsz,wght@9..144,600..800&family=DM+Sans:wght@400..700&family=Poppins:wght@500;700;800&display=swap">
+<style>
+/* Concepto: una mesa de luz para revisar piezas. La página es neutra (papel, grafito y un azul);
+   el color vive solo en las vistas previas de cada marca de ejemplo. */
+:root{
+  --bg:#F2F3EF;--surface:#FFFFFF;--surface-2:#E7E9E2;--ink:#15171C;--ink-2:#464C57;--muted:#5B6170;--line:#D6D9D1;
+  --accent:#2340E0;--accent-ink:#FFFFFF;--accent-soft:#E3E8FD;--ok:#1B7A4B;--ok-soft:#DCF0E4;
+  --shadow:0 1px 2px rgba(21,23,28,.06),0 8px 22px rgba(21,23,28,.07);--r:12px;
+  --f-display:"Bricolage Grotesque","Instrument Sans",system-ui,sans-serif;
+  --f-body:"Instrument Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#0F1114;--surface:#171A1F;--surface-2:#1F2329;--ink:#ECEEF2;--ink-2:#B7BDC9;--muted:#8E95A3;--line:#2A2F37;
+  --accent:#8FA0FF;--accent-ink:#0F1114;--accent-soft:#1E2444;--ok:#6FD3A0;--ok-soft:#173226;
+  --shadow:0 1px 2px rgba(0,0,0,.4),0 8px 22px rgba(0,0,0,.35);color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0F1114;--surface:#171A1F;--surface-2:#1F2329;--ink:#ECEEF2;--ink-2:#B7BDC9;--muted:#8E95A3;--line:#2A2F37;
+  --accent:#8FA0FF;--accent-ink:#0F1114;--accent-soft:#1E2444;--ok:#6FD3A0;--ok-soft:#173226;
+  --shadow:0 1px 2px rgba(0,0,0,.4),0 8px 22px rgba(0,0,0,.35);color-scheme:dark}
+
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font:400 16px/1.55 var(--f-body);-webkit-text-size-adjust:100%}
+h1,h2,h3,h4{text-wrap:balance}
+p{margin:0}
+.wrap{max-width:1080px;margin-inline:auto;padding-inline:16px}
+@media (min-width:720px){.wrap{padding-inline:24px}}
+a{color:var(--accent)}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:4px}
+.small{font-size:.86rem;color:var(--muted)}
+.eyebrow{font:500 .72rem/1.3 var(--f-mono);letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+
+/* cabecera */
+.top{padding-block:28px 16px;display:grid;gap:12px}
+.top h1{margin:0;font:800 clamp(1.9rem,5.2vw,3.1rem)/1.05 var(--f-display);letter-spacing:-.02em;max-width:22ch}
+.lede{font-size:1.06rem;color:var(--ink-2);max-width:64ch}
+.prog{display:grid;gap:8px;background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:12px 14px;max-width:560px}
+.prog-h{display:flex;flex-wrap:wrap;gap:4px 12px;align-items:baseline;justify-content:space-between}
+.prog-h b{font-variant-numeric:tabular-nums}
+.bar{height:8px;background:var(--surface-2);border-radius:99px;overflow:hidden}
+.bar i{display:block;height:100%;width:0;background:var(--accent);border-radius:99px}
+@media (prefers-reduced-motion:no-preference){.bar i{transition:width .35s ease}}
+
+/* pestañas */
+.tabs{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--bg);border-bottom:1px solid var(--line)}
+.tabs .in{display:flex;gap:6px;overflow-x:auto;padding-block:8px;scrollbar-width:none}
+.tabs .in::-webkit-scrollbar{display:none}
+.tab{flex:0 0 auto;min-height:44px;padding:0 14px;border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:99px;font:600 .9rem var(--f-body);cursor:pointer;white-space:nowrap}
+.tab[aria-selected="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.tab .dot{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:8px;vertical-align:baseline;box-shadow:0 0 0 1px rgba(128,128,128,.45)}
+main{padding-block:22px 56px}
+.panel{display:grid;gap:22px}
+.panel[hidden]{display:none}
+.panel,.piece,.card,.stack,.ph2,.top,.prog{grid-template-columns:minmax(0,1fr)}
+.ph2{display:grid;gap:6px}
+.ph2 h2{margin:0;font:800 clamp(1.5rem,3.6vw,2.1rem)/1.1 var(--f-display);letter-spacing:-.015em}
+
+/* tarjetas y bloques */
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:16px 18px;display:grid;gap:10px;min-width:0}
+.card h3{margin:0;font:700 1.12rem/1.2 var(--f-display)}
+.grid2{display:grid;gap:14px;grid-template-columns:repeat(2,minmax(0,1fr))}
+.grid3{display:grid;gap:14px;grid-template-columns:repeat(3,minmax(0,1fr))}
+@media (max-width:860px){.grid2,.grid3{grid-template-columns:minmax(0,1fr)}}
+.card ul,.card ol{margin:0;padding-left:1.15rem;display:grid;gap:6px}
+.card li{padding-left:2px}
+.card li b{font-weight:650}
+.note{border-left:3px solid var(--accent);background:var(--accent-soft);padding:12px 14px;border-radius:0 8px 8px 0}
+.tbl-wrap{overflow-x:auto;border:1px solid var(--line);border-radius:var(--r);background:var(--surface)}
+table{border-collapse:collapse;width:100%;font-size:.92rem}
+th,td{padding:10px 12px;text-align:left;vertical-align:top;border-top:1px solid var(--line)}
+thead th{border-top:0;font:500 .72rem var(--f-mono);letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+td.n,th.n{white-space:nowrap;font-variant-numeric:tabular-nums}
+
+/* copiar */
+.cb{border:1px solid var(--line);border-radius:10px;background:var(--surface);min-width:0}
+.cb-h{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:6px 8px 6px 12px;border-bottom:1px solid var(--line);background:var(--surface-2);border-radius:10px 10px 0 0}
+.cb-l{font:500 .72rem var(--f-mono);letter-spacing:.05em;text-transform:uppercase;color:var(--muted);min-width:0}
+.btn-copy{min-height:36px;padding:0 12px;border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:8px;font:600 .82rem var(--f-body);cursor:pointer;flex:0 0 auto}
+.btn-copy:hover{border-color:var(--accent);color:var(--accent)}
+.cb-t{padding:10px 12px;white-space:pre-wrap;overflow-wrap:anywhere;font-size:.93rem;line-height:1.5}
+.cb-t.mono{font-family:var(--f-mono);font-size:.82rem}
+
+/* paleta */
+.sw{display:flex;flex-wrap:wrap;gap:8px}
+.sw button{display:flex;align-items:center;gap:8px;min-height:44px;padding:5px 12px 5px 5px;border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:99px;font:500 .8rem var(--f-body);cursor:pointer;text-align:left}
+.sw i{width:34px;height:34px;border-radius:50%;border:1px solid rgba(0,0,0,.12);flex:0 0 auto}
+.sw small{display:block;color:var(--muted);font:400 .7rem var(--f-mono)}
+.brandhead{display:grid;gap:12px}
+.bmeta{display:grid;gap:4px 18px;grid-template-columns:repeat(auto-fit,minmax(200px,1fr))}
+.bmeta div{min-width:0}
+.bmeta dt{font:500 .7rem var(--f-mono);letter-spacing:.07em;text-transform:uppercase;color:var(--muted)}
+.bmeta dd{margin:0}
+
+/* pieza */
+.piece{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:16px 18px;display:grid;gap:14px;min-width:0}
+.pieceh{display:flex;gap:12px;justify-content:space-between;align-items:flex-start;flex-wrap:wrap}
+.pieceh h3{margin:2px 0 4px;font:800 1.3rem/1.15 var(--f-display);letter-spacing:-.01em}
+.tag{display:inline-block;font:500 .7rem var(--f-mono);letter-spacing:.06em;text-transform:uppercase;color:var(--muted);border:1px solid var(--line);border-radius:99px;padding:2px 9px}
+.done{display:inline-flex;align-items:center;gap:8px;min-height:44px;padding:0 14px;border:1px solid var(--line);border-radius:99px;background:var(--surface);font-weight:600;font-size:.9rem;cursor:pointer;user-select:none}
+.done input{width:20px;height:20px;accent-color:var(--accent);margin:0}
+.done:has(input:checked){background:var(--ok-soft);border-color:var(--ok);color:var(--ok)}
+.table-luz{background:var(--surface-2);border-radius:10px;padding:14px}
+.strip{display:flex;gap:12px;overflow-x:auto;padding-bottom:8px;scroll-snap-type:x proximity}
+@media (min-width:1000px){.strip.slides{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));overflow:visible}.strip.slides .fig{flex:none}}
+.fig{margin:0;flex:0 0 clamp(190px,56vw,236px);scroll-snap-align:start;display:grid;gap:6px;align-content:start;min-width:0}
+.fig.sc{flex-basis:clamp(128px,34vw,150px)}
+.fig figcaption{font:500 .72rem/1.3 var(--f-mono);color:var(--muted)}
+.fig figcaption b{color:var(--ink);font-weight:500}
+.fig .sd{font-size:.8rem;line-height:1.35;color:var(--ink-2)}
+.cols{display:grid;gap:14px;grid-template-columns:repeat(2,minmax(0,1fr));align-items:start}
+@media (max-width:860px){.cols{grid-template-columns:minmax(0,1fr)}}
+.stack{display:grid;gap:10px;min-width:0}
+.meta{font-size:.84rem;color:var(--muted)}
+
+/* ---------- láminas (vista previa 1080 × 1350) ---------- */
+.slide{aspect-ratio:4/5;container-type:inline-size;position:relative;overflow:hidden;border-radius:6px;box-shadow:var(--shadow)}
+.slide .si{position:absolute;inset:0;padding:9cqw 8cqw;display:flex;flex-direction:column;gap:3.6cqw;z-index:1}
+.slide h4{margin:0;line-height:1.06}
+.slide p{margin:0}
+.slide .ft{margin-top:auto;font:500 3cqw/1.2 var(--sb);letter-spacing:.02em;opacity:.85}
+.slide .dec{position:absolute;pointer-events:none}
+.t-cover{background:var(--dk);color:var(--cr)}
+.t-cover .si{justify-content:flex-end}
+.t-cover h4{font:800 11.4cqw/1.04 var(--sd)}
+.t-cover .sb{font:400 5cqw/1.3 var(--sb);opacity:.92}
+.t-cover .k{font:700 3.4cqw var(--sb);letter-spacing:.14em;text-transform:uppercase}
+.t-cover .ft{margin-top:2cqw}
+.t-item{background:var(--cr);color:var(--ink)}
+.t-item .si{justify-content:center}
+.t-item h4{font:800 8.6cqw/1.08 var(--sd);color:var(--dk)}
+.t-item .bd{font:400 5.4cqw/1.38 var(--sb)}
+.t-cta{background:var(--lt);color:var(--ink)}
+.t-cta .si{justify-content:center}
+.t-cta h4{font:800 9.6cqw/1.06 var(--sd);color:var(--dk)}
+.t-cta .bd{font:500 5.4cqw/1.38 var(--sb)}
+.t-cta .ft{margin-top:0;position:absolute;left:8cqw;bottom:7cqw}
+
+/* Casa Jacaranda */
+.b-jac{--dk:#4A2C7A;--lt:#EADFF5;--cr:#FBF5EA;--ink:#2A1F3D;--ac:#E5B65A;--acd:#8A5D0B;--sd:"Playfair Display",Georgia,serif;--sb:"Lato","Instrument Sans",system-ui,sans-serif}
+.b-jac.t-cover{background:radial-gradient(circle at 84% 13%,rgba(229,182,90,.42) 0 8cqw,transparent 8.3cqw),radial-gradient(circle at 68% 26%,rgba(234,223,245,.24) 0 5.5cqw,transparent 5.8cqw),radial-gradient(circle at 92% 34%,rgba(234,223,245,.16) 0 4cqw,transparent 4.3cqw),var(--dk)}
+.b-jac .t-cover .k,.b-jac.t-cover .k{color:var(--ac)}
+.b-jac.t-cover .si::before{content:"";width:14cqw;height:.9cqw;background:var(--ac);margin-bottom:.5cqw}
+.b-jac.t-item .nu{font:italic 700 30cqw/.78 var(--sd);color:var(--acd)}
+.b-jac.t-item .nu.lg{font:700 3.6cqw/1.2 var(--sb);letter-spacing:.14em;text-transform:uppercase}
+.b-jac.t-cta h4{font-style:italic}
+
+/* Migaja */
+.b-mig{--dk:#4A2A22;--lt:#F6B8C6;--cr:#FFF4E4;--ink:#3B211B;--ac:#F08A4B;--acd:#B8460F;--sd:"Fraunces",Georgia,serif;--sb:"DM Sans","Instrument Sans",system-ui,sans-serif}
+.b-mig.t-cover .k{align-self:flex-start;background:var(--lt);color:var(--ink);padding:1.7cqw 3.8cqw;border-radius:99px;transform:rotate(-4deg);letter-spacing:.06em;text-transform:none;font-size:4cqw}
+.b-mig.t-cover .dec{right:-14cqw;top:-14cqw;width:62cqw;height:62cqw;border-radius:50%;background:radial-gradient(circle,var(--cr) 0 27%,var(--lt) 28% 100%)}
+.b-mig.t-item{background:var(--lt)}
+.b-mig.t-item .nu{width:17cqw;height:17cqw;border-radius:50%;background:var(--cr);color:var(--acd);display:grid;place-items:center;font:800 9cqw/1 var(--sd)}
+.b-mig.t-item .nu.lg{width:auto;height:auto;border-radius:99px;padding:1.6cqw 4cqw;font:700 4cqw var(--sb);align-self:flex-start}
+.b-mig.t-item h4{color:var(--ink)}
+.b-mig.t-cta{background:var(--cr)}
+.b-mig.t-cta .dec{left:0;right:0;bottom:0;height:20cqw;background:var(--lt)}
+.b-mig.t-cta .ft{color:var(--ink);opacity:1}
+
+/* Estudio Serpentina */
+.b-ser{--dk:#1E2A5E;--lt:#FFD23F;--cr:#FFF9EC;--ink:#1E2A5E;--ac:#FF7A66;--acd:#1E2A5E;--sd:"Poppins","Instrument Sans",system-ui,sans-serif;--sb:"Poppins","Instrument Sans",system-ui,sans-serif}
+.b-ser.t-cover h4{font-size:10.4cqw;font-weight:800}
+.b-ser.t-cover .k{align-self:flex-start;background:var(--lt);color:var(--dk);padding:1.6cqw 3.8cqw;border-radius:99px;letter-spacing:.04em;text-transform:none;font-size:3.6cqw}
+.b-ser.t-cover .dec{right:-10cqw;top:-10cqw;width:50cqw;height:50cqw;border-radius:50%;background:var(--ac)}
+.b-ser.t-cover .dec2{left:8cqw;top:9cqw;width:34cqw;height:8cqw;background:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 24'><path d='M2 12 Q12 0 22 12 T42 12 T62 12 T82 12 T102 12 T118 12' fill='none' stroke='%23FFD23F' stroke-width='5' stroke-linecap='round'/></svg>") center/contain no-repeat}
+.b-ser.t-item h4{font:700 8.4cqw/1.1 var(--sd)}
+.b-ser.t-item .bd{font:500 5cqw/1.4 var(--sb)}
+.b-ser.t-item .nu{align-self:flex-start;background:var(--lt);color:var(--dk);padding:1.4cqw 4.4cqw;border-radius:99px;font:800 6cqw/1.2 var(--sd)}
+.b-ser.t-item .dec{right:0;top:0;width:24cqw;height:24cqw;background:var(--ac);clip-path:polygon(100% 0,0 0,100% 100%)}
+.b-ser.t-cta .dec{right:-12cqw;bottom:-12cqw;width:46cqw;height:46cqw;border-radius:50%;background:var(--ac)}
+
+/* marca personal (post fijado) */
+.b-me{--dk:#15171C;--lt:#E3E8FD;--cr:#F2F3EF;--ink:#15171C;--ac:#2340E0;--acd:#2340E0;--sd:"Bricolage Grotesque","Instrument Sans",system-ui,sans-serif;--sb:"Instrument Sans",system-ui,sans-serif}
+.b-me.t-cover .k{align-self:flex-start;background:var(--ac);color:#fff;padding:1.6cqw 3.6cqw;border-radius:99px;letter-spacing:.04em;text-transform:none;font-size:3.6cqw}
+.b-me.t-item .nu{font:800 12cqw/1 var(--sd);color:var(--ac)}
+.b-me.t-item .nu.lg{font:700 3.6cqw var(--sb);letter-spacing:.14em;text-transform:uppercase}
+.b-me.t-cta{background:var(--ac);color:#fff}
+.b-me.t-cta h4{color:#fff}
+
+/* ---------- escenas de reel (9:16) ---------- */
+.scene{aspect-ratio:9/16;container-type:inline-size;position:relative;overflow:hidden;border-radius:8px;box-shadow:var(--shadow);background:var(--dk);color:var(--cr)}
+.scene::before,.scene::after{content:"";position:absolute;left:0;right:0;z-index:2;pointer-events:none;background:repeating-linear-gradient(135deg,rgba(0,0,0,.34) 0 6px,rgba(0,0,0,.16) 6px 12px)}
+.scene::before{top:0;height:13%}
+.scene::after{bottom:0;height:21.9%}
+.scene .sx{position:absolute;inset:13% 7% 21.9%;display:flex;align-items:center;justify-content:center;text-align:center;font:800 11.5cqw/1.1 var(--sd);z-index:1;text-wrap:balance}
+.scene .chip{position:absolute;top:3.4cqw;left:4cqw;z-index:3;font:500 5cqw/1 var(--f-mono);background:rgba(0,0,0,.62);color:#fff;padding:1.4cqw 3cqw;border-radius:99px}
+.sc-dk{background:var(--dk);color:var(--cr)}
+.sc-lt{background:linear-gradient(180deg,var(--lt),var(--cr));color:var(--ink)}
+.sc-cr{background:linear-gradient(180deg,var(--cr),var(--lt));color:var(--ink)}
+.sc-ac{background:var(--lt);color:var(--ink)}
+.sc-end{background:var(--dk);color:var(--cr)}
+.sc-end .sx{font-size:9.5cqw}
+.scene{font-family:var(--sd)}
+
+.pill{display:inline-flex;align-items:center;gap:6px;font-size:.78rem;font-weight:600;padding:2px 9px;border-radius:99px;background:var(--surface-2);color:var(--ink-2)}
+footer.wrap{padding-block:8px 40px}
+</style>
+
+<header class="wrap top">
+  <p class="eyebrow">Muestras para tu servicio de reels y carruseles · giro de fiestas y eventos</p>
+  <h1>Portafolio de muestra: 6 carruseles y 3 reels</h1>
+  <p class="lede">Tres marcas inventadas del giro de fiestas, con todo para producir el portafolio: el texto de cada lámina, los guiones de reel, los prompts para Google y Adobe, y el orden para publicar. Las vistas previas son borradores de texto y color. Los diseños finales los haces tú con tus tipografías.</p>
+  <div class="prog" aria-live="polite">
+    <div class="prog-h"><span><b id="prog-n">0 de 13</b> pasos listos</span><span class="small" id="prog-s"></span></div>
+    <div class="bar" role="progressbar" aria-valuemin="0" aria-valuemax="13" aria-valuenow="0" id="prog-bar"><i id="prog-b"></i></div>
+  </div>
+</header>
+
+<nav class="tabs" aria-label="Secciones del portafolio"><div class="wrap in" role="tablist" id="tabs"></div></nav>
+
+<main class="wrap">
+
+<!-- ================= CUENTA ================= -->
+<section class="panel" id="cuenta" role="tabpanel" aria-labelledby="t-cuenta">
+  <div class="ph2">
+    <span class="eyebrow">Antes de publicar la primera pieza</span>
+    <h2>Tu cuenta de muestra</h2>
+    <p class="lede">Una cuenta de Instagram solo para tu servicio, sin tu cara. Se arma en una tarde. Con 8 horas a la semana, las 9 piezas te toman entre 1 y 2 semanas: unas 3 o 4 horas por marca (estimación mía).</p>
+  </div>
+
+  <div class="grid3">
+    <div class="card">
+      <h3>Nombre y usuario</h3>
+      <p class="small">En el campo Nombre di qué haces, para que se entienda en un vistazo. El usuario debe ser corto y fácil de escribir. Busca que esté libre antes de decidir.</p>
+      <div data-cb="nombre"></div>
+      <ul>
+        <li><b>[tunombre].contenido</b></li>
+        <li><b>estudio.[tunombre]</b></li>
+        <li><b>[tunombre].reels</b></li>
+        <li><b>contenido.para.eventos</b> y tu ciudad</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>Bio y enlace</h3>
+      <p class="small">La bio permite 150 caracteres como máximo. Estas dos caben.</p>
+      <div data-cb="bio1"></div>
+      <div data-cb="bio2"></div>
+      <div data-cb="enlace"></div>
+      <p class="small">Cambia XXXXXXXXXX por tu número de 10 dígitos y pruébalo desde otro teléfono. Abre el chat con el mensaje ya escrito.</p>
+    </div>
+    <div class="card">
+      <h3>Foto y destacados</h3>
+      <p><b>Foto:</b> un monograma con tus iniciales dentro de un círculo, con los colores de tu marca. Sin cara.</p>
+      <p><b>Destacados</b>, con la misma portada de color y un ícono simple:</p>
+      <ul>
+        <li><b>Muestras:</b> capturas de tus 3 mejores piezas.</li>
+        <li><b>Paquetes:</b> Básico y Crecimiento, una historia cada uno.</li>
+        <li><b>Cómo trabajo:</b> los 4 pasos del post fijado.</li>
+        <li><b>Contacto:</b> botón a WhatsApp.</li>
+      </ul>
+      <p class="small">Para tu marca personal te propongo grafito #15171C, papel #F2F3EF y azul #2340E0, con Bricolage Grotesque y Instrument Sans (Google Fonts). Son los mismos de esta página.</p>
+    </div>
+  </div>
+
+  <div class="grid2">
+    <div class="card">
+      <h3>Cómo se produce un carrusel</h3>
+      <ol>
+        <li>Crea el documento de <b>1080 × 1350 px</b> en Photoshop, Illustrator o Express, con al menos 60 px de margen a cada lado.</li>
+        <li>Genera los fondos con <b>Nano Banana Pro</b> (en Google AI Studio o en Gemini, si lo ves en tu cuenta). Pega primero el prompt de estilo de la marca y luego el de la lámina.</li>
+        <li>Escribe el texto con las tipografías de la marca en tu programa de diseño, nunca dentro de la imagen de la IA. Así puedes corregirlo.</li>
+        <li>Exporta cada lámina en JPG o PNG de 1080 × 1350 px.</li>
+        <li>Revisa que la portada se lea en la cuadrícula del perfil, que recorta un poco los lados.</li>
+      </ol>
+    </div>
+    <div class="card">
+      <h3>Cómo se produce un reel</h3>
+      <ol>
+        <li>Genera los clips en <b>Flow</b> con el prompt de cada escena. Pide formato vertical 9:16 si te lo ofrece; si no, genera en horizontal y recorta en Premiere. Si Flow te deja partir de una imagen, usa la misma imagen del lugar en las tres tomas para que se parezcan.</li>
+        <li>En Premiere, crea una secuencia de <b>1080 × 1920 px</b> a 30 cuadros por segundo y corta cada clip al tiempo que marca el guion.</li>
+        <li>Pon el texto de cada escena con la tipografía de la marca, fuera de las franjas rayadas de la vista previa.</li>
+        <li>Agrega música libre de derechos, a volumen bajo.</li>
+        <li>Exporta en H.264 y diseña la portada en 4:5, centrada.</li>
+      </ol>
+    </div>
+  </div>
+
+  <div id="slot-fijado"></div>
+
+  <label class="done" style="justify-self:start"><input type="checkbox" data-id="cuenta"> Mi cuenta está lista: nombre, bio, enlace, foto y destacados</label>
+</section>
+
+<!-- ================= MARCAS ================= -->
+<section class="panel" id="jacaranda" role="tabpanel" aria-labelledby="t-jacaranda" hidden></section>
+<section class="panel" id="migaja" role="tabpanel" aria-labelledby="t-migaja" hidden></section>
+<section class="panel" id="serpentina" role="tabpanel" aria-labelledby="t-serpentina" hidden></section>
+
+<!-- ================= PUBLICAR ================= -->
+<section class="panel" id="publicar" role="tabpanel" aria-labelledby="t-publicar" hidden>
+  <div class="ph2">
+    <span class="eyebrow">Días 1 a 10</span>
+    <h2>Publicar y enviar tus muestras</h2>
+    <p class="lede">Publica una pieza al día, siempre en el mismo horario, y alterna las marcas para que cada fila de tu cuadrícula muestre las tres. El día 1 es cuando ya tengas hechas al menos las tres primeras piezas.</p>
+  </div>
+
+  <div class="tbl-wrap"><table>
+    <thead><tr><th class="n">Día</th><th>Publica</th><th>Por qué en ese lugar</th></tr></thead>
+    <tbody>
+      <tr><td class="n">1</td><td><b>Cómo trabajo</b> · carrusel fijado</td><td>Fíjalo en tu perfil para que sea lo primero que vea quien llegue.</td></tr>
+      <tr><td class="n">2</td><td>Casa Jacaranda · 5 preguntas antes de reservar</td><td>Contenido para guardar y compartir.</td></tr>
+      <tr><td class="n">3</td><td>Migaja · Pan de muerto</td><td>Es de temporada: octubre es su mes.</td></tr>
+      <tr><td class="n">4</td><td>Estudio Serpentina · Checklist de fiesta infantil</td><td>Otro contenido para guardar.</td></tr>
+      <tr><td class="n">5</td><td>Casa Jacaranda · Reel de salón vacío a fiesta</td><td>Primer reel: ya hay 4 publicaciones.</td></tr>
+      <tr><td class="n">6</td><td>Migaja · Reel El corte</td><td><b>Ya puedes escribirle a negocios:</b> tu perfil tiene 6 publicaciones.</td></tr>
+      <tr><td class="n">7</td><td>Estudio Serpentina · Reel de las 5 cosas</td><td>Reel solo con texto e imágenes.</td></tr>
+      <tr><td class="n">8</td><td>Casa Jacaranda · XV años mes por mes</td><td>Cierra la primera vuelta con las tres marcas.</td></tr>
+      <tr><td class="n">9</td><td>Migaja · ¿De qué tamaño pido el pastel?</td><td>Guía útil que evita preguntas repetidas.</td></tr>
+      <tr><td class="n">10</td><td>Estudio Serpentina · 3 errores al planear</td><td>Contenido de opinión que invita a comentar.</td></tr>
+    </tbody>
+  </table></div>
+
+  <div class="grid2">
+    <div class="card">
+      <h3>Antes de publicar cada pieza</h3>
+      <ul>
+        <li><b>Di que es una marca de ejemplo:</b> en la última lámina o al final del video, y en el texto de la publicación.</li>
+        <li><b>Busca el nombre en Instagram.</b> Si ya existe un negocio real con ese nombre, cámbialo.</li>
+        <li><b>Sin logos, personajes con licencia ni música protegida.</b></li>
+        <li><b>Marca lo hecho con IA.</b> Si la imagen o el video parecen reales y los generó la IA, activa la etiqueta “Hecho con IA” cuando Instagram te la ofrezca.</li>
+        <li><b>Carruseles:</b> 1080 × 1350 px, con al menos 60 px de margen a cada lado. Instagram muestra la cuadrícula del perfil en 3:4 y recorta un poco los lados.</li>
+        <li><b>Reels:</b> 1080 × 1920 px, con el texto lejos de los bordes: guías de terceros dejan libres unos 250 px arriba y 420 px abajo. No son medidas oficiales; pruébalo en la vista previa de Instagram.</li>
+        <li><b>Portada del reel</b> en 4:5, con lo importante al centro.</li>
+        <li><b>Lee cada texto en voz alta.</b> Revisa acentos y cifras.</li>
+        <li><b>Agrega texto alternativo</b> a las imágenes.</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>Cómo saber que vas bien</h3>
+      <ul>
+        <li>Meta sugerida para las primeras 2 semanas: <b>30 mensajes enviados</b> y <b>3 llamadas o respuestas positivas</b>.</li>
+        <li>Máximo 10 mensajes al día, cada uno con una primera línea distinta. Si mandas el mismo texto a decenas de negocios, WhatsApp puede limitar tu cuenta.</li>
+        <li>Si no contestan después del seguimiento, no insistas.</li>
+        <li>Anota en una hoja: negocio, fecha, respuesta y siguiente paso.</li>
+      </ul>
+      <p class="small">No publiques precios en las piezas: dalos por mensaje. Es una decisión tuya; si prefieres ponerlos, agrégalos a la lámina de cada paquete del post fijado.</p>
+    </div>
+  </div>
+
+  <h3 style="margin:6px 0 -6px;font:800 1.3rem var(--f-display)">Mensajes para enviar tus muestras</h3>
+  <div class="grid2">
+    <div class="stack">
+      <div data-cb="msg1"></div>
+      <div data-cb="msg2"></div>
+    </div>
+    <div class="stack">
+      <div data-cb="msg3"></div>
+      <div data-cb="msg4"></div>
+    </div>
+  </div>
+
+  <div style="display:flex;flex-wrap:wrap;gap:10px">
+    <label class="done"><input type="checkbox" data-id="publicado"> Las 10 publicaciones están arriba</label>
+    <label class="done"><input type="checkbox" data-id="mensajes"> Envié mis primeros 10 mensajes</label>
+  </div>
+</section>
+
+</main>
+
+<footer class="wrap">
+  <p class="small">Las tres marcas, sus nombres, precios y fechas son inventados para el portafolio. Los prompts son una base: ajústalos a lo que te devuelva Nano Banana Pro o Flow. Medidas de Instagram según <a href="https://metricool.com/instagram-image-size/" target="_blank" rel="noopener">la guía de Metricool (enero 2026)</a>; las zonas del reel son de guías de terceros. Sobre etiquetas de IA en Instagram: <a href="https://www.infobae.com/tecno/2026/08/31/instagram-cambia-la-etiqueta-creador-de-ia-por-perfil-generado-con-ia-para-identificar-cuentas-de-videos-hechos-por-robots/" target="_blank" rel="noopener">Infobae, 31 ago 2026</a>.</p>
+</footer>
+
+<script>
+(()=>{
+"use strict";
+const $=(s,r=document)=>r.querySelector(s);
+const $$=(s,r=document)=>[...r.querySelectorAll(s)];
+const h=(t,a,...k)=>{const e=document.createElement(t);if(a)for(const[n,v]of Object.entries(a)){if(v==null||v===false)continue;if(n==="class")e.className=v;else e.setAttribute(n,v);}for(const c of k.flat()){if(c==null||c===false)continue;e.append(c.nodeType?c:document.createTextNode(c));}return e;};
+
+/* ---------- textos para copiar ---------- */
+const COPY={
+ nombre:{l:"Nombre visible",t:"[Tu nombre] | Reels para eventos"},
+ bio1:{l:"Bio, opción 1 · 115 caracteres",t:"Reels y carruseles para salones, pastelerías y organizadores de eventos. Te preparo 2 piezas de muestra sin costo ↓"},
+ bio2:{l:"Bio, opción 2 · 96 caracteres",t:"Reels y carruseles para salones, pastelerías y eventos. 2 piezas de muestra sin costo ↓ WhatsApp"},
+ enlace:{l:"Enlace de WhatsApp",t:"https://wa.me/52XXXXXXXXXX?text=Hola%2C%20vi%20tu%20perfil%20y%20quiero%20mis%202%20piezas%20de%20muestra",mono:true},
+ msg1:{l:"1 · Primer mensaje",t:"Hola, buen día. Soy [tu nombre]; hago reels y carruseles para [salones / pastelerías / organizadores de eventos] en [ciudad]. Vi que [nombre del negocio] [dato concreto: sube fotos del jardín / tiene pan de temporada / hace fiestas temáticas] y se me ocurrió cómo se vería en un reel corto. ¿Te preparo 2 piezas de muestra sin costo? Aquí puedes ver mi trabajo: [enlace a tu perfil]."},
+ msg2:{l:"2 · Seguimiento a los 3 días",t:"Hola, ¿cómo estás? Te escribo por si se te pasó mi mensaje. Con gusto te preparo las 2 piezas de muestra con tu logo y tus colores para que las veas antes de decidir. Si no es buen momento, no hay problema."},
+ msg3:{l:"3 · Cuando preguntan el precio",t:"Claro. Tengo dos paquetes al mes. Básico: 8 publicaciones (carruseles o imágenes) y 2 reels, desde $3,500 + IVA. Crecimiento: 12 publicaciones, 4 reels, reporte mensual y una llamada, desde $6,000 + IVA. Los dos incluyen calendario y 2 rondas de cambios. ¿Te mando una propuesta con lo que necesita tu negocio?"},
+ msg4:{l:"4 · Para cerrar",t:"Perfecto. Para arrancar necesito tu logo, tus colores, unas 10 fotos de tu negocio y un día a la semana para enviarte todo listo (o acceso para publicar). El pago es por adelantado cada mes, por transferencia, y te mando la factura. ¿Empezamos el [fecha]?"}
+};
+
+/* ---------- marcas y piezas ---------- */
+const PIE="Marca de ejemplo creada para mostrar mi trabajo.";
+const NOTE_IA="Escenas creadas con IA.";
+const BRANDS=[
+{id:"jac",cls:"b-jac",tab:"Casa Jacaranda",dot:"#4A2C7A",nombre:"Casa Jacaranda",giro:"Salón de eventos sociales",tono:"Elegante y cálido",para:"Familias que buscan salón para XV años, bodas y bautizos.",
+ fuentes:"Playfair Display para títulos y Lato para texto",
+ paleta:[["Violeta jacaranda","#4A2C7A","Portada y cierre"],["Lila","#EADFF5","Fondo del cierre"],["Crema","#FBF5EA","Fondo de láminas y texto sobre violeta"],["Tinta","#2A1F3D","Texto"],["Dorado","#E5B65A","Detalles sobre violeta (sobre crema usa #8A5D0B)"]],
+ estilo:"Estilo visual: elegante y cálido, luz natural suave y dorada, paleta de morado jacaranda, crema y dorado, flores de jacaranda, mantelería color crema y madera clara, fotografía editorial de bodas y XV años con poca profundidad de campo. Sin personas, sin texto, sin logotipos.",
+ piezas:[
+ {id:"jac1",tipo:"car",titulo:"5 preguntas antes de reservar un salón",objetivo:"Que lo guarden y lo compartan. Muestra que sabes hacer contenido educativo para un salón.",
+  slides:[
+   {t:"cover",k:"Guarda este post",ti:"5 preguntas antes de reservar un salón"},
+   {t:"item",nu:"1",ti:"¿Qué incluye el precio?",bd:"Pregunta si mesas, sillas, mantelería, meseros y limpieza van incluidos o se cobran aparte."},
+   {t:"item",nu:"2",ti:"¿Cuál es el aforo real?",bd:"Pide el número de personas sentadas con pista de baile y mesa de pastel, no solo el máximo de pie."},
+   {t:"item",nu:"3",ti:"¿Hasta cuándo puedo cambiar la fecha?",bd:"Pide por escrito el anticipo, los cambios de fecha y la cancelación."},
+   {t:"item",nu:"4",ti:"¿Puedo traer a mis proveedores?",bd:"Algunos salones piden usar su banquetero o cobran un cargo por proveedor externo."},
+   {t:"item",nu:"5",ti:"¿Qué pasa si llueve?",bd:"Si hay jardín o terraza, pregunta dónde se mueve la fiesta y cuánto tarda el cambio."},
+   {t:"cta",ti:"¿Quieres conocer Casa Jacaranda?",bd:"Agenda tu visita por WhatsApp."}],
+  caption:`Antes de dar tu anticipo, revisa estas 5 preguntas. Guarda el post y llévalo a tu visita.\n\n¿Cuál se te había olvidado? Cuéntanos en los comentarios.\n\n${PIE}\n#salondeeventos #fiestas #eventos #planeaciondeeventos`,
+  prompts:[
+   {l:"Fondo de la portada (Nano Banana Pro)",t:"Salón de eventos elegante con mesas redondas, mantelería color crema, centros de mesa con flores moradas de jacaranda, ventanales grandes con luz de tarde y piso de madera clara. Encuadre vertical 4:5, con la parte de abajo más despejada para poner texto. Sin personas, sin texto, sin logotipos."},
+   {l:"Fondo del cierre (Nano Banana Pro)",t:"Detalle de una mesa de fiesta: arreglo de flores moradas en un florero de cristal, copas y servilleta color crema, luz cálida, fondo desenfocado. Vertical 4:5, sin personas, sin texto."}]},
+ {id:"jac2",tipo:"car",titulo:"Tu fiesta de XV años, mes por mes",objetivo:"Mostrar una línea de tiempo, un formato que la gente guarda y comparte con quien la ayuda a organizar.",
+  slides:[
+   {t:"cover",k:"Planeación",ti:"Tu fiesta de XV años, mes por mes"},
+   {t:"item",nu:"12 a 10 meses",ti:"Fecha y salón",bd:"Define presupuesto y lista de invitados. Reserva la fecha y el salón."},
+   {t:"item",nu:"9 a 6 meses",ti:"Los proveedores grandes",bd:"Contrata banquete, música y fotografía. Pide todos los contratos por escrito."},
+   {t:"item",nu:"5 a 3 meses",ti:"Los detalles",bd:"Vestido, invitaciones y pastel. Agenda las pruebas de menú."},
+   {t:"item",nu:"El último mes",ti:"Confirmar todo",bd:"Confirma asistencia, arma el plan de mesas y entrega el cronograma a tus proveedores."},
+   {t:"item",nu:"La semana",ti:"Ensayo y pagos finales",bd:"Haz el ensayo, cubre los pagos finales y pide a una persona que reciba a los proveedores."},
+   {t:"cta",ti:"¿Empezamos a planear tu fecha?",bd:"Escríbenos por WhatsApp."}],
+  caption:`Guarda esta línea de tiempo y compártela con quien te ayuda a organizar. ¿Ya tienes fecha? Cuéntanos.\n\n${PIE}\n#fiestadexv #salondeeventos #eventos #quinceanera`,
+  prompts:[
+   {l:"Fondo de la portada (Nano Banana Pro)",t:"Un vestido de fiesta color lila colgado junto a una ventana con luz suave, unos zapatos y una corona de flores sobre una silla de madera clara, flores de jacaranda en una mesa. Vertical 4:5, sin personas, sin rostros, sin texto."}]},
+ {id:"jacR",tipo:"reel",titulo:"De salón vacío a fiesta",objetivo:"Mostrar la transformación del lugar, que es la razón por la que un salón necesita reels.",dur:"15 s",
+  escenas:[
+   {tm:"0–2 s",fn:"Gancho",tx:"Así se transforma un salón para XV años",bg:"sc-dk",clip:"Clip A",d:"Abre con el salón vacío. El texto entra en el primer segundo."},
+   {tm:"2–6 s",fn:"Montaje",tx:"1 · Montaje",bg:"sc-lt",clip:"Clip A",d:"Salón vacío, sillas apiladas, luz natural. La cámara avanza despacio."},
+   {tm:"6–10 s",fn:"Decoración",tx:"2 · Decoración",bg:"sc-cr",clip:"Clip B",d:"Mesas con mantelería y flores moradas, luz cálida."},
+   {tm:"10–13 s",fn:"La fiesta",tx:"3 · ¡A celebrar!",bg:"sc-dk",clip:"Clip C",d:"El mismo salón de noche, con luces y globos. La cámara sube."},
+   {tm:"13–15 s",fn:"Cierre",tx:"Casa Jacaranda · Reserva tu fecha por WhatsApp",bg:"sc-end",clip:"Tarjeta",d:"Fondo violeta, monograma y texto. Marca de ejemplo abajo."}],
+  caption:`De un salón vacío a la fiesta de tus sueños, en 15 segundos. ¿Para qué evento buscas salón? Escríbenos.\n\n${PIE} ${NOTE_IA}\n#salondeeventos #fiestadexv #decoracion`,
+  prompts:[
+   {l:"Clip A · salón vacío (Flow)",t:"Plano general de un salón de eventos elegante y vacío por la tarde, sillas apiladas al fondo, piso de madera clara, ventanales con luz natural dorada. La cámara avanza despacio hacia el centro del salón. Sin personas, sin texto, sin logotipos. Formato vertical 9:16."},
+   {l:"Clip B · mesas montadas (Flow)",t:"El mismo salón con mesas redondas montadas, mantelería color crema y centros de mesa de flores moradas de jacaranda, luz cálida. La cámara se desplaza despacio entre las mesas. Sin personas, sin texto, sin logotipos. Formato vertical 9:16."},
+   {l:"Clip C · salón de noche (Flow)",t:"El mismo salón de noche con luces cálidas, guirnalda de luces, pista de baile iluminada, globos color lila y crema, destellos suaves. La cámara se eleva lentamente. Sin personas, sin texto, sin logotipos. Formato vertical 9:16."}]}
+ ]},
+{id:"mig",cls:"b-mig",tab:"Migaja",dot:"#F6B8C6",nombre:"Migaja",giro:"Pastelería y panadería",tono:"Divertido y antojable",para:"Quien pide pastel para cumpleaños y pan de temporada para la familia.",
+ fuentes:"Fraunces para títulos y DM Sans para texto",
+ paleta:[["Chocolate","#4A2A22","Portada y texto oscuro"],["Rosa","#F6B8C6","Fondo de láminas"],["Crema","#FFF4E4","Fondo del cierre y texto sobre chocolate"],["Tinta","#3B211B","Texto"],["Naranja","#F08A4B","Detalles sobre chocolate (sobre crema usa #B8460F)"]],
+ estilo:"Estilo visual: fotografía de repostería antojable, luz lateral suave, superficies de madera clara y manteles rosa, chocolate oscuro y crema, colores cálidos, mucha textura y cuadro cerrado. Sin personas, sin texto, sin logotipos.",
+ piezas:[
+ {id:"mig1",tipo:"car",titulo:"Pan de muerto: 3 versiones de la casa",objetivo:"Mostrar producto y precios de temporada con pedido por WhatsApp. Publícalo en octubre.",
+  slides:[
+   {t:"cover",k:"Temporada 2026",ti:"Pan de muerto Migaja",sub:"3 versiones de la casa"},
+   {t:"item",nu:"1",ti:"Clásico",bd:"Naranja, anís y azúcar. El de siempre. $45 la pieza."},
+   {t:"item",nu:"2",ti:"Relleno de nata",bd:"Nata montada con un toque de vainilla. $65 la pieza."},
+   {t:"item",nu:"3",ti:"Relleno de chocolate",bd:"Ganache de chocolate oscuro. $65 la pieza."},
+   {t:"item",nu:"+",ti:"Caja para compartir",bd:"6 piezas surtidas en caja Migaja. $340."},
+   {t:"item",nu:"Fechas",ti:"Cómo pedir",bd:"Pedidos hasta el miércoles 28 de octubre. Entregas el 31 de octubre, el 1 y el 2 de noviembre."},
+   {t:"cta",ti:"Aparta tu caja",bd:"Escríbenos por WhatsApp con tu nombre y tu fecha de entrega."}],
+  caption:`Ya huele a pan de muerto en Migaja. Tres versiones y una caja para compartir.\nPedidos hasta el 28 de octubre por WhatsApp.\n\n${PIE}\n#pandemuerto #diademuertos #pasteleria`,
+  prompts:[
+   {l:"Portada (Nano Banana Pro)",t:"Fotografía cenital de tres panes de muerto sobre una mesa de madera clara, con papel picado naranja y rosa al fondo y azúcar espolvoreada, luz lateral suave. Vertical 4:5, con espacio libre arriba para el título. Sin texto."},
+   {l:"Relleno de nata (Nano Banana Pro)",t:"Acercamiento de un pan de muerto partido a la mitad que muestra un relleno de nata montada, fondo rosa claro, luz suave. Vertical 4:5, sin texto."},
+   {l:"Relleno de chocolate (Nano Banana Pro)",t:"Acercamiento de un pan de muerto partido que muestra un relleno de ganache de chocolate oscuro, luz cálida, fondo de madera. Vertical 4:5, sin texto."},
+   {l:"Caja (Nano Banana Pro)",t:"Caja de cartón kraft con seis panes de muerto surtidos, tapa abierta, listón rosa, sobre una mesa de madera clara. Vertical 4:5, sin texto ni logotipos."}]},
+ {id:"mig2",tipo:"car",titulo:"¿De qué tamaño pido el pastel?",objetivo:"Una guía práctica que evita las preguntas que llegan una y otra vez por mensaje.",
+  slides:[
+   {t:"cover",k:"Guía rápida",ti:"¿De qué tamaño pido el pastel?"},
+   {t:"item",nu:"S",ti:"Mini · 15 cm",bd:"8 porciones. Para una cena íntima."},
+   {t:"item",nu:"M",ti:"Mediano · 20 cm",bd:"15 porciones. Para un cumpleaños familiar."},
+   {t:"item",nu:"L",ti:"Grande · 25 cm",bd:"25 porciones. Para una fiesta con amigos."},
+   {t:"item",nu:"XL",ti:"Media plancha",bd:"40 porciones. Para fiestas infantiles y eventos."},
+   {t:"item",nu:"Tip",ti:"Si dudas entre dos",bd:"Pide el más grande: siempre hay quien repite."},
+   {t:"cta",ti:"Dinos cuántos son y te recomendamos",bd:"Escríbenos por WhatsApp."}],
+  caption:`Guarda esta guía para la próxima vez que pidas pastel. ¿Cuántos serán en tu fiesta? Dinos y te decimos qué tamaño te conviene.\n\n${PIE}\n#pasteles #pasteleria #cumpleaños`,
+  prompts:[
+   {l:"Portada (Nano Banana Pro)",t:"Cuatro pasteles del mismo estilo, con betún blanco y fresas, en cuatro tamaños alineados de menor a mayor sobre una mesa cubierta con mantel rosa, vista frontal, luz suave. Vertical 4:5, sin texto. Si la escala no queda clara, genera cada pastel por separado."}],
+  nota:"Las porciones son de la casa de ejemplo. Cada pastelería define las suyas: con un cliente real, pídele su tabla."},
+ {id:"migR",tipo:"reel",titulo:"El corte",objetivo:"Antojo. Un reel corto de producto en macro, sin manos ni personas.",dur:"15 s",
+  escenas:[
+   {tm:"0–2 s",fn:"Gancho",tx:"¿Con cuál te quedas?",bg:"sc-lt",clip:"Clip A",d:"Primer cuadro del corte de chocolate, con el texto encima."},
+   {tm:"2–5 s",fn:"Chocolate",tx:"Chocolate oscuro",bg:"sc-dk",clip:"Clip A",d:"Un cuchillo corta una rebanada, macro, luz lateral."},
+   {tm:"5–8 s",fn:"Vainilla",tx:"Vainilla y fresas",bg:"sc-cr",clip:"Clip B",d:"Un tenedor separa un bocado de pastel de vainilla."},
+   {tm:"8–11 s",fn:"Zanahoria",tx:"Zanahoria y nuez",bg:"sc-lt",clip:"Clip C",d:"Una espátula extiende el betún de queso crema."},
+   {tm:"11–15 s",fn:"Cierre",tx:"Migaja · Pide el tuyo por WhatsApp",bg:"sc-end",clip:"Tarjeta",d:"Fondo chocolate con rosa. Marca de ejemplo abajo."}],
+  caption:`¿Chocolate, vainilla o zanahoria? Cuéntanos cuál es tu favorito y pide el tuyo por WhatsApp.\n\n${PIE} ${NOTE_IA}\n#pasteles #pasteleria #antojo`,
+  prompts:[
+   {l:"Clip A · chocolate (Flow)",t:"Acercamiento macro: un cuchillo corta una rebanada de pastel de chocolate oscuro con betún brillante sobre un plato blanco; el cuchillo entra desde fuera de cuadro. Luz lateral suave, superficie de madera clara. Sin manos visibles, sin personas, sin texto. Formato vertical 9:16."},
+   {l:"Clip B · vainilla (Flow)",t:"Acercamiento: una rebanada de pastel de vainilla con fresas frescas sobre un plato; un tenedor entra desde fuera de cuadro y separa un bocado. Luz suave, fondo rosa desenfocado. Sin manos visibles, sin personas, sin texto. Formato vertical 9:16."},
+   {l:"Clip C · zanahoria (Flow)",t:"Acercamiento: una espátula extiende betún de queso crema sobre un pastel de zanahoria con nueces; la espátula entra desde fuera de cuadro. Luz cálida, mesa de madera. Sin manos visibles, sin personas, sin texto. Formato vertical 9:16."}]}
+ ]},
+{id:"ser",cls:"b-ser",tab:"Estudio Serpentina",dot:"#FF7A66",nombre:"Estudio Serpentina",giro:"Organización de fiestas infantiles",tono:"Alegre y práctico",para:"Mamás y papás que quieren una fiesta sin estrés.",
+ fuentes:"Poppins para títulos y texto",
+ paleta:[["Azul marino","#1E2A5E","Portada y texto"],["Amarillo","#FFD23F","Fondo del cierre y detalles"],["Blanco cálido","#FFF9EC","Fondo de láminas y texto sobre azul"],["Coral","#FF7A66","Solo formas decorativas, no texto"]],
+ estilo:"Estilo visual: fiesta infantil alegre y ordenada, colores azul marino, coral y amarillo, globos, guirnaldas, piñata y mesa de dulces, luz brillante y pareja, fotografía limpia de estudio. Sin personas, sin texto, sin logotipos.",
+ piezas:[
+ {id:"ser1",tipo:"car",titulo:"Checklist: fiesta infantil sin estrés",objetivo:"Un checklist para guardar. Es el tipo de pieza que comparte quien organiza la fiesta.",
+  slides:[
+   {t:"cover",k:"Checklist",ti:"Tu fiesta infantil, sin estrés"},
+   {t:"item",nu:"2 semanas antes",ti:"Lo grande",bd:"Confirma invitados, lugar, pastel y brincolín. Pide todo por escrito."},
+   {t:"item",nu:"1 semana antes",ti:"Lo que se compra",bd:"Compra decoración, dulces y recuerdos. Prepara la música."},
+   {t:"item",nu:"1 día antes",ti:"Lo que se arma",bd:"Arma la mesa de dulces, confirma horarios con cada proveedor y revisa el clima."},
+   {t:"item",nu:"El día",ti:"La fiesta",bd:"Llega 2 horas antes. Que una persona reciba a los proveedores."},
+   {t:"item",nu:"Al final",ti:"El cierre",bd:"Reparte los recuerdos, junta los regalos y toma la foto de grupo."},
+   {t:"cta",ti:"¿Quieres esta lista para imprimir?",bd:"Pídela por WhatsApp."}],
+  caption:`Guarda este checklist y compártelo con quien te ayuda a organizar. ¿Qué otro pendiente agregarías?\n\n${PIE}\n#fiestainfantil #cumpleaños #organizaciondeeventos`,
+  prompts:[
+   {l:"Fondo de la portada (Nano Banana Pro)",t:"Mesa de dulces para una fiesta infantil con globos azul marino, coral y amarillo, dulces en frascos de vidrio, cupcakes y una guirnalda al fondo, luz brillante. Vertical 4:5, con espacio libre en la parte de abajo. Sin personas, sin texto."},
+   {l:"Fondo del cierre (Nano Banana Pro)",t:"Arco de globos azul marino, coral y amarillo con listones y una piñata colgando, sobre fondo claro. Vertical 4:5, sin personas, sin texto."}]},
+ {id:"ser2",tipo:"car",titulo:"3 errores al planear una fiesta infantil",objetivo:"Contenido de opinión que invita a comentar y muestra que conoces el oficio.",
+  slides:[
+   {t:"cover",k:"Antes de organizar",ti:"3 errores al planear una fiesta infantil"},
+   {t:"item",nu:"1",ti:"No confirmar invitados",bd:"Pide confirmación una semana antes y ajusta comida, pastel y sillas."},
+   {t:"item",nu:"2",ti:"No tener horario",bd:"Define llegada, comida, pastel y fin. Los niños se cansan."},
+   {t:"item",nu:"3",ti:"Hacerlo todo tú",bd:"Asigna responsables: recibir, cocina, fotos y música."},
+   {t:"item",nu:"Bonus",ti:"Ten un plan B",bd:"Prevé lluvia y retrasos: un espacio techado y un horario con margen."},
+   {t:"cta",ti:"Te ayudamos a organizarla",bd:"Escríbenos por WhatsApp."}],
+  caption:`¿Cuál de estos errores has visto en una fiesta? Cuéntanos en los comentarios y comparte el post con quien va a organizar una.\n\n${PIE}\n#fiestainfantil #organizaciondeeventos #cumpleaños`,
+  prompts:[
+   {l:"Fondo de la portada (Nano Banana Pro)",t:"Una mesa de fiesta infantil desordenada y colorida vista de cerca: globos, platos de papel, un pastel a medio decorar, cintas y confeti azul, coral y amarillo, luz brillante. Vertical 4:5, sin personas, sin texto."}]},
+ {id:"serR",tipo:"reel",titulo:"5 cosas que no pueden faltar",objetivo:"Mostrar que puedes hacer un reel solo con texto e imágenes, sin video y sin cámara.",dur:"19 s",
+  escenas:[
+   {tm:"0–2 s",fn:"Gancho",tx:"5 cosas que no pueden faltar en una fiesta infantil",bg:"sc-dk",clip:"Imagen 1",d:"Texto grande sobre la mesa de dulces, con zoom lento."},
+   {tm:"2–5 s",fn:"Uno",tx:"1 · Invitados confirmados",bg:"sc-ac",clip:"Imagen 1",d:"Entra el texto desde abajo. Sigue el zoom."},
+   {tm:"5–8 s",fn:"Dos",tx:"2 · Un horario para todo",bg:"sc-cr",clip:"Imagen 2",d:"Cambio a la imagen del arco de globos."},
+   {tm:"8–11 s",fn:"Tres",tx:"3 · Mesa de dulces lista",bg:"sc-ac",clip:"Imagen 1",d:"Vuelve la mesa de dulces, con otro encuadre."},
+   {tm:"11–14 s",fn:"Cuatro",tx:"4 · Plan B para el clima",bg:"sc-cr",clip:"Imagen 3",d:"Imagen de la mesa techada."},
+   {tm:"14–17 s",fn:"Cinco",tx:"5 · Alguien que reciba a los proveedores",bg:"sc-ac",clip:"Imagen 2",d:"Regresa el arco de globos."},
+   {tm:"17–19 s",fn:"Cierre",tx:"Estudio Serpentina · Cotiza tu fiesta por WhatsApp",bg:"sc-end",clip:"Tarjeta",d:"Fondo azul marino con amarillo. Marca de ejemplo abajo."}],
+  caption:`5 cosas que no pueden faltar en una fiesta infantil. Guarda este video y mándaselo a quien la va a organizar.\n\n${PIE}\n#fiestainfantil #cumpleaños #organizaciondeeventos`,
+  prompts:[
+   {l:"Imagen 1 · mesa de dulces (Nano Banana Pro)",t:"Mesa de dulces para una fiesta infantil con globos azul marino, coral y amarillo, frascos de dulces y cupcakes, guirnalda al fondo, luz brillante. Vertical 9:16, sin personas, sin texto. Deja el centro despejado."},
+   {l:"Imagen 2 · arco de globos (Nano Banana Pro)",t:"Arco de globos azul marino, coral y amarillo con listones y una piñata colgando, sobre un fondo claro. Vertical 9:16, sin personas, sin texto."},
+   {l:"Imagen 3 · mesa techada (Nano Banana Pro)",t:"Mesa larga de fiesta infantil bajo una carpa blanca en un jardín, con manteles claros, sillas pequeñas y globos azul marino, coral y amarillo. Vertical 9:16, sin personas, sin texto."}],
+  pasos:["Genera las 3 imágenes y colócalas en Premiere.","Anima cada imagen con un zoom lento (de 100% a 110% de escala).","Anima cada texto para que entre desde abajo, en Poppins 800, fuera de las franjas rayadas.","Agrega música alegre libre de derechos a volumen bajo."]}
+ ]}
+];
+
+/* post fijado con la marca personal */
+const FIJADO={id:"fijado",tipo:"car",titulo:"Cómo trabajo",objetivo:"Que quien llegue a tu perfil entienda en 20 segundos qué vendes y cómo pedir tus muestras. Se fija al inicio del perfil.",
+ slides:[
+  {t:"cover",k:"Para negocios de eventos",ti:"Contenido para tu negocio, sin que tú lo hagas"},
+  {t:"item",nu:"Qué hago",ti:"Reels y carruseles",bd:"Para salones, pastelerías y organizadores de eventos."},
+  {t:"item",nu:"Básico",ti:"8 publicaciones y 2 reels al mes",bd:"Con calendario del mes y 2 rondas de cambios."},
+  {t:"item",nu:"Crecimiento",ti:"12 publicaciones y 4 reels",bd:"Con reporte mensual y una llamada."},
+  {t:"item",nu:"Cómo trabajamos",ti:"Cuatro pasos",bd:"1. Llamada de 20 minutos. 2. Calendario del mes. 3. Producción. 4. Reporte con resultados."},
+  {t:"item",nu:"Ojo",ti:"Las marcas de este perfil son de ejemplo",bd:"Casa Jacaranda, Migaja y Estudio Serpentina se inventaron para mostrar mi trabajo."},
+  {t:"cta",ti:"Te preparo 2 piezas de muestra sin costo",bd:"Escríbeme por WhatsApp."}],
+ caption:`Hago reels y carruseles para salones, pastelerías y organizadores de eventos. Te preparo 2 piezas de muestra sin costo: escríbeme por WhatsApp.\n\nLas marcas de este perfil son de ejemplo, creadas para mostrar mi trabajo.\n#contenidoparaeventos #reels #carruseles`,
+ prompts:[{l:"Fondo de la portada (Nano Banana Pro)",t:"Escritorio de diseñador visto desde arriba: laptop con una cuadrícula de imágenes en pantalla, libreta, lápiz y una taza, luz de ventana, paleta de grafito, blanco y azul. Vertical 4:5, sin personas, sin texto legible."}]};
+
+/* ---------- render ---------- */
+const cb=(k)=>{const c=typeof k==="string"?COPY[k]:k;return h("div",{class:"cb"},h("div",{class:"cb-h"},h("span",{class:"cb-l"},c.l),h("button",{type:"button",class:"btn-copy"},"Copiar")),h("p",{class:"cb-t"+(c.mono?" mono":"")},c.t));};
+
+function slideEl(cls,nombre,s){
+  const d=h("div",{class:`slide ${cls} t-${s.t}`});
+  const si=h("div",{class:"si"});
+  if(s.t==="cover"){si.append(h("span",{class:"k"},s.k),h("h4",null,s.ti));if(s.sub)si.append(h("p",{class:"sb"},s.sub));si.append(h("span",{class:"ft"},nombre+" · marca de ejemplo"));}
+  else if(s.t==="item"){si.append(h("span",{class:"nu"+(s.nu.length>2?" lg":"")},s.nu),h("h4",null,s.ti),h("p",{class:"bd"},s.bd));}
+  else{si.append(h("h4",null,s.ti),h("p",{class:"bd"},s.bd),h("span",{class:"ft"},"Marca de ejemplo"));}
+  d.append(h("i",{class:"dec","aria-hidden":"true"}));
+  if(cls==="b-ser"&&s.t==="cover")d.append(h("i",{class:"dec dec2","aria-hidden":"true"}));
+  d.append(si);
+  return d;
+}
+function sceneEl(cls,sc){
+  const d=h("div",{class:`scene ${cls} ${sc.bg}`});
+  d.append(h("span",{class:"chip"},sc.clip),h("div",{class:"sx"},sc.tx));
+  return d;
+}
+function pieceEl(brand,p){
+  const isCar=p.tipo==="car";
+  const head=h("div",{class:"pieceh"},
+    h("div",null,
+      h("span",{class:"tag"},isCar?`Carrusel · ${p.slides.length} láminas · 1080 × 1350`:`Reel · ${p.dur} · 1080 × 1920`),
+      h("h3",null,p.titulo),
+      h("p",{class:"small"},"Objetivo: "+p.objetivo)),
+    h("label",{class:"done"},h("input",{type:"checkbox","data-id":p.id})," Lista"));
+  const strip=isCar
+    ? h("div",{class:"strip slides"},p.slides.map((s,i)=>h("figure",{class:"fig"},slideEl(brand.cls,brand.nombre,s),h("figcaption",null,h("b",null,`Lámina ${i+1}`)," · "+({cover:"portada",item:"contenido",cta:"cierre"})[s.t]))))
+    : h("div",{class:"strip"},p.escenas.map((sc,i)=>h("figure",{class:"fig sc"},sceneEl(brand.cls,sc),h("figcaption",null,h("b",null,sc.tm)," · "+sc.fn),h("p",{class:"sd"},sc.d))));
+  const wrap=h("div",{class:"table-luz"},strip,
+    isCar?null:h("p",{class:"small",style:"margin-top:6px"},"Las franjas rayadas son la zona que tapa la interfaz de Instagram. No pongas texto ahí."));
+  const left=h("div",{class:"stack"},cb({l:"Texto de la publicación",t:p.caption}),p.nota?h("p",{class:"small"},p.nota):null,
+    h("p",{class:"meta"},isCar?"Tiempo: unos 45 minutos (estimación). Herramientas: Nano Banana Pro y Photoshop o Illustrator.":"Tiempo: unos 90 minutos (estimación). Herramientas: "+(p.pasos?"Nano Banana Pro y Premiere.":"Flow y Premiere.")));
+  const right=h("div",{class:"stack"},p.prompts.map(x=>cb({l:x.l,t:x.t})),p.pasos?h("div",{class:"card"},h("h3",null,"Cómo se arma"),h("ol",null,p.pasos.map(x=>h("li",null,x)))):null);
+  return h("article",{class:"piece",id:"p-"+p.id},head,wrap,h("div",{class:"cols"},left,right));
+}
+function brandPanel(b){
+  const sec=$("#"+({jac:"jacaranda",mig:"migaja",ser:"serpentina"})[b.id]);
+  const meta=h("dl",{class:"bmeta"},
+    h("div",null,h("dt",null,"Giro"),h("dd",null,b.giro)),
+    h("div",null,h("dt",null,"Tono"),h("dd",null,b.tono)),
+    h("div",null,h("dt",null,"Para quién"),h("dd",null,b.para)),
+    h("div",null,h("dt",null,"Tipografías"),h("dd",null,b.fuentes)));
+  const sw=h("div",{class:"sw"},b.paleta.map(([n,hex,rol])=>{const bt=h("button",{type:"button","data-hex":hex,title:rol},h("i",{style:"background:"+hex}),h("span",null,n,h("small",null,hex+" · "+rol)));return bt;}));
+  sec.replaceChildren(
+    h("div",{class:"ph2"},h("span",{class:"eyebrow"},"Marca de ejemplo · "+b.giro),h("h2",null,b.nombre),h("p",{class:"lede"},"2 carruseles y 1 reel. Toca un color para copiar su código.")),
+    h("div",{class:"card brandhead"},meta,sw,cb({l:"Prompt de estilo · pégalo antes de cada prompt de imagen o video",t:b.estilo})),
+    ...b.piezas.map(p=>pieceEl(b,p)));
+}
+BRANDS.forEach(brandPanel);
+$("#slot-fijado").replaceWith(pieceEl({cls:"b-me",nombre:"Tu marca"},FIJADO));
+$$("[data-cb]").forEach(n=>n.replaceWith(cb(n.dataset.cb)));
+
+/* ---------- copiar ---------- */
+async function copyText(text,node,btn,label){
+  const old=label||btn.textContent;
+  try{await navigator.clipboard.writeText(text);btn.textContent="Copiado";}
+  catch(e){try{const r=document.createRange();r.selectNodeContents(node);const s=getSelection();s.removeAllRanges();s.addRange(r);btn.textContent="Selecciónalo y copia";}catch(e2){}}
+  setTimeout(()=>{btn.textContent=old;},2200);
+}
+document.addEventListener("click",e=>{
+  const b=e.target.closest(".btn-copy");
+  if(b){const t=b.closest(".cb").querySelector(".cb-t");copyText(t.textContent,t,b);return;}
+  const sw=e.target.closest(".sw button");
+  if(sw){const sp=sw.querySelector("small");copyText(sw.dataset.hex,sw,sp,sp.textContent);}
+});
+
+/* ---------- pestañas ---------- */
+const TABS=[["cuenta","Tu cuenta","#15171C"],["jacaranda","Casa Jacaranda","#4A2C7A"],["migaja","Migaja","#F6B8C6"],["serpentina","Estudio Serpentina","#FF7A66"],["publicar","Publicar y enviar","#2340E0"]];
+const tabsEl=$("#tabs");
+TABS.forEach(([id,n,c])=>tabsEl.append(h("button",{type:"button",class:"tab",role:"tab",id:"t-"+id,"aria-controls":id,"aria-selected":"false",tabindex:"-1","data-tab":id},h("span",{class:"dot",style:"background:"+c,"aria-hidden":"true"}),n)));
+function showTab(id,focus){
+  if(!TABS.some(t=>t[0]===id))id="cuenta";
+  TABS.forEach(([t])=>{const on=t===id;const p=$("#"+t);p.hidden=!on;const b=$("#t-"+t);b.setAttribute("aria-selected",String(on));b.tabIndex=on?0:-1;if(on&&focus)b.focus();});
+  try{history.replaceState(null,"","#"+id);}catch(e){}
+  const bar=$(".tabs");const y=bar.getBoundingClientRect().top+scrollY;if(scrollY>y)window.scrollTo(0,y);
+}
+tabsEl.addEventListener("click",e=>{const b=e.target.closest(".tab");if(b)showTab(b.dataset.tab);});
+tabsEl.addEventListener("keydown",e=>{
+  const ids=TABS.map(t=>t[0]);const cur=ids.indexOf(document.activeElement.dataset.tab);if(cur<0)return;
+  let n=null;if(e.key==="ArrowRight")n=(cur+1)%ids.length;else if(e.key==="ArrowLeft")n=(cur-1+ids.length)%ids.length;else if(e.key==="Home")n=0;else if(e.key==="End")n=ids.length-1;
+  if(n!=null){e.preventDefault();showTab(ids[n],true);}
+});
+
+/* ---------- avance ---------- */
+const IDS=["cuenta","fijado","jac1","jac2","jacR","mig1","mig2","migR","ser1","ser2","serR","publicado","mensajes"];
+const LS="portafolio-muestra-v1";
+let hechas={},ref=null,chain=Promise.resolve();
+try{hechas=JSON.parse(localStorage.getItem(LS)||"{}")||{};}catch(e){hechas={};}
+const setStatus=t=>{$("#prog-s").textContent=t||"";};
+function paint(){
+  const n=IDS.filter(i=>hechas[i]).length;
+  $("#prog-n").textContent=`${n} de ${IDS.length}`;
+  $("#prog-b").style.width=(n/IDS.length*100)+"%";
+  $("#prog-bar").setAttribute("aria-valuenow",String(n));
+  $$("input[data-id]").forEach(i=>{i.checked=!!hechas[i.dataset.id];});
+}
+function persist(){
+  try{localStorage.setItem(LS,JSON.stringify(hechas));}catch(e){}
+  if(!ref)return;
+  const snap={hechas:{...hechas},actualizado:new Date().toISOString()};
+  chain=chain.then(()=>ref.set(snap)).then(()=>setStatus("Guardado en tu cuenta"),()=>setStatus("Sin guardar en tu cuenta; queda en este navegador"));
+}
+document.addEventListener("change",e=>{const i=e.target.closest("input[data-id]");if(!i)return;hechas[i.dataset.id]=i.checked;paint();persist();});
+async function initStore(){
+  try{
+    const use=window.claude&&window.claude.use;if(!use)return;
+    const [user,db]=await Promise.all([use("user"),use("db")]);
+    if(!user||!db)return;
+    const id=await user.id();if(!id)return;
+    ref=db.doc("data/users/"+id+"/portafolio");
+    const snap=await ref.get();
+    if(snap.exists){const d=snap.data()||{};hechas=(d.hechas&&typeof d.hechas==="object")?{...d.hechas}:{};paint();try{localStorage.setItem(LS,JSON.stringify(hechas));}catch(e){}setStatus("Guardado en tu cuenta");}
+    else if(Object.values(hechas).some(Boolean))persist();
+  }catch(e){ref=null;}
+}
+
+/* ---------- arranque ---------- */
+paint();
+showTab((location.hash||"").slice(1)||"cuenta");
+window.addEventListener("hashchange",()=>{const id=(location.hash||"").slice(1);if(TABS.some(t=>t[0]===id))showTab(id);});
+initStore();
+})();
+</script>

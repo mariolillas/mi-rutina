@@ -394,6 +394,8 @@ La bodega no te ahorra envío. En Mercado Libre, Full paga la misma tarifa que s
 
 ## Servicio de reels y carruseles para negocios
 
+**Portafolio de muestra:** ya está armado, con 3 marcas inventadas del giro de fiestas, 6 carruseles y 3 reels (textos, guiones, prompts y orden para publicar). Versión interactiva: https://claude.ai/artifact/Qxu6C8U4TqZ3aghLeET9xS · Versión en texto: [`portafolio/README.md`](portafolio/README.md).
+
 **Idea:** les haces cada mes reels y carruseles a negocios de tu ciudad y cobras por cliente, no por pieza. Con Google AI Ultra y Adobe produces rápido, y puedes hacerlo sin salir en cámara. Es un servicio: cada cliente te pide horas cada mes. En la página tiene su calculadora, y el cuestionario ya lo incluye como camino ("servicio").
 
 **Qué cobra el mercado:** de $3,000 a $8,000 al mes por manejar las redes de un negocio chico, con un paquete típico de 8 publicaciones y 2 reels (Holográfico, mayo 2026). Blogs de agencias ponen a un freelance junior en $3,500–7,000 y a uno semi-senior en $7,000–12,000.
