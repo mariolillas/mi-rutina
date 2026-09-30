@@ -1,0 +1,1236 @@
+<!doctype html>
+<html lang="es-MX"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0;font:14px system-ui,sans-serif}img{max-width:100%}[hidden]{display:none!important}</style></head><body>
+<title>¿Qué me conviene vender?</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<style>
+/* Layout: one reading column (max 1120px) under a sticky chip nav; the two tools
+   (hoja de respuestas y ticket de ganancia) sit on "papel" blocks, everything else reads as a report. */
+:root{
+  --bg:#f2f3f6;
+  --paper:#ffffff;
+  --ink:#141722;
+  --ink-2:#434a5c;
+  --muted:#6c7386;
+  --line:#dadde6;
+  --line-2:#eceef3;
+  --rosa:#c4006a;          /* rosa mexicano, text-safe */
+  --rosa-fill:#e4007c;     /* rosa mexicano, fills */
+  --rosa-soft:#fbe6f0;
+  --azul:#2f5bd3;
+  --good:#0b7a4b; --good-soft:#e2f4ea;
+  --warn:#9a6200; --warn-soft:#fbf0d9;
+  --bad:#b8322a;  --bad-soft:#fbe5e3;
+  --c-prod:#2f5bd3; --c-ml:#d6197a; --c-tax:#d99a00; --c-gain:#0e9c86;
+  --dot:#2f5bd3;
+  --shadow:0 1px 0 rgba(20,23,34,.04), 0 8px 24px -12px rgba(20,23,34,.18);
+  --f-display:"Archivo", "Arial Narrow", system-ui, sans-serif;
+  --f-body:"Archivo", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --f-mono:"IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+  --r:10px;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0e1016; --paper:#161922; --ink:#eef0f5; --ink-2:#b9bfcd; --muted:#8b92a5;
+    --line:#2a2f3c; --line-2:#1f232d;
+    --rosa:#ff5aa8; --rosa-fill:#ff3d9a; --rosa-soft:#3b1229; --azul:#7d9cf2;
+    --good:#3fcf8e; --good-soft:#0f2a1f; --warn:#f0b54a; --warn-soft:#2e2310; --bad:#ff7b72; --bad-soft:#35161a;
+    --c-prod:#4f7ae8; --c-ml:#e4468f; --c-tax:#b98200; --c-gain:#199a84; --dot:#6f93f0;
+    --shadow:0 1px 0 rgba(0,0,0,.3), 0 10px 28px -14px rgba(0,0,0,.7);
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0e1016; --paper:#161922; --ink:#eef0f5; --ink-2:#b9bfcd; --muted:#8b92a5;
+  --line:#2a2f3c; --line-2:#1f232d;
+  --rosa:#ff5aa8; --rosa-fill:#ff3d9a; --rosa-soft:#3b1229; --azul:#7d9cf2;
+  --good:#3fcf8e; --good-soft:#0f2a1f; --warn:#f0b54a; --warn-soft:#2e2310; --bad:#ff7b72; --bad-soft:#35161a;
+  --c-prod:#4f7ae8; --c-ml:#e4468f; --c-tax:#b98200; --c-gain:#199a84; --dot:#6f93f0;
+  --shadow:0 1px 0 rgba(0,0,0,.3), 0 10px 28px -14px rgba(0,0,0,.7);
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:72px}
+@media (prefers-reduced-motion: reduce){html{scroll-behavior:auto}*{transition:none!important;animation:none!important}}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:16px;line-height:1.55;font-variation-settings:"wdth" 100;-webkit-font-smoothing:antialiased}
+.wrap{max-width:1120px;margin:0 auto;padding-inline:20px;padding-block:0 64px}
+@media (max-width:480px){.wrap{padding-inline:16px}}
+a{color:var(--rosa);text-underline-offset:2px}
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,[tabindex]:focus-visible{outline:2px solid var(--rosa);outline-offset:2px;border-radius:4px}
+h1,h2,h3{font-family:var(--f-display);text-wrap:balance;margin:0}
+h1{font-size:clamp(2.1rem,6vw,3.6rem);line-height:1.02;font-weight:850;font-variation-settings:"wdth" 125;letter-spacing:-.02em}
+h2{font-size:clamp(1.5rem,3.4vw,2.05rem);line-height:1.1;font-weight:800;font-variation-settings:"wdth" 118;letter-spacing:-.01em}
+h3{font-size:1.12rem;line-height:1.25;font-weight:750;font-variation-settings:"wdth" 108}
+p{margin:0}
+.eyebrow{font-family:var(--f-mono);font-size:.74rem;letter-spacing:.09em;text-transform:uppercase;color:var(--muted)}
+.lede{font-size:1.1rem;color:var(--ink-2);max-width:62ch}
+.small{font-size:.86rem;color:var(--muted)}
+.mono{font-family:var(--f-mono)}
+.num{font-variant-numeric:tabular-nums}
+
+/* top bar + nav */
+.topbar{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:color-mix(in srgb,var(--bg) 88%,transparent);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+.topbar .in{max-width:1120px;margin:0 auto;padding-inline:20px;display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;padding-block:10px}
+.topbar .in::-webkit-scrollbar{display:none}
+.chip{flex:none;font-family:var(--f-mono);font-size:.78rem;padding:6px 11px;border-radius:999px;border:1px solid var(--line);color:var(--ink-2);text-decoration:none;background:var(--paper);white-space:nowrap}
+.chip:hover{border-color:var(--ink-2);color:var(--ink)}
+.chip.hot{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+
+/* hero */
+.hero{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);gap:40px;padding-block:44px 28px;align-items:start}
+@media (max-width:860px){.hero{grid-template-columns:1fr;gap:24px;padding-block:28px 12px}}
+.hero h1 .r{color:var(--rosa)}
+.hero .meta{display:flex;flex-wrap:wrap;gap:8px 16px;margin-top:18px}
+.cta{display:inline-flex;align-items:center;gap:10px;margin-top:22px;background:var(--rosa-fill);color:#fff;text-decoration:none;font-weight:700;padding:12px 18px;border-radius:999px;font-family:var(--f-display);font-variation-settings:"wdth" 110;border:0;cursor:pointer;font-size:1rem}
+.cta:hover{filter:brightness(1.06)}
+.cta.ghost{background:transparent;color:var(--ink);border:1.5px solid var(--ink)}
+.today{background:var(--paper);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow);padding:18px 18px 8px}
+.today h3{margin-top:4px;margin-bottom:10px}
+.today ol{list-style:none;margin:0;padding:0}
+.today li{display:grid;grid-template-columns:28px minmax(0,1fr) auto;gap:10px;padding:9px 0;border-top:1px solid var(--line-2);align-items:baseline}
+.today li:first-child{border-top:0}
+.today .rk{font-family:var(--f-mono);font-size:.8rem;color:var(--muted)}
+.today .nm{font-size:.93rem;line-height:1.3}
+.today .nm small{display:block;color:var(--muted);font-size:.78rem;margin-top:2px}
+.today .pr{font-family:var(--f-mono);font-size:.9rem;font-variant-numeric:tabular-nums;white-space:nowrap}
+
+/* sections */
+section{padding-block:40px 8px}
+.sec-head{display:grid;gap:8px;margin-bottom:22px;max-width:760px}
+.grid2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}
+.grid3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}
+@media (max-width:860px){.grid2,.grid3{grid-template-columns:1fr}}
+.grid2>*,.grid3>*,.calc>*,.hero>*,.tiles>*,.cal>*{min-width:0}
+.card{background:var(--paper);border:1px solid var(--line);border-radius:var(--r);padding:20px;min-width:0}
+.card h3{margin-bottom:8px}
+.card p+p{margin-top:8px}
+.card ul{margin:8px 0 0;padding-left:18px}
+.card li{margin:4px 0}
+
+/* verdict list */
+.verdict{counter-reset:v;display:grid;gap:0;background:var(--paper);border:1px solid var(--line);border-radius:var(--r)}
+.verdict>div{display:grid;grid-template-columns:minmax(120px,190px) minmax(0,1fr);gap:18px;padding:16px 20px;border-top:1px solid var(--line-2)}
+.verdict>div:first-child{border-top:0}
+.verdict .k{font-family:var(--f-display);font-weight:800;font-size:1.5rem;line-height:1.05;font-variation-settings:"wdth" 112}
+.verdict .k small{display:block;font-family:var(--f-mono);font-weight:400;font-size:.72rem;color:var(--muted);letter-spacing:.04em;margin-top:6px;text-transform:uppercase}
+@media (max-width:600px){.verdict>div{grid-template-columns:1fr;gap:6px}}
+
+/* stat tiles */
+.tiles{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+@media (max-width:860px){.tiles{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.tile{background:var(--paper);border:1px solid var(--line);border-radius:var(--r);padding:14px 16px;min-width:0}
+.tile .l{font-size:.82rem;color:var(--muted);line-height:1.3}
+.tile .v{font-family:var(--f-body);font-weight:700;font-size:1.7rem;line-height:1.1;margin-top:6px;letter-spacing:-.01em}
+.tile .d{font-size:.8rem;color:var(--ink-2);margin-top:4px;line-height:1.35}
+
+/* callouts */
+.note{border-left:3px solid var(--rosa-fill);background:var(--rosa-soft);padding:12px 16px;border-radius:0 8px 8px 0;color:var(--ink)}
+.note.warn{border-color:var(--warn);background:var(--warn-soft)}
+.note.good{border-color:var(--good);background:var(--good-soft)}
+.note b{font-weight:700}
+
+/* pills */
+.pill{display:inline-flex;align-items:center;gap:5px;font-size:.76rem;font-weight:600;padding:2px 8px;border-radius:999px;white-space:nowrap;font-family:var(--f-body)}
+.pill::before{content:"";width:6px;height:6px;border-radius:50%;background:currentColor}
+.pill.bien{color:var(--good);background:var(--good-soft)}
+.pill.regular{color:var(--warn);background:var(--warn-soft)}
+.pill.mal{color:var(--bad);background:var(--bad-soft)}
+.pill.neutra{color:var(--ink-2);background:var(--line-2)}
+
+/* tables */
+.tbl-wrap{overflow-x:auto;border:1px solid var(--line);border-radius:var(--r);background:var(--paper)}
+table{border-collapse:collapse;width:100%;font-size:.9rem}
+th,td{padding:10px 12px;text-align:left;vertical-align:top;border-top:1px solid var(--line-2)}
+thead th{border-top:0;font-family:var(--f-mono);font-size:.72rem;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);font-weight:500;background:var(--paper);position:sticky;top:0}
+td.n,th.n{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+tbody tr:hover{background:color-mix(in srgb,var(--line-2) 60%,transparent)}
+td b{font-weight:650}
+.tbl-niches td:first-child{min-width:170px}
+.tbl-niches td{min-width:120px}
+
+/* ===== hoja de respuestas ===== */
+.sheet{background:var(--paper);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow);overflow:hidden}
+.sheet-head{display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px;align-items:center;padding:16px 20px;border-bottom:1px solid var(--line);background:linear-gradient(0deg,var(--paper),var(--paper))}
+.progress{display:flex;align-items:center;gap:10px;font-family:var(--f-mono);font-size:.82rem;color:var(--ink-2)}
+.pbar{width:140px;height:6px;border-radius:99px;background:var(--line-2);overflow:hidden}
+.pbar i{display:block;height:100%;width:0;background:var(--rosa-fill);border-radius:99px;transition:width .25s}
+.q{display:grid;grid-template-columns:44px minmax(0,1fr);gap:4px 12px;padding:16px 20px;border-top:1px solid var(--line-2)}
+.q:first-of-type{border-top:0}
+.q .qn{font-family:var(--f-mono);font-size:.9rem;color:var(--muted);padding-top:2px}
+.q .qt{font-weight:650;font-size:1rem;line-height:1.35}
+.q .qh{font-size:.84rem;color:var(--muted);margin-top:2px}
+.opts{grid-column:2;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-top:10px}
+@media (max-width:640px){.opts{grid-template-columns:1fr}.q{grid-template-columns:30px minmax(0,1fr)}}
+.opt{display:flex;align-items:center;gap:10px;text-align:left;background:transparent;border:1px solid var(--line);border-radius:8px;padding:9px 12px;color:var(--ink);font:inherit;font-size:.93rem;cursor:pointer;line-height:1.3;min-height:44px}
+.opt:hover{border-color:var(--ink-2)}
+.bub{flex:none;width:26px;height:26px;border-radius:50%;border:1.6px solid var(--ink-2);display:grid;place-items:center;font-family:var(--f-mono);font-size:.78rem;color:var(--ink-2);transition:background .15s,color .15s}
+.opt[aria-pressed="true"]{border-color:var(--ink);background:color-mix(in srgb,var(--rosa-soft) 55%,transparent)}
+.opt[aria-pressed="true"] .bub{background:var(--ink);border-color:var(--ink);color:var(--paper)}
+.temas{grid-column:2;display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+.tema{font:inherit;font-size:.9rem;border:1px solid var(--line);background:transparent;color:var(--ink);border-radius:999px;padding:7px 13px;cursor:pointer;min-height:40px}
+.tema[aria-pressed="true"]{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.tema:disabled{opacity:.45;cursor:not-allowed}
+.sheet-foot{display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between;padding:16px 20px;border-top:1px solid var(--line);background:color-mix(in srgb,var(--line-2) 50%,var(--paper))}
+.btn{font:inherit;font-weight:650;border-radius:999px;padding:10px 16px;border:1.5px solid var(--ink);background:var(--ink);color:var(--paper);cursor:pointer;min-height:44px}
+.btn.sec{background:transparent;color:var(--ink)}
+.btn:disabled{opacity:.4;cursor:not-allowed}
+.btnrow{display:flex;flex-wrap:wrap;gap:10px}
+
+/* resultado */
+#resultado{margin-top:22px}
+.res-head{display:flex;flex-wrap:wrap;gap:10px 18px;align-items:baseline;justify-content:space-between;margin-bottom:12px}
+.rank{background:var(--paper);border:1px solid var(--line);border-radius:var(--r);padding:16px 18px}
+.rrow{display:grid;grid-template-columns:minmax(0,260px) minmax(0,1fr) 46px;gap:12px;align-items:center;padding:5px 0;font-size:.9rem}
+@media (max-width:640px){.rrow{grid-template-columns:minmax(0,1fr) 46px}.rrow .rb{grid-column:1 / -1;order:3}}
+.rrow .rn{min-width:0;line-height:1.25}
+.rrow .rn small{color:var(--muted);font-family:var(--f-mono);font-size:.7rem;margin-left:6px;text-transform:uppercase;letter-spacing:.05em}
+.rb{height:12px;background:var(--line-2);border-radius:0 4px 4px 0;position:relative}
+.rb i{position:absolute;inset:0 auto 0 0;background:color-mix(in srgb,var(--muted) 55%,transparent);border-radius:0 4px 4px 0}
+.rrow.top .rb i{background:var(--rosa-fill)}
+.rrow .rv{font-family:var(--f-mono);font-variant-numeric:tabular-nums;text-align:right;font-size:.85rem}
+.picks{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin-top:14px}
+@media (max-width:960px){.picks{grid-template-columns:1fr}}
+.pick{background:var(--paper);border:1px solid var(--line);border-radius:var(--r);padding:18px;min-width:0;display:grid;gap:10px;align-content:start}
+.pick .place{font-family:var(--f-mono);font-size:.74rem;letter-spacing:.08em;text-transform:uppercase;color:var(--rosa)}
+.pick h3{font-size:1.2rem}
+.pick .why li::marker{color:var(--good)}
+.pick .risk li::marker{color:var(--bad)}
+.pick ul{margin:0;padding-left:18px;font-size:.9rem}
+.pick li{margin:3px 0}
+.pick .lbl{font-family:var(--f-mono);font-size:.7rem;letter-spacing:.07em;text-transform:uppercase;color:var(--muted)}
+.save-state{font-size:.88rem;color:var(--ink-2)}
+.save-state b{color:var(--good)}
+.ai-out{white-space:normal;background:var(--paper);border:1px solid var(--line);border-radius:var(--r);padding:18px;margin-top:14px;font-size:.95rem}
+.ai-out h4{font-family:var(--f-display);font-size:1.05rem;margin:14px 0 6px;font-variation-settings:"wdth" 108}
+.ai-out ul{padding-left:18px;margin:6px 0}
+.ai-out p{margin:6px 0}
+.code{font-family:var(--f-mono);font-size:.85rem;background:var(--line-2);padding:8px 10px;border-radius:6px;word-break:break-all;user-select:all}
+
+/* ===== ticket calculadora ===== */
+.calc{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,.9fr);gap:22px;align-items:start}
+@media (max-width:900px){.calc{grid-template-columns:1fr}}
+.form{background:var(--paper);border:1px solid var(--line);border-radius:var(--r);padding:18px;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+@media (max-width:520px){.form{grid-template-columns:1fr}}
+.fld{display:grid;gap:5px;min-width:0}
+.fld.full{grid-column:1 / -1}
+.fld label{font-size:.82rem;color:var(--ink-2);font-weight:600}
+.fld .hint{font-size:.76rem;color:var(--muted);line-height:1.3}
+.fld input,.fld select{font:inherit;font-size:.95rem;padding:9px 10px;border-radius:8px;border:1px solid var(--line);background:var(--bg);color:var(--ink);width:100%;min-height:42px}
+.seg{display:flex;border:1px solid var(--line);border-radius:8px;overflow:hidden}
+.seg button{flex:1;font:inherit;font-size:.86rem;padding:9px 8px;border:0;background:var(--bg);color:var(--ink-2);cursor:pointer;min-height:42px}
+.seg button[aria-pressed="true"]{background:var(--ink);color:var(--paper);font-weight:650}
+.ticket{background:var(--paper);border:1px solid var(--line);border-radius:6px;padding:20px 20px 26px;font-family:var(--f-mono);font-size:.86rem;box-shadow:var(--shadow);position:relative}
+.ticket::after{content:"";position:absolute;left:0;right:0;bottom:-1px;height:10px;background:radial-gradient(circle at 6px 10px,var(--bg) 5px,transparent 5.5px) 0 0/12px 10px repeat-x}
+.ticket .th{text-align:center;border-bottom:1px dashed var(--line);padding-bottom:10px;margin-bottom:8px}
+.ticket .th b{display:block;font-size:1rem;letter-spacing:.06em}
+.tl{display:flex;justify-content:space-between;gap:10px;padding:3px 0;font-variant-numeric:tabular-nums}
+.tl span:first-child{min-width:0}
+.tl.minus span:last-child{color:var(--ink-2)}
+.tl.sub{border-top:1px dashed var(--line);margin-top:6px;padding-top:8px}
+.tl.total{border-top:2px solid var(--ink);margin-top:8px;padding-top:10px;font-weight:600;font-size:1rem}
+.tl .sw{display:inline-block;width:9px;height:9px;border-radius:2px;margin-right:7px;vertical-align:0}
+.verdict-chip{margin-top:12px;text-align:center}
+.big{font-family:var(--f-body);font-weight:750;font-size:2.2rem;letter-spacing:-.02em;line-height:1}
+.ticket .kpis{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-top:14px;text-align:center}
+.ticket .kpis div{background:var(--line-2);border-radius:6px;padding:8px 4px}
+.ticket .kpis small{display:block;color:var(--muted);font-size:.68rem;letter-spacing:.05em;text-transform:uppercase}
+
+/* charts */
+.chart{background:var(--paper);border:1px solid var(--line);border-radius:var(--r);padding:18px;min-width:0}
+.chart h3{margin-bottom:4px}
+.chart .sub{font-size:.85rem;color:var(--muted);margin-bottom:12px}
+.legend{display:flex;flex-wrap:wrap;gap:6px 16px;font-size:.82rem;color:var(--ink-2);margin:6px 0 10px}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+.legend i{width:10px;height:10px;border-radius:2px;display:inline-block}
+.svgbox{width:100%;overflow-x:auto}
+svg text{fill:var(--ink-2);font-family:var(--f-body)}
+svg .axis text{fill:var(--muted);font-size:11px;font-family:var(--f-mono)}
+.tip{position:fixed;pointer-events:none;z-index:50;background:var(--ink);color:var(--paper);font-size:.8rem;padding:8px 10px;border-radius:6px;max-width:280px;line-height:1.35;opacity:0;transition:opacity .1s}
+.tip b{font-size:.95rem}
+.tview{margin-top:10px}
+.tview summary{cursor:pointer;font-size:.84rem;color:var(--ink-2)}
+.tview table{font-size:.82rem;margin-top:8px}
+
+/* timeline Q4 */
+.cal{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+@media (max-width:860px){.cal{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:480px){.cal{grid-template-columns:1fr}}
+.cal .card{padding:14px 16px}
+.cal .when{font-family:var(--f-mono);font-size:.75rem;color:var(--rosa);letter-spacing:.05em;text-transform:uppercase}
+
+/* plan */
+.steps{counter-reset:s;display:grid;gap:10px;margin:0;padding:0;list-style:none}
+.steps li{counter-increment:s;display:grid;grid-template-columns:40px minmax(0,1fr);gap:12px;background:var(--paper);border:1px solid var(--line);border-radius:var(--r);padding:14px 16px}
+.steps li::before{content:counter(s,decimal-leading-zero);font-family:var(--f-mono);color:var(--rosa);font-size:.9rem;padding-top:2px}
+.steps b{display:block;margin-bottom:2px}
+
+/* sources */
+.src{columns:2 320px;column-gap:28px;font-size:.84rem;padding-left:20px;margin:0}
+.src li{break-inside:avoid;margin:0 0 7px;color:var(--ink-2)}
+.src a{word-break:break-word}
+footer{margin-top:48px;padding-top:18px;border-top:1px solid var(--line);font-size:.82rem;color:var(--muted)}
+
+</style>
+<nav class="topbar" aria-label="Secciones">
+  <div class="in">
+    <a class="chip" href="#resumen">Resumen</a>
+    <a class="chip hot" href="#cuestionario">Cuestionario</a>
+    <a class="chip" href="#numeros">Estadísticas</a>
+    <a class="chip" href="#calculadora">Calculadora</a>
+    <a class="chip" href="#fisicos">Productos físicos</a>
+    <a class="chip" href="#digitales">Productos digitales</a>
+    <a class="chip" href="#surtir">Proveedores e importación</a>
+    <a class="chip" href="#sat">SAT</a>
+    <a class="chip" href="#plan">Plan de 30 días</a>
+    <a class="chip" href="#fuentes">Fuentes</a>
+  </div>
+</nav>
+<main class="wrap">
+  <header class="hero">
+    <div>
+      <span class="eyebrow">Investigación · Mercado Libre México y productos digitales · 30 sep 2026</span>
+      <h1 style="margin-top:10px">¿Qué me conviene <span class="r">vender</span>?</h1>
+      <p class="lede" style="margin-top:14px">Revisé tarifas oficiales de Mercado Libre, retenciones del SAT, aranceles 2026, estadísticas de la AMVO y los 120 productos más vendidos de hoy. Abajo tienes lo que encontré, una calculadora con las reglas vigentes y un cuestionario que arma tu recomendación.</p>
+      <div class="btnrow" style="margin-top:4px">
+        <a class="cta" href="#cuestionario">Contestar el cuestionario · 4 min</a>
+        <a class="cta ghost" href="#resumen">Leer el resumen</a>
+      </div>
+    </div>
+    <aside class="today" aria-labelledby="h-today">
+      <span class="eyebrow">Más vendidos hoy en Mercado Libre</span>
+      <h3 id="h-today">Lo que más rota es barato y de recompra</h3>
+      <ol>
+        <li><span class="rk">#1</span><span class="nm">Calcetines, paquete de 12<small>Ropa · más de 250 mil vendidos</small></span><span class="pr">$59</span></li>
+        <li><span class="rk">#14</span><span class="nm">Pantalón de mezclilla skinny<small>Ropa · más de 250 mil vendidos</small></span><span class="pr">$298</span></li>
+        <li><span class="rk">#4</span><span class="nm">Pijama quirúrgica con bolsas<small>Ropa · más de 100 mil vendidos</small></span><span class="pr">$290</span></li>
+        <li><span class="rk">#1</span><span class="nm">Funda impermeable para moto<small>Accesorios para vehículos</small></span><span class="pr">$195</span></li>
+        <li><span class="rk">#1</span><span class="nm">Guantes de nitrilo sin látex<small>Salud y equipo médico</small></span><span class="pr">$116</span></li>
+        <li><span class="rk">#2</span><span class="nm">Creatina en polvo 450 g<small>Salud y equipo médico</small></span><span class="pr">$424</span></li>
+      </ol>
+      <p class="small" style="padding-block:8px 6px">Posiciones en “Más vendidos” leídas el 30 sep 2026. Las cantidades vendidas solo se muestran en Ropa.</p>
+    </aside>
+  </header>
+
+<section id="resumen" aria-labelledby="h-resumen">
+  <div class="sec-head">
+    <span class="eyebrow">Lo que encontré</span>
+    <h2 id="h-resumen">Ocho cosas que cambian qué te conviene vender</h2>
+  </div>
+  <div class="verdict">
+    <div><div class="k">$941 mil mdp<small>ventas en línea 2025</small></div><p><b>El mercado sí da.</b> El comercio en línea creció 19% en 2025 y ya son 77 millones de compradores. Mercado Libre México crece 26% (T2 2026) y pelea el primer lugar en visitas con Amazon.</p></div>
+    <div><div class="k">$210<small>mediana de lo más vendido</small></div><p><b>Lo que más se vende es barato, práctico y de recompra.</b> De los 120 más vendidos de hoy, 83 cuestan menos de $299 y 106 salen de la bodega Full de Mercado Libre.</p></div>
+    <div><div class="k">~50%<small>del precio se va</small></div><p><b>Pero la mitad del precio se queda en el camino.</b> Entre $149 y $499, comisión, envío, impuestos y empaque se llevan de 48% a 62%. Para ganar 20% tienes que comprar a entre 18% y 32% del precio de venta; arriba de $800, a cerca de 40%.</p></div>
+    <div><div class="k">36% vs 10.5%<small>retención sin RFC y con RFC</small></div><p><b>Sin RFC no hay negocio.</b> Desde 2026, con RFC te retienen 2.5% de ISR y 8% de IVA; sin RFC, 20% y 16%. En una venta de $499 recibes $290 o $180. Y el SAT ya ve en tiempo real lo que vendes en plataformas.</p></div>
+    <div><div class="k">20–50%<small>aranceles a China</small></div><p><b>China ya no es la ganga.</b> Desde enero, ropa, calzado, juguetes y plásticos pagan de 20% a 35% de arancel, y las ventas de vendedores chinos directo en Mercado Libre crecieron 60% en el último trimestre. Tu ventaja está en lo nacional, lo pesado, lo que pide compatibilidad, los kits y lo personalizado.</p></div>
+    <div><div class="k">9%<small>comisión en accesorios para vehículos</small></div><p><b>Nichos buenos para empezar:</b> accesorios de moto, refacciones de desgaste, consumibles de impresión y 3D, insumos para negocios, filtros y repuestos, higiene para mascotas y uniformes médicos hechos en México.</p></div>
+    <div><div class="k">Prohibido<small>descargables en Mercado Libre</small></div><p><b>Lo digital, fuera de Mercado Libre.</b> Ahí no se permiten ebooks, cursos, guías ni descargables. Lo que se mantiene: invitaciones de diseño propio y plantillas para negocios, cobradas con link de Mercado Pago o SPEI. La guía COMIPEMS ya no sirve: el examen desapareció.</p></div>
+    <div><div class="k">13–17 nov<small>Buen Fin 2026</small></div><p><b>El reloj corre.</b> Para este fin de año ya no da tiempo de importar por barco. Si quieres vender en temporada, surte con proveedor nacional y ten stock en Full antes del 1 de noviembre.</p></div>
+  </div>
+  <div class="note good" style="margin-top:16px"><b>Mi recomendación general, antes del cuestionario:</b> empieza con un nicho “aburrido” de recompra, con proveedor mexicano y factura, vendido en kit arriba de $299, con RFC y Full. En paralelo, si tienes una habilidad (diseño, Excel, enseñar), arma un producto digital y véndelo por WhatsApp. El cuestionario ajusta esto a tu dinero, tu tiempo y lo que te gusta.</div>
+</section>
+
+<section id="cuestionario" aria-labelledby="h-cuest">
+  <div class="sec-head">
+    <span class="eyebrow">Hoja de respuestas · 17 preguntas</span>
+    <h2 id="h-cuest">Cuestionario para afinar la recomendación</h2>
+    <p class="lede">Marca una opción por pregunta. Con tus respuestas calculo qué tan bien te queda cada uno de 16 caminos (9 físicos y 7 digitales) usando los números de esta investigación. Tus respuestas se quedan guardadas en este navegador mientras contestas.</p>
+  </div>
+  <div class="sheet" id="hoja">
+    <div class="sheet-head">
+      <span class="eyebrow">Opción múltiple · una respuesta por pregunta</span>
+      <div class="progress"><span id="prog-txt">0 de 16 contestadas</span><span class="pbar" aria-hidden="true"><i id="prog-bar"></i></span></div>
+    </div>
+    <div id="hoja-preguntas"></div>
+    <div class="sheet-foot">
+      <span class="small" id="btn-res-hint"></span>
+      <div class="btnrow"><button type="button" class="btn sec" id="btn-reset">Borrar respuestas</button><button type="button" class="btn" id="btn-res" disabled>Ver mi resultado</button></div>
+    </div>
+  </div>
+
+  <div id="resultado" hidden>
+    <div class="res-head">
+      <h2 style="font-size:1.6rem">Tu resultado</h2>
+      <span class="save-state" id="save-state"></span>
+    </div>
+    <p class="note warn" id="sat-warn" hidden><b>Antes de vender, pon en orden tu RFC.</b> Si no tienes, date de alta; si eres asalariado, actualiza tus actividades. Sin RFC registrado te retienen 20% de ISR y 16% de IVA; con RFC, 2.5% y 8%. En un producto de $499 es la diferencia entre recibir $180 o $290.</p>
+    <div class="rank" style="margin-top:12px">
+      <div class="eyebrow" style="margin-bottom:8px">Compatibilidad con cada camino</div>
+      <div id="rank"></div>
+    </div>
+    <div class="picks" id="picks"></div>
+    <div class="card" style="margin-top:14px">
+      <h3>Afinemos con Claude</h3>
+      <p>Tus respuestas en código, por si prefieres pegarlas en el chat:</p>
+      <p class="code" id="code" style="margin-top:8px"></p>
+      <div class="btnrow" style="margin-top:10px"><button type="button" class="btn sec" id="btn-copy">Copiar código</button></div>
+      <div id="ai-box" hidden style="margin-top:14px">
+        <p>También puedes pedirle aquí mismo a Claude un plan de 30 días con tus respuestas. Usa tu cuenta de Claude y te pide permiso la primera vez.</p>
+        <div class="btnrow" style="margin-top:10px"><button type="button" class="btn" id="btn-ai">Pedir mi plan a Claude</button><button type="button" class="btn sec" id="btn-ai-stop" hidden>Detener</button></div>
+        <p class="small" id="ai-note" style="margin-top:8px"></p>
+        <div class="ai-out" id="ai-out" hidden></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="numeros" aria-labelledby="h-numeros">
+  <div class="sec-head">
+    <span class="eyebrow">Estadísticas · corte 30 sep 2026</span>
+    <h2 id="h-numeros">El mercado sí está, pero lo más vendido es barato y rápido</h2>
+    <p class="lede">El comercio en línea en México sigue creciendo casi 20% al año. Mercado Libre crece más rápido que el mercado, aunque en 2026 bajó el ritmo por la nueva retención de impuestos y un consumo más flojo.</p>
+  </div>
+  <div class="tiles">
+    <div class="tile"><div class="l">Ventas en línea en México, 2025</div><div class="v">$941 mil mdp</div><div class="d">+19.2% vs 2024 · AMVO 2026</div></div>
+    <div class="tile"><div class="l">Compradores digitales</div><div class="v">77.2 M</div><div class="d">88% de quienes usan internet · AMVO 2026</div></div>
+    <div class="tile"><div class="l">Crecimiento de Mercado Libre México, T2 2026</div><div class="v">+26%</div><div class="d">Ventas en pesos; artículos vendidos +34% · reporte a la SEC</div></div>
+    <div class="tile"><div class="l">Buen Fin 2026</div><div class="v">13 al 17 nov</div><div class="d">En 2025 vendió $219 mil mdp; 21% fue en línea (+31%)</div></div>
+  </div>
+  <div class="grid2" style="margin-top:18px">
+    <div class="chart">
+      <h3>Mercado Libre México sigue creciendo, pero más lento</h3>
+      <p class="sub">Crecimiento del valor vendido contra el mismo trimestre del año anterior, sin efecto del tipo de cambio.</p>
+      <div class="svgbox" id="g-meli" data-label="Crecimiento trimestral de Mercado Libre México"></div>
+      <details class="tview"><summary>Ver como tabla</summary>
+        <table><thead><tr><th>Trimestre</th><th class="n">Crecimiento</th><th class="n">Artículos vendidos</th></tr></thead>
+        <tbody><tr><td>T1 2025</td><td class="n">+23%</td><td class="n">n/d</td></tr><tr><td>T2 2025</td><td class="n">+32%</td><td class="n">+36%</td></tr><tr><td>T3 2025</td><td class="n">+34%</td><td class="n">+42%</td></tr><tr><td>T4 2025</td><td class="n">+35%</td><td class="n">+45%</td></tr><tr><td>T1 2026</td><td class="n">+28%</td><td class="n">+34%</td></tr><tr><td>T2 2026</td><td class="n">+26%</td><td class="n">+34%</td></tr></tbody></table>
+      </details>
+    </div>
+    <div class="chart">
+      <h3>Qué compra la gente en línea</h3>
+      <p class="sub">% de compradores digitales que compró la categoría en línea en 2025. En rosa, las categorías que Nubimetrics y AMVO marcan con crecimiento y menos saturación.</p>
+      <div class="svgbox" id="g-cats" data-label="Categorías compradas en línea en México 2025"></div>
+      <p class="small" style="margin-top:8px">Hueco interesante: casi todos compran despensa (93%), farmacia (87%) y cosas para mascota (69%), pero solo 28–30% lo hace en línea.</p>
+    </div>
+  </div>
+
+  <div class="chart" style="margin-top:18px">
+    <h3>Lo más vendido hoy en Mercado Libre: 120 productos, 6 categorías</h3>
+    <p class="sub">Los 20 primeros de “Más vendidos” en cada categoría, leídos el 30 sep 2026. Cada punto es un producto; la raya negra es la mediana. Punto relleno = usa Full (bodega de Mercado Libre); punto hueco = sin Full.</p>
+    <div class="svgbox" id="strip" data-label="Precios de los más vendidos"></div>
+    <details class="tview"><summary>Ver como tabla</summary><div class="tbl-wrap" style="margin-top:8px"><table id="strip-table"></table></div></details>
+  </div>
+  <div class="grid3" style="margin-top:18px">
+    <div class="card"><h3>88% usa Full</h3><p>106 de los 120 más vendidos salen de las bodegas de Mercado Libre. En Accesorios para vehículos, 20 de 20. Mercado Libre dice que Full puede duplicar ventas; en Hot Sale 2026 entregó la mitad de lo vendido en 24 horas o menos.</p></div>
+    <div class="card"><h3>La mediana cuesta $210</h3><p>83 de los 120 cuestan menos de $299. Lo que más rota es barato, práctico y de recompra: calcetines en paquete, guantes de nitrilo, micas, cargadores, fundas para moto, uniformes médicos.</p></div>
+    <div class="card"><h3>Ventas enormes en cosas “aburridas”</h3><p>En Ropa, el #1 son calcetines de 12 pares a $59 con más de 250 mil vendidos. Un pantalón de mezclilla a $298 lleva más de 250 mil, y dos pijamas quirúrgicas llevan más de 100 mil cada una.</p></div>
+  </div>
+  <p class="note" style="margin-top:16px"><b>Cómo leer esto:</b> el precio bajo gana volumen, pero con las reglas de abril 2026 cada venta de menos de $299 paga un costo por envío (desde $30 por pieza para un vendedor nuevo con paquete chico), aunque el cliente pague su propio envío. Por eso a los vendedores grandes les funciona y a un principiante le puede comer todo el margen. Revisa la calculadora antes de elegir precio.</p>
+</section>
+
+<section id="calculadora" aria-labelledby="h-calc">
+  <div class="sec-head">
+    <span class="eyebrow">Calculadora con las tarifas vigentes</span>
+    <h2 id="h-calc">¿Cuánto te queda de cada venta?</h2>
+    <p class="lede">Usa las comisiones por categoría y la tabla oficial de envíos que rige desde el 6 de abril de 2026 (ya no existe el “cargo fijo”: ahora pagas un costo por envío en toda venta). Las retenciones son las de 2026.</p>
+  </div>
+  <div class="calc">
+    <form class="form" id="calc-form">
+      <div class="fld full"><label for="c-ejemplo">Cargar un ejemplo</label>
+        <select id="c-ejemplo"><option value="">Elige un ejemplo (costos supuestos, cámbialos)</option></select></div>
+      <div class="fld"><label for="c-precio">Precio de venta (MXN)</label><input id="c-precio" type="number" inputmode="decimal" min="35" step="1"></div>
+      <div class="fld"><label for="c-costo">Lo que te cuesta el producto</label><input id="c-costo" type="number" inputmode="decimal" min="0" step="1"><span class="hint">Puesto en tu casa: compra + flete + impuestos de importación.</span></div>
+      <div class="fld full"><label for="c-cat">Categoría · comisión Clásica / Premium</label><select id="c-cat"></select></div>
+      <div class="fld"><label id="l-tipo">Tipo de publicación</label>
+        <div class="seg" id="c-tipo" role="group" aria-labelledby="l-tipo"><button type="button" data-v="clasica">Clásica</button><button type="button" data-v="premium">Premium (MSI)</button></div></div>
+      <div class="fld"><label id="l-rfc">¿Tienes RFC registrado en Mercado Libre?</label>
+        <div class="seg" id="c-rfc" role="group" aria-labelledby="l-rfc"><button type="button" data-v="1">Sí</button><button type="button" data-v="0">No</button></div></div>
+      <div class="fld"><label for="c-peso">Peso con empaque</label><select id="c-peso"></select><span class="hint">Cuenta el mayor entre peso real y volumétrico.</span></div>
+      <div class="fld"><label for="c-rep">Tu reputación</label><select id="c-rep"></select></div>
+      <div class="fld full"><label style="display:flex;gap:8px;align-items:center;font-weight:500"><input id="c-gratis" type="checkbox" style="width:auto;min-height:0"> Ofrezco envío gratis aunque el producto cueste menos de $299</label></div>
+      <div class="fld"><label for="c-ads">Publicidad (% del precio)</label><input id="c-ads" type="number" min="0" max="60" step="1"><span class="hint">Product Ads se paga por clic. Empieza en 0 y súbelo al probar.</span></div>
+      <div class="fld"><label for="c-dev">Devoluciones y mermas (%)</label><input id="c-dev" type="number" min="0" max="50" step="1"><span class="hint">Ropa y calzado devuelven más; ponle 5 a 8.</span></div>
+      <div class="fld"><label for="c-emp">Empaque por pieza (MXN)</label><input id="c-emp" type="number" min="0" step="1"></div>
+    </form>
+    <div>
+      <div class="ticket" aria-live="polite">
+        <div class="th"><b>TICKET DE VENTA</b><span class="small">Mercado Libre México · tarifas sep 2026</span></div>
+        <div id="ticket-lines"></div>
+        <div class="kpis"><div><small>Margen</small><span id="k-margen" class="num">—</span></div><div><small>Sobre tu costo</small><span id="k-roi" class="num">—</span></div><div><small>Por 100 ventas</small><span id="k-100" class="num">—</span></div></div>
+        <div class="verdict-chip" id="calc-verdict"></div>
+        <p class="small" style="text-align:center;margin-top:8px">Precio mínimo para ganar 20% con este costo: <b id="calc-min" class="mono">—</b></p>
+      </div>
+      <p class="small" style="margin-top:10px">Con RFC y la opción de pago definitivo (ingresos de hasta $300 mil al año), la retención de 2.5% ISR + 8% IVA suele ser tu impuesto final. En Guanajuato se retiene 2.5% adicional. Confírmalo con tu contador.</p>
+    </div>
+  </div>
+
+  <div class="grid2" style="margin-top:18px">
+    <div class="chart">
+      <h3>A dónde se va el dinero según el precio</h3>
+      <p class="sub" id="stack-note"></p>
+      <div class="legend" aria-hidden="true"><span><i style="background:var(--c-prod)"></i>Producto</span><span><i style="background:var(--c-ml)"></i>Mercado Libre</span><span><i style="background:var(--c-tax)"></i>Impuestos</span><span><i style="background:var(--c-gain)"></i>Te queda</span></div>
+      <div class="svgbox" id="stack"></div>
+      <details class="tview"><summary>Ver como tabla</summary><div class="tbl-wrap" style="margin-top:8px"><table id="stack-table"></table></div></details>
+    </div>
+    <div class="card">
+      <h3>Regla rápida: cuánto puedes pagar por el producto</h3>
+      <p class="small">Categoría de 15%, vendedor nuevo, con RFC, empaque de $12 y 3% de devoluciones. “Se va” incluye comisión, envío, impuestos, empaque y devoluciones.</p>
+      <div class="tbl-wrap" style="margin-top:10px"><table>
+        <thead><tr><th>Precio</th><th>Peso</th><th class="n">Se va</th><th class="n">Pagas máximo</th></tr></thead>
+        <tbody>
+          <tr><td>$149</td><td>0.3–0.5 kg</td><td class="n">62%</td><td class="n">$26 <span class="small">(18%)</span></td></tr>
+          <tr><td>$199</td><td>0.3–0.5 kg</td><td class="n">56%</td><td class="n">$48 <span class="small">(24%)</span></td></tr>
+          <tr><td>$299</td><td>0.5–1 kg</td><td class="n">55%</td><td class="n">$75 <span class="small">(25%)</span></td></tr>
+          <tr><td>$399</td><td>0.5–1 kg</td><td class="n">48%</td><td class="n">$128 <span class="small">(32%)</span></td></tr>
+          <tr><td>$499</td><td>1–2 kg</td><td class="n">50%</td><td class="n">$151 <span class="small">(30%)</span></td></tr>
+          <tr><td>$799</td><td>1–2 kg</td><td class="n">41%</td><td class="n">$310 <span class="small">(39%)</span></td></tr>
+          <tr><td>$999</td><td>1–2 kg</td><td class="n">38%</td><td class="n">$416 <span class="small">(42%)</span></td></tr>
+          <tr><td>$1,499</td><td>2–3 kg</td><td class="n">35%</td><td class="n">$668 <span class="small">(45%)</span></td></tr>
+        </tbody></table></div>
+      <p style="margin-top:10px">“Pagas máximo” es lo más que puede costarte para ganar 20%. <b>Si vendes barato, necesitas comprar a la quinta parte del precio.</b> Arriba de $800 ya aguantas comprar al 40%. En Accesorios para vehículos (9% de comisión) el margen es más holgado.</p>
+    </div>
+  </div>
+  <div class="grid3" style="margin-top:18px">
+    <div class="card"><h3>Kits y paquetes</h3><p>Si la venta total pasa de $299, se cobra un solo envío por el paquete. Vender “3 piezas” o “kit de 12” en lugar de piezas sueltas es la forma más simple de salvar el margen en productos baratos.</p></div>
+    <div class="card"><h3>Cuidado con los cortes de precio</h3><p>El envío cambia por bandas de precio. Un producto de 0.5–1 kg paga $71.50 de envío a $498 y $89.40 a $499. A veces bajar $1 te deja más dinero.</p></div>
+    <div class="card"><h3>Cuándo cobras</h3><p>Con envíos de Mercado Libre, el dinero se libera 2 días después de la entrega si ya tienes reputación, o 6 días si eres nuevo. Pasarlo a tu banco por SPEI es gratis.</p></div>
+  </div>
+</section>
+
+<section id="fisicos" aria-labelledby="h-fisicos">
+  <div class="sec-head">
+    <span class="eyebrow">Comprar y revender en Mercado Libre</span>
+    <h2 id="h-fisicos">Para empezar, lo aburrido de recompra gana</h2>
+    <p class="lede">Consumibles que el cliente vuelve a comprar y refacciones con compatibilidad: menos competencia de marcas y de vendedores chinos, pocas devoluciones y surtido en México. Los márgenes de la tabla son estimaciones después de comisión y envío, antes de publicidad e impuestos.</p>
+  </div>
+  <div class="tbl-wrap tbl-niches"><table>
+    <thead><tr><th>Nicho</th><th>Demanda</th><th>Competencia</th><th class="n">Margen bruto (est.)</th><th class="n">Lote de prueba (est.)</th><th>Riesgo</th><th>Nota</th></tr></thead>
+    <tbody>
+      <tr><td><b>Accesorios de moto</b><br><span class="small">fundas, guantes, direccionales, balaclavas</span></td><td><span class="pill bien">Alta, estable</span></td><td><span class="pill regular">Media</span></td><td class="n">25–40%</td><td class="n">$4–10k</td><td><span class="pill bien">Bajo</span></td><td>Comisión de 9%. Menos de 5% de vendedores Platinum. Evita cascos.</td></tr>
+      <tr><td><b>Refacciones de desgaste de auto</b><br><span class="small">focos H4, plumas, filtros, fundas</span></td><td><span class="pill bien">Alta</span></td><td><span class="pill regular">Media</span></td><td class="n">20–35%</td><td class="n">$5–15k</td><td><span class="pill regular">Medio</span></td><td>Publica tabla de año y modelo: la compatibilidad causa devoluciones.</td></tr>
+      <tr><td><b>Consumibles de impresión y 3D</b><br><span class="small">papel foto, tintas, filamento PLA</span></td><td><span class="pill bien">Alta, recompra</span></td><td><span class="pill mal">Alta en precio</span></td><td class="n">15–25%</td><td class="n">$5–12k</td><td><span class="pill bien">Bajo</span></td><td>El papel importado paga 25–35%: surte nacional.</td></tr>
+      <tr><td><b>Insumos para negocios</b><br><span class="small">guantes de nitrilo, papel térmico, empaque</span></td><td><span class="pill bien">Alta, estable</span></td><td><span class="pill regular">Media-alta</span></td><td class="n">12–25%</td><td class="n">$5–15k</td><td><span class="pill bien">Bajo-medio</span></td><td>Guantes de uso médico piden COFEPRIS; ofrece uso industrial o de alimentos.</td></tr>
+      <tr><td><b>Filtros y repuestos</b><br><span class="small">agua, aspiradora, cafetera</span></td><td><span class="pill bien">Sube (+7%)</span></td><td><span class="pill regular">Media</span></td><td class="n">25–40%</td><td class="n">$5–12k</td><td><span class="pill bien">Bajo</span></td><td>La compatibilidad es tu barrera de entrada.</td></tr>
+      <tr><td><b>Mascotas: higiene y accesorios</b></td><td><span class="pill bien">Sube fuerte</span></td><td><span class="pill regular">Media</span></td><td class="n">30–45%</td><td class="n">$5–12k</td><td><span class="pill bien">Bajo-medio</span></td><td>Tiendas en línea de mascotas +31% en el 1er semestre de 2026. Evita alimento.</td></tr>
+      <tr><td><b>Uniformes médicos y ropa de trabajo</b></td><td><span class="pill bien">Alta</span></td><td><span class="pill regular">Media</span></td><td class="n">25–40%</td><td class="n">$6–15k</td><td><span class="pill regular">Medio</span></td><td>Más de 100 mil vendidas de los modelos top. Hecho en México, sin arancel. Tallas: guía en cm.</td></tr>
+      <tr><td><b>Herramienta: brocas, discos, puntas</b></td><td><span class="pill bien">Sube (+22% llave de impacto)</span></td><td><span class="pill mal">Alta en marcas</span></td><td class="n">25–40% acc. · 8–15% herramienta</td><td class="n">$6–15k</td><td><span class="pill regular">Medio</span></td><td>Vende accesorios, no la herramienta. NOM-003 si es eléctrica.</td></tr>
+      <tr><td><b>Iluminación LED</b></td><td><span class="pill bien">Sube (+17%)</span></td><td><span class="pill mal">Muy alta (chinos)</span></td><td class="n">15–30%</td><td class="n">$4–10k</td><td><span class="pill regular">Medio</span></td><td>Pico en noviembre. Defectos y NOM-003 si va a 127 V.</td></tr>
+      <tr><td><b>Pickleball</b><br><span class="small">pelotas, grips, bolsas</span></td><td><span class="pill regular">Meseta</span></td><td><span class="pill bien">Baja-media</span></td><td class="n">25–40%</td><td class="n">$8–20k</td><td><span class="pill regular">Medio</span></td><td>Mercado chico; empieza por consumibles.</td></tr>
+      <tr><td><b>Suplementos</b><br><span class="small">creatina, proteína, omega 3</span></td><td><span class="pill bien">Sube (+13% creatina)</span></td><td><span class="pill mal">Concentrada en marcas</span></td><td class="n">10–20%</td><td class="n">$10–30k</td><td><span class="pill mal">Alto</span></td><td>COFEPRIS y NOM-051; hay falsificaciones.</td></tr>
+      <tr><td><b>K-beauty y skincare</b></td><td><span class="pill bien">Sube fuerte</span></td><td><span class="pill mal">Alta, tiendas oficiales</span></td><td class="n">15–30%</td><td class="n">$10–25k</td><td><span class="pill mal">Alto</span></td><td>Etiqueta NOM-141 en español; Corea paga arancel de 25–36%; caducidad.</td></tr>
+      <tr><td><b>Cámaras de seguridad Wi-Fi</b></td><td><span class="pill regular">Meseta (−3%)</span></td><td><span class="pill mal">Muy alta</span></td><td class="n">10–20%</td><td class="n">$10–25k</td><td><span class="pill mal">Alto</span></td><td>Homologación ante la CRT obligatoria; exige soporte técnico.</td></tr>
+      <tr><td><b>Freidoras, cafeteras y electrodomésticos</b></td><td><span class="pill regular">Alta pero madura</span></td><td><span class="pill mal">Marcas y tiendas oficiales</span></td><td class="n">8–15%</td><td class="n">$15–40k</td><td><span class="pill mal">Alto</span></td><td>Mejor vende sus accesorios y repuestos.</td></tr>
+      <tr><td><b>Ropa y calzado con tallas</b></td><td><span class="pill bien">Muy alta</span></td><td><span class="pill mal">Muy alta</span></td><td class="n">30–50% antes de devoluciones</td><td class="n">$10–30k</td><td><span class="pill mal">Alto</span></td><td>La moda es 28% de todas las devoluciones. Excepción: básicos en paquete.</td></tr>
+    </tbody></table></div>
+  <p class="small" style="margin-top:8px">Fuente de la tabla: evaluación con “Más vendidos” (30 sep 2026), Google Trends México, Nubimetrics, Tiendanube y aranceles 2026. No hay datos públicos de margen por categoría; son estimaciones para comparar.</p>
+
+  <div class="grid2" style="margin-top:18px">
+    <div class="chart">
+      <h3>Qué sube y qué ya pasó de moda</h3>
+      <p class="sub">Cambio en búsquedas de Google México: últimas 52 semanas contra las 52 anteriores (al 27 sep 2026). Que suba no significa que convenga: power banks y K-beauty suben, pero compiten con marcas y vendedores chinos o piden permisos.</p>
+      <div class="svgbox" id="g-trends-f" data-label="Tendencias de búsqueda de productos físicos"></div>
+    </div>
+    <div class="card">
+      <h3>Qué no vender si vas empezando</h3>
+      <ol style="padding-left:18px;margin:6px 0 0">
+        <li><b>Modas agotadas:</b> el termo Stanley está al 18% de su pico y Labubu cayó 85% en un año.</li>
+        <li><b>Especular con Pokémon o coleccionables:</b> los precios de reventa ya van a la baja.</li>
+        <li><b>Electrónica genérica con batería o Bluetooth:</b> audífonos, power banks, smartwatches. Competencia china, homologación y devoluciones.</li>
+        <li><b>Celulares, consolas y marcas de ticket alto:</b> mucho capital, margen mínimo y fraudes.</li>
+        <li><b>Ropa y calzado con tallas:</b> devoluciones, arancel de 35% y réplicas prohibidas.</li>
+        <li><b>Suplementos, cosméticos y perfumes sin papeles.</b></li>
+        <li><b>Piezas sueltas de menos de $150 o productos muy voluminosos:</b> el envío por pieza y el almacenaje en Full te comen el margen. Arma kits de $299 o más.</li>
+      </ol>
+    </div>
+  </div>
+
+  <div class="grid2" style="margin-top:18px">
+    <div>
+      <h3 style="margin-bottom:10px">Cómo validar un producto en 2 o 3 semanas</h3>
+      <ol class="steps">
+        <li><div><b>Demanda</b>Revisa el autocompletado del buscador de Mercado Libre, “Más vendidos” por categoría, tendencias.mercadolibre.com.mx y Google Trends a 5 años. Descarta curvas que caen o picos de moda.</div></li>
+        <li><div><b>Ventas de la competencia</b>Anota los “vendidos” de los 10 primeros resultados y vuelve a medir a los 14 días. Hay extensiones gratis que registran ventas diarias; de pago, Nubimetrics o Real Trends.</div></li>
+        <li><div><b>Competencia</b>En la primera página cuenta tiendas oficiales, medallas Platinum, productos de catálogo y envíos internacionales. Buena señal: varios vendedores sin medalla con más de 100 vendidos.</div></li>
+        <li><div><b>Margen</b>Mete el precio y tu costo a la calculadora. Si no deja 20% con RFC y sin anuncios, descártalo.</div></li>
+        <li><div><b>Lote de prueba</b>Compra de 20 a 50 piezas a un proveedor nacional. Si en 4 semanas vendes al menos la mitad con 20% de margen, recompra; si no, liquida y prueba otro.</div></li>
+      </ol>
+    </div>
+    <div>
+      <h3 style="margin-bottom:10px">Calendario del último trimestre</h3>
+      <div class="tbl-wrap"><table>
+        <thead><tr><th>Producto</th><th>Empieza a subir</th><th>Pico</th><th>Se cae</th></tr></thead>
+        <tbody>
+          <tr><td>Disfraz de Halloween</td><td>2 oct</td><td>1 nov</td><td>7 nov</td></tr>
+          <tr><td>Papel picado</td><td>10 oct</td><td>30 oct</td><td>6 nov</td></tr>
+          <tr><td>Árbol de Navidad</td><td>5 nov</td><td>~5 dic</td><td>20 dic</td></tr>
+          <tr><td>Luces navideñas</td><td>9 nov</td><td>~6 dic</td><td>19 dic</td></tr>
+          <tr><td>Chamarras</td><td>todo el año, sube 4 nov</td><td>24 dic</td><td>enero</td></tr>
+          <tr><td>Juguetes</td><td>todo el año, sube 23 nov</td><td>6 ene</td><td>13 ene</td></tr>
+        </tbody></table></div>
+      <p class="small" style="margin-top:6px">Google Trends México 2025 (media de 7 días, ±3 días). “Empieza a subir” = llega al 25% de su pico.</p>
+      <div class="note" style="margin-top:12px"><b>Ya no da tiempo de importar por barco para este fin de año:</b> un pedido hecho hoy llega a mediados o fines de noviembre. Día de Muertos solo con mayorista local y publicado antes del 10 de octubre. Buen Fin y Navidad: stock en Full antes del 1 de noviembre. Reyes: antes del 20 de diciembre.</div>
+    </div>
+  </div>
+</section>
+
+<section id="digitales" aria-labelledby="h-digitales">
+  <div class="sec-head">
+    <span class="eyebrow">Productos digitales</span>
+    <h2 id="h-digitales">Lo digital se vende fuera de Mercado Libre</h2>
+    <p class="lede">Mercado Libre prohíbe el contenido descargable, los ebooks (solo tiendas oficiales), los cursos y las guías de estudio. Hay muchas invitaciones y plantillas publicadas, pero se arriesgan a baja o suspensión. Tu canal es WhatsApp, Instagram y TikTok, con cobro por link de Mercado Pago, SPEI, Hotmart, Gumroad o Etsy.</p>
+  </div>
+  <div class="grid2">
+    <div class="chart">
+      <h3>Qué se busca más y qué se busca menos</h3>
+      <p class="sub">Cambio en búsquedas de Google México entre 2021-22 y 2025-26. Ojo: parte de la búsqueda se está yendo a TikTok y a la IA, así que la caída exagera un poco.</p>
+      <div class="svgbox" id="g-trends-d" data-label="Tendencias de búsqueda de productos digitales"></div>
+    </div>
+    <div>
+      <div class="tbl-wrap"><table>
+        <thead><tr><th>Producto</th><th>Precio típico</th><th>Temporada</th><th>Competencia</th></tr></thead>
+        <tbody>
+          <tr><td><b>Invitaciones digitales</b><br><span class="small">XV, boda, bautizo, baby shower</span></td><td>$89–585</td><td>ene, jun–jul</td><td><span class="pill regular">Alta</span> Mucha gente las hace en Canva</td></tr>
+          <tr><td><b>Plantillas Excel o Sheets</b></td><td>~$230</td><td>ene, nov, feb</td><td><span class="pill regular">Media-alta</span></td></tr>
+          <tr><td><b>Plantillas Canva</b></td><td>~$180</td><td>oct, feb, nov</td><td><span class="pill mal">Muy alta</span> hay mucho gratis</td></tr>
+          <tr><td><b>Guías EXANI-II, UNAM, IPN</b></td><td>s/d</td><td>ene–feb, abr–jun</td><td><span class="pill bien">Media</span> pide dominar el temario</td></tr>
+          <tr><td><b>Planeaciones para maestros</b></td><td>s/d</td><td>sep, ene–feb</td><td><span class="pill mal">Alta</span> mucho gratis</td></tr>
+          <tr><td><b>Cursos de oficios</b></td><td>s/d</td><td>ene, jul, dic</td><td><span class="pill regular">Búsqueda a la baja</span></td></tr>
+          <tr><td><b>Cake toppers e imprimibles</b></td><td>s/d</td><td>jul, abr–may</td><td><span class="pill regular">Media</span> riesgo por personajes</td></tr>
+          <tr><td><b>Planners digitales</b></td><td>~$500 (en inglés)</td><td>dic–ene</td><td><span class="pill mal">Saturado</span></td></tr>
+          <tr><td><b>Guías COMIPEMS</b></td><td>—</td><td>—</td><td><span class="pill mal">Ya no existe el examen</span></td></tr>
+        </tbody></table></div>
+      <p class="small" style="margin-top:6px">Precios: publicaciones en Mercado Libre (invitaciones) y medianas en Gumroad (plantillas y planners). s/d = sin dato confiable.</p>
+    </div>
+  </div>
+
+  <h3 style="margin-top:24px;margin-bottom:10px">Dónde cobrar y cuánto te cobran</h3>
+  <div class="tbl-wrap"><table>
+    <thead><tr><th>Plataforma</th><th>Mensualidad</th><th>Comisión por venta</th><th class="n">De $199 te quedan</th><th>Lo importante en México</th></tr></thead>
+    <tbody>
+      <tr><td><b>Link de Mercado Pago</b></td><td>$0</td><td>3.49% + $4 + IVA · OXXO 3.79% + $4</td><td class="n">≈ $186</td><td>Tarjeta, SPEI y OXXO. Lo más barato para empezar.</td></tr>
+      <tr><td><b>WhatsApp o Instagram + SPEI</b></td><td>$0</td><td>0%</td><td class="n">$199</td><td>Sin protección: valida cada pago con el CEP de Banxico.</td></tr>
+      <tr><td><b>Hotmart</b></td><td>$0</td><td>9.9% + US$0.50–1</td><td class="n">≈ $161–170</td><td>OXXO, SPEI, hasta 12 pagos. Pide exclusividad del producto.</td></tr>
+      <tr><td><b>Gumroad</b></td><td>$0</td><td>10% + US$0.50 (30% si la venta viene de su buscador)</td><td class="n">≈ $170</td><td>Cobra los impuestos del comprador; deposita en pesos.</td></tr>
+      <tr><td><b>Etsy</b></td><td>US$0.20 por publicación</td><td>6.5% + 4.5% + $10</td><td class="n">≈ $164</td><td>Compradores en inglés. Retiene 2.5% de ISR.</td></tr>
+      <tr><td><b>Shopify + descargas</b></td><td>US$14 al mes (anual)</td><td>3.5% + $3</td><td class="n">≈ $189</td><td>Tienda propia en pesos; conviene cuando ya vendes.</td></tr>
+      <tr><td><b>Payhip · Lemon Squeezy</b></td><td>$0 o desde US$29</td><td>5% + procesador</td><td class="n">—</td><td>Cobran en dólares.</td></tr>
+    </tbody></table></div>
+  <p class="small" style="margin-top:6px">“De $199 te quedan”: cálculo antes de impuestos, con tarjeta. Tarifas publicadas por cada plataforma (consultadas el 30 sep 2026).</p>
+
+  <div class="grid3" style="margin-top:18px">
+    <div class="card"><h3>Los anuncios no dan para precios bajos</h3><p>En Meta, un clic en México cuesta de $1.80 a $4.30 y compra entre 1.4% y 3% de quienes llegan. Cada venta te cuesta de $60 a $310 en anuncios. Solo conviene con productos de $300 o más, o si vendes algo extra después.</p></div>
+    <div class="card"><h3>Cuánto se gana de verdad</h3><p>Nadie publica ingresos típicos; los casos famosos son la punta. Escenarios razonables: invitaciones personalizadas, de 8 a 25 pedidos al mes, entre $1,200 y $11,000 brutos. Plantillas sin anuncios en los primeros 3 a 6 meses: de $0 a $3,700 al mes.</p></div>
+    <div class="card"><h3>Riesgos que sí pasan</h3><ul><li>Personajes con licencia (Disney, Marvel, Bluey): infracción aunque todos lo hagan.</li><li>Tus archivos se piratean: personaliza y actualiza.</li><li>Hotmart puede cerrar tu cuenta con 0.9% de contracargos.</li><li>Una decisión de la SEP puede borrar un nicho (COMIPEMS).</li><li>Lo 100% hecho con IA es difícil de proteger como tuyo.</li></ul></div>
+  </div>
+  <p class="note good" style="margin-top:16px"><b>Mi recomendación digital:</b> empieza con invitaciones de diseño propio (sin personajes) o plantillas de Excel para un giro concreto, cobra con link de Mercado Pago o SPEI por WhatsApp y consigue clientes con videos en TikTok e Instagram. Pasa a Hotmart cuando tengas un curso. EXANI-II solo si dominas el temario.</p>
+</section>
+
+<section id="surtir" aria-labelledby="h-surtir">
+  <div class="sec-head">
+    <span class="eyebrow">Dónde conseguir la mercancía</span>
+    <h2 id="h-surtir">China ya no es barato por default</h2>
+    <p class="lede">Desde el 1 de enero de 2026, 1,463 fracciones de países sin tratado con México pagan aranceles de 5% a 50%. En abril se sumaron 185 más. En el primer semestre, las importaciones de China de esos productos cayeron 26%.</p>
+  </div>
+  <div class="grid2">
+    <div>
+      <div class="tbl-wrap"><table>
+        <thead><tr><th>Producto (varía por fracción)</th><th class="n">Arancel 2026</th></tr></thead>
+        <tbody>
+          <tr><td>Ropa, ropa de cama y telas</td><td class="n">25–35%</td></tr>
+          <tr><td>Calzado (algunos tenis 20%)</td><td class="n">20–35%</td></tr>
+          <tr><td>Plásticos, llantas y envases</td><td class="n">35%</td></tr>
+          <tr><td>Juguetes (de plástico 20%)</td><td class="n">20–30%</td></tr>
+          <tr><td>Útiles escolares</td><td class="n">30%</td></tr>
+          <tr><td>Higiene: shampoo, pasta dental y otros</td><td class="n">25–35%</td></tr>
+          <tr><td>Muebles de plástico, bambú o ratán</td><td class="n">25%</td></tr>
+          <tr><td>Electrodomésticos (microondas, planchas, secadoras)</td><td class="n">20–25%</td></tr>
+          <tr><td>Autopartes</td><td class="n">25–50%</td></tr>
+          <tr><td>Paquetería tipo Temu y Shein (tasa global)</td><td class="n">33.5%</td></tr>
+        </tbody></table></div>
+      <p class="small" style="margin-top:8px">Fuentes: DOF 29 dic 2025 y 23 abr 2026, El Financiero, Informador, Expansión. Revisa tu fracción exacta en la TIGIE antes de comprar.</p>
+    </div>
+    <div class="card">
+      <h3>Lo que pagas de verdad al importar</h3>
+      <ul>
+        <li><b>Importación formal de ropa (35%):</b> arancel + 0.8% de trámite + 16% de IVA ≈ 57.5% sobre el valor con flete. Con RFC recuperas la parte del IVA.</li>
+        <li><b>Producto con arancel 0%:</b> ≈ 16.9%, casi todo IVA acreditable.</li>
+        <li><b>Flete aéreo de carga:</b> US$4–8 por kg, 2 a 8 días. Aéreo puerta a puerta: US$5–12 por kg.</li>
+        <li><b>Marítimo consolidado:</b> US$80–210 por m³ solo de flete, 18 a 45 días puerto a puerto. Todo incluido: US$200–500 por m³ y más de 55 días.</li>
+        <li><b>Agente aduanal:</b> $3,000–15,000 por operación, más maniobras. En total, traer la mercancía suele sumar 40–65% sobre su precio en China.</li>
+        <li><b>Agente de compras en China:</b> 5–10% del pedido; inspección de US$40–120 por lote.</li>
+      </ul>
+      <p class="note warn" style="margin-top:12px">Si una consolidadora te ofrece “todo incluido” muy barato en ropa o calzado, sospecha de subvaluación. Te puedes quedar sin pedimento ni factura, y sin eso no puedes defenderte si alguien te denuncia en Mercado Libre.</p>
+    </div>
+  </div>
+
+  <div class="grid3" style="margin-top:18px">
+    <div class="card">
+      <h3>Proveedores en México</h3>
+      <ul>
+        <li><b>León, Gto.:</b> calzado y piel. Guanajuato hace 7 de cada 10 pares del país.</li>
+        <li><b>Moroleón y Uriangato, Gto.:</b> 4 km de locales de ropa al mayoreo.</li>
+        <li><b>San Martín Texmelucan, Pue.:</b> el tianguis de ropa más grande de Latinoamérica, los martes.</li>
+        <li><b>Centro de CDMX y La Merced:</b> juguetes, papelería, fiesta, dulces y bazar.</li>
+        <li><b>DENUE del INEGI:</b> busca fabricantes por giro y ciudad, gratis.</li>
+        <li><b>Ferias:</b> SAPICA y ANPIC (calzado y piel, León).</li>
+      </ul>
+      <p class="small" style="margin-top:8px">Pide factura. Sin factura no acreditas IVA y te cuesta demostrar que la mercancía es legal.</p>
+    </div>
+    <div class="card">
+      <h3>Etiquetas y permisos</h3>
+      <ul>
+        <li><b>NOM-050:</b> etiqueta en español con nombre, contenido, origen e importador. Casi todo la necesita.</li>
+        <li><b>NOM-004:</b> ropa y textiles (composición, talla, cuidados).</li>
+        <li><b>NOM-020:</b> calzado y piel.</li>
+        <li><b>NOM-015 y NOM-252:</b> juguetes.</li>
+        <li><b>NOM-024, 019 y 001:</b> electrónicos.</li>
+        <li><b>NOM-141:</b> cosméticos. Suplementos y cosméticos también piden cumplimiento ante COFEPRIS.</li>
+        <li><b>Bluetooth y Wi-Fi:</b> homologación ante la CRT (sustituyó al IFT). Sin ella, Mercado Libre te puede bajar la publicación.</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>Contra quién compites</h3>
+      <p>Los vendedores chinos que venden directo en Mercado Libre crecieron 60% en el T2 2026, y México es su mercado más grande. En lo ligero, barato y genérico (micas, fundas, bisutería, gadgets, moda rápida) casi no se les puede ganar.</p>
+      <p><b>Donde ganas tú:</b> productos pesados o voluminosos, entrega rápida con Full, refacciones con compatibilidad, hecho en México, kits armados y personalización.</p>
+    </div>
+  </div>
+  <div class="grid2" style="margin-top:18px">
+    <div class="card">
+      <h3>¿Y el dropshipping?</h3>
+      <p>Está permitido si describes bien el producto y cumples tiempos. Puedes marcar hasta 60 días de “disponibilidad de stock”, pero no aplica con Full ni Flex y Mercado Libre posiciona mejor lo que sí tiene stock. Desde China tarda 1 a 3 semanas y paga 33.5%, así que casi no conviene. En México hay pocos proveedores serios; desconfía de “franquicias” que cobran cuotas altas.</p>
+    </div>
+    <div class="card">
+      <h3>Productos regulados: mejor no al inicio</h3>
+      <p>Réplicas y piratería (te suspenden la cuenta), inalámbricos sin homologación, cosméticos y suplementos sin registro, medicamentos, y cualquier cosa con personajes o marcas que no son tuyas. Los titulares de marca pueden denunciarte y tienes 4 días para responder con documentos.</p>
+    </div>
+  </div>
+</section>
+
+<section id="sat" aria-labelledby="h-sat">
+  <div class="sec-head">
+    <span class="eyebrow">Impuestos 2026 · no es asesoría fiscal</span>
+    <h2 id="h-sat">Date de alta en el SAT antes de tu primera venta</h2>
+    <p class="lede">Desde enero de 2026 las plataformas retienen más, y desde abril el SAT ve en tiempo real lo que vendes en ellas. Vender sin RFC no te esconde: solo te cobra más.</p>
+  </div>
+  <div class="grid2">
+    <div>
+      <div class="tbl-wrap"><table>
+        <thead><tr><th>Retención de la plataforma</th><th class="n">Con RFC</th><th class="n">Sin RFC</th></tr></thead>
+        <tbody>
+          <tr><td>ISR</td><td class="n">2.5%</td><td class="n">20%</td></tr>
+          <tr><td>IVA</td><td class="n">8%</td><td class="n">16%</td></tr>
+          <tr><td><b>Total, sobre el precio sin IVA</b></td><td class="n"><b>10.5%</b></td><td class="n"><b>36%</b></td></tr>
+          <tr><td>En una venta de $499</td><td class="n">$45</td><td class="n">$155</td></tr>
+        </tbody></table></div>
+      <p class="small" style="margin-top:8px">El ISR con RFC subió de 1% a 2.5% en 2026 (Ley de Ingresos 2026). Aplica en Mercado Libre, Etsy y demás plataformas. En Guanajuato se retiene 2.5% adicional.</p>
+      <div class="note warn" style="margin-top:14px"><b>Sin RFC también te pueden multar.</b> Aunque te retengan, sigues obligado a inscribirte. La multa va de $5,070 a $15,200 y los recargos de 2026 son de 2.07% al mes. Si te inscribes por tu cuenta antes de que el SAT te lo pida, no hay multa.</div>
+    </div>
+    <div class="card">
+      <h3>Qué régimen te conviene al empezar</h3>
+      <ul>
+        <li><b>Solo vendes en plataformas y facturas menos de $300 mil al año:</b> Plataformas Tecnológicas con “pago definitivo”. La retención es tu impuesto final y casi no tienes trámites. Presentas el aviso dentro de 30 días del primer cobro y la opción queda fija 5 años.</li>
+        <li><b>Ojo:</b> con pago definitivo no deduces compras ni recuperas el IVA de tus facturas. Si revendes con margen bajo y compras con factura, puede salirte más caro. Haz la cuenta con tu contador.</li>
+        <li><b>Plataformas más tienda propia o redes:</b> pagos mensuales restando lo que te retuvieron.</li>
+        <li><b>Solo tienda propia, redes o Gumroad (digitales):</b> RESICO suele ser lo más barato (1% a 2.5% de lo cobrado). Hay criterios encontrados si lo combinas con plataformas; confírmalo.</li>
+      </ul>
+      <p style="margin-top:10px"><b>Cuánto cuesta un contador:</b> apps como Heru cobran desde $189–249 al mes en el plan para plataformas y $599–799 en RESICO.</p>
+    </div>
+  </div>
+  <ol class="steps" style="margin-top:18px">
+    <li><div><b>Saca tu RFC</b>Con tu CURP en el portal del SAT. Si ya tienes RFC de asalariado, presenta el aviso de actualización de actividades.</div></li>
+    <li><div><b>Tramita tu e.firma</b>Cita presencial en el SAT con identificación, correo y una USB. Luego generas tu contraseña.</div></li>
+    <li><div><b>Descarga tu constancia de situación fiscal</b>Desde el portal o la app del SAT.</div></li>
+    <li><div><b>Registra tu RFC en Mercado Libre y en cada plataforma</b>Tu nombre y código postal deben coincidir exactamente con los del SAT, o te retienen como si no tuvieras RFC.</div></li>
+    <li><div><b>Si eliges pago definitivo, presenta el aviso</b>Dentro de los 30 días siguientes a tu primer cobro.</div></li>
+  </ol>
+  <div class="grid2" style="margin-top:18px">
+    <div class="card"><h3>Productos digitales</h3><p>Plantillas, cursos e invitaciones pagan IVA de 16% en México. Etsy retiene 2.5% de ISR y 8% de IVA en ventas a México. Hotmart cobra el IVA al comprador en México desde 2026 y tú le facturas a Hotmart. Gumroad cobra y paga los impuestos del comprador, pero tú declaras tus ingresos. Si vendes a alguien en el extranjero, suele ser exportación con IVA de 0%.</p></div>
+    <div class="card"><h3>Importar por paquetería</h3><p>Hasta US$2,500 por envío sin padrón de importadores. De China pagas una tasa global de 33.5%. De Estados Unidos o Canadá: nada hasta US$50, 17% de US$50 a 117 y 19% arriba de eso. Si una consolidadora no te da pedimento o factura, no puedes deducir la mercancía ni demostrar que entró legalmente.</p></div>
+  </div>
+</section>
+
+<section id="plan" aria-labelledby="h-plan">
+  <div class="sec-head">
+    <span class="eyebrow">Si arrancas hoy, 30 de septiembre</span>
+    <h2 id="h-plan">Plan de 30 días</h2>
+    <p class="lede">Es el plan general para el camino más común (nicho de recompra con proveedor nacional, más un producto digital opcional). El cuestionario te da los primeros pasos de tu camino específico.</p>
+  </div>
+  <ol class="steps">
+    <li><div><b>Semana 1 · Papeles y candidatos</b>Saca tu RFC y agenda la cita de e.firma. Elige 3 productos candidatos con el método de validación y cotiza con 3 proveedores mexicanos que den factura. Si harás algo digital, diseña 5 muestras.</div></li>
+    <li><div><b>Semana 2 · Lote de prueba y publicación</b>Compra de 20 a 50 piezas de 1 o 2 productos. Toma fotos propias con fondo claro, escribe título con marca, modelo y medida, y publica en kit arriba de $299. Registra tu RFC en Mercado Libre. Evalúa el Programa Despegue: dejas $850 en garantía y a cambio apareces en verde, te dan hasta $850 en publicidad y acceso a Flex.</div></li>
+    <li><div><b>Semana 3 · Medir y ajustar</b>Revisa visitas y ventas cada 3 días. Si hay visitas y no ventas, ajusta precio y fotos; si no hay visitas, mejora el título o prueba Product Ads con presupuesto chico. Responde preguntas en menos de una hora. En lo digital, sube 3 videos por semana y comparte tu link de Mercado Pago.</div></li>
+    <li><div><b>Semana 4 · Decidir</b>Si vendiste la mitad del lote con 20% de margen o más, recompra el doble y pide entrar a Full antes del 1 de noviembre para el Buen Fin. Si no, liquídalo y prueba el siguiente candidato. Anota todo: costo, precio, días para vender.</div></li>
+  </ol>
+  <div class="grid3" style="margin-top:18px">
+    <div class="card"><h3>Presupuesto de ejemplo con $10,000</h3><ul><li>$6,000 en 2 productos de prueba</li><li>$850 de garantía del Programa Despegue (recuperable)</li><li>$600 en empaque y etiquetas</li><li>$1,000 para anuncios</li><li>$1,550 de colchón para recomprar lo que funcione</li></ul></div>
+    <div class="card"><h3>Reputación desde el día uno</h3><p>Tu color se calcula desde 10 ventas. Para verde necesitas menos de 1.5% de reclamos, menos de 10% de envíos tardíos y menos de 1% de cancelaciones. Cancelar más de 2.5% de tus ventas puede suspenderte. En verde pagas 17% menos de envío que un vendedor nuevo.</p></div>
+    <div class="card"><h3>Cómo sabes que vas bien</h3><ul><li>Vendes la mitad del lote en 4 semanas o menos</li><li>El margen real, con RFC, queda arriba de 20%</li><li>Menos de 3% de devoluciones</li><li>Cada recompra se vende más rápido que la anterior</li></ul></div>
+  </div>
+</section>
+
+<section id="fuentes" aria-labelledby="h-fuentes">
+  <div class="sec-head">
+    <span class="eyebrow">Consultadas entre el 29 y el 30 de septiembre de 2026</span>
+    <h2 id="h-fuentes">Fuentes</h2>
+    <p class="small">Las páginas de ayuda de Mercado Libre no muestran fecha; se consultaron el 30 sep 2026. Donde las fuentes no coincidían, usé la oficial y lo señalé en el texto.</p>
+  </div>
+  <div class="grid2">
+    <div>
+      <h3 style="margin-bottom:8px">Mercado Libre y Mercado Pago</h3>
+      <ol class="src">
+        <li><a href="https://www.mercadolibre.com.mx/ayuda/870" target="_blank" rel="noopener">Costos de vender (comisiones Clásica y Premium)</a></li>
+        <li><a href="https://www.mercadolibre.com.mx/ayuda/3287" target="_blank" rel="noopener">Costos de los envíos gratis</a> · tablas por reputación: <a href="https://www.mercadolibre.com.mx/ayuda/40538" target="_blank" rel="noopener">verde</a>, <a href="https://www.mercadolibre.com.mx/ayuda/40545" target="_blank" rel="noopener">amarilla</a>, <a href="https://www.mercadolibre.com.mx/ayuda/40547" target="_blank" rel="noopener">naranja y roja</a></li>
+        <li><a href="https://www.profitosapp.com/blog/baja-cargos-comisiones-mercado-libre-abril-2026" target="_blank" rel="noopener">ProfitOS: cambios del 22 abr 2026</a> y <a href="https://www.profitosapp.com/blog/cambios-mercado-envios-full-mexico-abril-2026" target="_blank" rel="noopener">fin del cargo fijo, 6 abr 2026</a></li>
+        <li><a href="https://envios.mercadolibre.com.mx/vender-con-full" target="_blank" rel="noopener">Vender con Full</a> · <a href="https://www.mercadolibre.com.mx/ayuda/21793" target="_blank" rel="noopener">almacenamiento</a></li>
+        <li><a href="https://www.mercadolibre.com.mx/ayuda/26663" target="_blank" rel="noopener">Retenciones de impuestos</a> · <a href="https://www.mercadopago.com.mx/blog/nuevas-retenciones-ventas-en-plataformas" target="_blank" rel="noopener">Mercado Pago: nuevas retenciones 2026</a></li>
+        <li><a href="https://www.mercadolibre.com.mx/ayuda/275" target="_blank" rel="noopener">Cuándo se libera el dinero</a> · <a href="https://www.mercadolibre.com.mx/ayuda/866" target="_blank" rel="noopener">reputación</a> · <a href="https://www.mercadolibre.com.mx/ayuda/33314" target="_blank" rel="noopener">Programa Despegue</a></li>
+        <li><a href="https://www.mercadolibre.com.mx/ayuda/1079" target="_blank" rel="noopener">Contenido digital prohibido</a> · <a href="https://www.mercadolibre.com.mx/ayuda/3590" target="_blank" rel="noopener">libros digitales</a> · <a href="https://www.mercadolibre.com.mx/ayuda/1071" target="_blank" rel="noopener">cursos y guías</a></li>
+        <li><a href="https://www.mercadolibre.com.mx/mas-vendidos" target="_blank" rel="noopener">Más vendidos</a> (leído el 30 sep 2026)</li>
+        <li><a href="https://www.sec.gov/Archives/edgar/data/0001099590/000109959026000021/meli-20260805xex991.htm" target="_blank" rel="noopener">MercadoLibre, carta a inversionistas T2 2026</a> · <a href="https://www.sec.gov/Archives/edgar/data/0001099590/000109959026000014/meli-20260507xex991.htm" target="_blank" rel="noopener">T1 2026</a></li>
+        <li><a href="https://www.mercadopago.com.mx/herramientas-para-vender/link-de-pago" target="_blank" rel="noopener">Link de pago de Mercado Pago</a></li>
+      </ol>
+      <h3 style="margin:16px 0 8px">Mercado y tendencias</h3>
+      <ol class="src" start="11">
+        <li><a href="https://images.produ.com/wp-content/uploads/2026/03/12132700/AMVO_Estudio-de-Venta-Online-2026-Prensa-1_compressed.pdf" target="_blank" rel="noopener">AMVO, Estudio de Venta Online 2026</a></li>
+        <li><a href="https://www.elfinanciero.com.mx/economia/2025/12/14/buen-fin-2025-ventas-rompen-record-y-se-consolida-el-consumo-formal/" target="_blank" rel="noopener">El Financiero: Buen Fin 2025</a> · <a href="https://www.informador.mx/economia/buen-fin-2026-estos-son-todos-los-dias-que-duraran-las-ofertas-20260928-0085.html" target="_blank" rel="noopener">Informador: fechas Buen Fin 2026</a></li>
+        <li><a href="https://www.similarweb.com/es/top-websites/mexico/e-commerce-and-shopping/marketplace/" target="_blank" rel="noopener">Similarweb: marketplaces en México</a></li>
+        <li><a href="https://academia.nubimetrics.com/productos-vender-todo-ano" target="_blank" rel="noopener">Nubimetrics: productos para todo el año</a> · <a href="https://academia.nubimetrics.com/cuarto-trimestre" target="_blank" rel="noopener">cuarto trimestre</a> · <a href="https://academia.nubimetrics.com/dia-del-padre" target="_blank" rel="noopener">Día del Padre 2026</a></li>
+        <li><a href="https://www.jornada.com.mx/noticia/2026/07/20/economia/ventas-en-internet-de-productos-para-mascotas-suben-31" target="_blank" rel="noopener">La Jornada: mascotas en línea +31%</a></li>
+        <li><a href="https://trends.google.com/trends/explore?geo=MX&date=today%205-y&q=termo%20stanley" target="_blank" rel="noopener">Google Trends México</a> (consultas del 27 al 30 sep 2026)</li>
+        <li><a href="https://www.unotv.com/ciencia-y-tecnologia/hot-sale-2026-estos-fueron-los-productos-mas-comprados-por-los-mexicanos/" target="_blank" rel="noopener">UnoTV: lo más comprado en Hot Sale 2026</a></li>
+        <li><a href="https://tierragamer.com/noticias/geek/pokemon-tcg-revendedores-precios-caen-30-aniversario" target="_blank" rel="noopener">TierraGamer: caen precios de reventa de Pokémon</a></li>
+      </ol>
+    </div>
+    <div>
+      <h3 style="margin-bottom:8px">SAT, leyes y aranceles</h3>
+      <ol class="src" start="19">
+        <li><a href="https://www.diputados.gob.mx/LeyesBiblio/pdf/LIF_2026.pdf" target="_blank" rel="noopener">Ley de Ingresos 2026 (ISR de 2.5%)</a></li>
+        <li><a href="https://www.diputados.gob.mx/LeyesBiblio/pdf/LISR.pdf" target="_blank" rel="noopener">Ley del ISR, arts. 113-A a 113-D</a> · <a href="https://www.diputados.gob.mx/LeyesBiblio/pdf/LIVA.pdf" target="_blank" rel="noopener">Ley del IVA, arts. 18-J y 18-K</a></li>
+        <li><a href="https://dof.gob.mx/2025/SHCP/SHCP_281225_01.pdf" target="_blank" rel="noopener">Resolución Miscelánea Fiscal 2026</a> · <a href="https://www.diputados.gob.mx/LeyesBiblio/pdf/CFF.pdf" target="_blank" rel="noopener">Código Fiscal (art. 30-B, multas)</a></li>
+        <li><a href="https://www.elcontribuyente.mx/2025/11/en-2026-vender-en-plataformas-digitales-sera-mas-caro-habra-nuevas-retenciones/" target="_blank" rel="noopener">El Contribuyente: retenciones 2026</a></li>
+        <li><a href="https://www.diputados.gob.mx/LeyesBiblio/ref/ligie_2022/LIGIE_2022_ref02_29dic25.pdf" target="_blank" rel="noopener">Decreto LIGIE, DOF 29 dic 2025</a> · <a href="https://www.snice.gob.mx/cs/avi/snice/ligie.info22.mod26.html" target="_blank" rel="noopener">segunda ronda, abr 2026</a></li>
+        <li><a href="https://www.elfinanciero.com.mx/economia/2025/12/29/ropa-juguetes-y-shampoo-que-productos-costaran-mas-en-2026-por-los-aranceles-que-impondra-mexico/" target="_blank" rel="noopener">El Financiero: productos con arancel 2026</a> · <a href="https://expansion.mx/economia/2026/09/22/mexico-municiones-aranceles-productos-asiaticos" target="_blank" rel="noopener">Expansión: efecto en importaciones</a></li>
+        <li><a href="https://www.anam.gob.mx/mensajeria-y-paqueteria/" target="_blank" rel="noopener">ANAM: mensajería y paquetería</a> · <a href="https://dof.gob.mx/nota_detalle.php?codigo=5777199&fecha=27/12/2025" target="_blank" rel="noopener">RGCE 2026</a></li>
+        <li><a href="https://www.camtomx.com/en/blog/importar-de-china-a-mexico-guia-completa" target="_blank" rel="noopener">Camtom: costos de importar de China</a> · <a href="https://www.camtomx.com/en/blog/padron-importadores-sat-2026" target="_blank" rel="noopener">padrón de importadores</a></li>
+        <li><a href="https://platiica.economia.gob.mx/normalizacion/nom-050-scfi-2004/" target="_blank" rel="noopener">Secretaría de Economía: NOM-050</a> y demás NOM citadas</li>
+        <li><a href="https://www.tuv.com/regulations-and-standards/en/mexico-instituto-federal-de-telecomunicaciones-ift-transition-to-comisi-n-de-regulaci-n-en-telecomunicaciones-crt.html" target="_blank" rel="noopener">TÜV: transición del IFT a la CRT</a></li>
+        <li><a href="https://www.heru.app/" target="_blank" rel="noopener">Heru: planes de contabilidad</a></li>
+      </ol>
+      <h3 style="margin:16px 0 8px">Productos digitales</h3>
+      <ol class="src" start="30">
+        <li><a href="https://hotmart.com/mx/tasa-hotmart" target="_blank" rel="noopener">Hotmart: tarifas</a> · <a href="https://hotmart.com/es/legal/terminos-de-uso" target="_blank" rel="noopener">términos de uso</a> · <a href="https://itenlinea.com/wp-content/uploads/2026/01/HotmartLatam25.pdf" target="_blank" rel="noopener">informe Latam 2025</a></li>
+        <li><a href="https://gumroad.com/pricing" target="_blank" rel="noopener">Gumroad: tarifas</a> · <a href="https://www.etsy.com/mx/payments" target="_blank" rel="noopener">Etsy Payments</a> · <a href="https://help.etsy.com/hc/en-us/articles/8709142835223-What-Does-Etsy-Withhold-and-Remit-to-Mexican-Tax-Authorities" target="_blank" rel="noopener">retenciones de Etsy en México</a></li>
+        <li><a href="https://www.miderechomilugar.gob.mx/" target="_blank" rel="noopener">Mi derecho, mi lugar (sustituye a COMIPEMS)</a></li>
+        <li><a href="https://www.superads.ai/facebook-ads-costs/cpc-cost-per-click/mexico" target="_blank" rel="noopener">Superads: costo por clic en Meta, México</a> · <a href="https://www.shopify.com/blog/ecommerce-conversion-rate" target="_blank" rel="noopener">Shopify: tasa de conversión</a></li>
+        <li><a href="https://datareportal.com/reports/digital-2026-mexico" target="_blank" rel="noopener">DataReportal: Digital 2026 México</a></li>
+        <li><a href="https://www.diputados.gob.mx/LeyesBiblio/pdf/LFDA.pdf" target="_blank" rel="noopener">Ley Federal del Derecho de Autor</a> · <a href="https://www.diputados.gob.mx/LeyesBiblio/pdf/LFPC.pdf" target="_blank" rel="noopener">Ley Federal de Protección al Consumidor</a></li>
+      </ol>
+    </div>
+  </div>
+</section>
+<footer>
+  Investigación hecha con fuentes públicas al 30 de septiembre de 2026. No es asesoría fiscal ni legal: confirma impuestos con un contador y revisa la fracción arancelaria y las NOM de tu producto antes de comprar. Esta página no tiene relación con Mercado Libre.
+</footer>
+</main>
+
+<script>
+window.QMCV_DATA={"fecha":"30 de septiembre de 2026","preguntas":[{"id":"capital","t":"¿Cuánto puedes invertir para arrancar sin que te duela?","o":["Menos de $3,000","$3,000 a $10,000","$10,000 a $30,000","Más de $30,000"]},{"id":"horas","t":"¿Cuántas horas a la semana le puedes meter?","o":["Menos de 5","De 5 a 10","De 10 a 20","Más de 20"]},{"id":"meta","t":"¿Qué quieres lograr en 6 meses?","o":["Un extra de $2 a 5 mil al mes","De $5 a 15 mil al mes","De $15 a 40 mil al mes","Que sea mi negocio principal"]},{"id":"rapidez","t":"¿Qué tan rápido necesitas ver dinero de regreso?","o":["Este mismo mes","En 1 a 3 meses","En 3 a 6 meses","Puedo esperar si vale la pena"]},{"id":"riesgo","t":"Si metes $5,000 y el producto no se vende, ¿cómo te pega?","o":["Muy mal, no puedo perder ese dinero","Me dolería, pero lo aguanto","Lo veo como costo de aprender","Tranqui, es parte del juego"]},{"id":"lugar","t":"¿Dónde vives?","o":["CDMX o zona metropolitana","Guadalajara o Monterrey","Otra ciudad grande","Ciudad chica o pueblo"]},{"id":"espacio","t":"¿Cuánto espacio tienes para guardar mercancía?","o":["Casi nada","Un clóset o un rincón","Un cuarto","Cochera o bodega"]},{"id":"sat","t":"¿Cómo estás con el SAT?","h":"Importa mucho: sin RFC, Mercado Libre te retiene 20% de ISR y 16% de IVA.","o":["Tengo RFC con actividad empresarial, RESICO o plataformas","Tengo RFC, pero de asalariado o sin actividad","No tengo RFC, pero me doy de alta","Por ahora no quiero darme de alta"]},{"id":"exp","t":"¿Ya has vendido en línea?","o":["Nunca","Cosas usadas (Marketplace, grupos)","Sí, en Mercado Libre o Amazon","Tengo o tuve un negocio"]},{"id":"habilidad","t":"¿Qué se te da mejor?","h":"Escoge la que más te describa.","o":["Diseñar cosas bonitas (Canva, fotos)","Explicar y enseñar","Negociar y encontrar gangas","Números, Excel y organización","Hacer cosas con las manos (cocina, uñas, costura)"]},{"id":"camara","t":"¿Te animas a hacer videos para TikTok o Reels?","o":["Sí, me late salir a cámara","Sí, pero sin mostrar la cara","Poquito, si hace falta","Nel, nada de redes"]},{"id":"tipo","t":"¿Qué te llama más?","o":["Productos físicos: comprar y revender","Productos digitales: haces uno y vendes muchos","Los dos, empezando por físico","Los dos, empezando por digital"]},{"id":"china","t":"¿Te late importar de China?","h":"Desde enero de 2026 muchos productos chinos pagan aranceles de 35% o más.","o":["Sí, ya sé o quiero aprender","Sí, pero con alguien que me lo resuelva","Prefiero proveedores en México","Ni idea de cómo funciona"]},{"id":"ingles","t":"¿Qué tal tu inglés?","o":["Nada","Lo básico","Me defiendo","Avanzado"]},{"id":"movilidad","t":"¿Cómo te mueves?","o":["Tengo carro","Tengo moto","Transporte público","Prefiero no salir mucho"]},{"id":"clientes","t":"¿Qué tal te llevas con atender clientes (preguntas, reclamos)?","o":["Me gusta, soy buena onda con la gente","Lo hago sin problema","Prefiero lo mínimo","Lo odio"]}],"temas":[{"id":"autos","n":"Autos y motos"},{"id":"mascotas","n":"Mascotas"},{"id":"belleza","n":"Belleza y uñas"},{"id":"cocina","n":"Cocina y repostería"},{"id":"tecnologia","n":"Tecnología y gadgets"},{"id":"deportes","n":"Deportes y fitness"},{"id":"bebes","n":"Bebés y maternidad"},{"id":"educacion","n":"Escuela y maestros"},{"id":"moda","n":"Ropa y calzado"},{"id":"hogar","n":"Hogar y organización"},{"id":"herramientas","n":"Herramientas y ferretería"},{"id":"salud","n":"Salud y consultorios"},{"id":"fiestas","n":"Fiestas y eventos"},{"id":"hobbies","n":"Hobbies y coleccionables"}],"costos":{"iva":0.16,"isrConRfc":0.025,"ivaRetConRfc":0.08,"isrSinRfc":0.2,"ivaRetSinRfc":0.16,"umbralEnvioGratis":299,"bandas":[99,199,299,499,999],"pesos":["Hasta 0.3 kg","0.3 a 0.5 kg","0.5 a 1 kg","1 a 2 kg","2 a 3 kg","3 a 4 kg","4 a 5 kg","5 a 7 kg","7 a 9 kg","9 a 12 kg","12 a 15 kg","15 a 20 kg","20 a 30 kg"],"envio":[{"n":"Verde","t":[[25.0,32.0,35.0,52.4,65.5,65.5],[28.5,34.0,38.0,56.0,70.0,70.0],[33.0,38.0,39.0,59.6,74.5,74.5],[35.0,40.0,41.0,67.6,84.5,84.5],[37.0,46.0,48.0,76.0,88.5,95.0],[39.0,50.0,54.0,82.4,95.5,103.0],[40.0,53.0,59.0,88.0,102.5,110.0],[45.0,59.0,70.0,98.0,122.5,122.5],[51.0,67.0,81.0,111.6,139.5,139.5],[59.0,78.0,96.0,129.2,161.5,161.5],[69.0,92.0,113.0,152.0,190.0,190.0],[81.0,108.0,140.0,178.0,222.5,222.5],[102.0,137.0,195.0,225.2,281.5,281.5]]},{"n":"Amarilla o sin reputación (vendedor nuevo)","t":[[30.0,38.4,42.0,62.9,78.6,78.6],[34.2,40.8,45.6,67.2,84.0,84.0],[39.6,45.6,46.8,71.5,89.4,89.4],[42.0,48.0,49.2,81.1,101.4,101.4],[44.4,55.2,57.6,91.2,106.2,114.0],[46.8,60.0,64.8,98.9,114.6,123.6],[48.0,63.6,70.8,105.6,123.0,132.0],[54.0,70.8,84.0,117.6,147.0,147.0],[61.2,80.4,97.2,133.9,167.4,167.4],[70.8,93.6,115.2,155.0,193.8,193.8],[82.8,110.4,135.6,182.4,228.0,228.0],[97.2,129.6,168.0,213.6,267.0,267.0],[122.4,164.4,234.0,270.2,337.8,337.8]]},{"n":"Naranja o roja","t":[[50.0,64.0,70.0,104.8,131.0,131.0],[57.0,68.0,76.0,112.0,140.0,140.0],[66.0,76.0,78.0,119.2,149.0,149.0],[70.0,80.0,82.0,135.2,169.0,169.0],[74.0,92.0,96.0,152.0,177.0,190.0],[78.0,100.0,108.0,164.8,191.0,206.0],[80.0,106.0,118.0,176.0,205.0,220.0],[90.0,118.0,140.0,196.0,245.0,245.0],[102.0,134.0,162.0,223.2,279.0,279.0],[118.0,156.0,192.0,258.4,323.0,323.0],[138.0,184.0,226.0,304.0,380.0,380.0],[162.0,216.0,280.0,356.0,445.0,445.0],[204.0,274.0,390.0,450.4,563.0,563.0]]}],"categorias":[{"id":"hogar","n":"Hogar, Muebles y Jardín","clasica":15,"premium":19.5},{"id":"vehiculos","n":"Accesorios para Vehículos","clasica":9,"premium":12},{"id":"refacciones","n":"Refacciones de autos y motos","clasica":13,"premium":16},{"id":"herramientas","n":"Herramientas","clasica":13.5,"premium":18},{"id":"ropa","n":"Ropa, Bolsas y Calzado","clasica":15,"premium":19.5},{"id":"belleza","n":"Belleza y Cuidado Personal","clasica":14,"premium":18.5},{"id":"salud","n":"Salud y Equipamiento Médico","clasica":14,"premium":18.5},{"id":"suplementos","n":"Suplementos y vitaminas","clasica":14.9,"premium":19.4},{"id":"mascotas","n":"Mascotas","clasica":15,"premium":19.5},{"id":"bebes","n":"Bebés","clasica":15,"premium":19.5},{"id":"deportes","n":"Deportes y Fitness","clasica":15,"premium":19.5},{"id":"juguetes","n":"Juegos y Juguetes","clasica":15,"premium":19.5},{"id":"celulares","n":"Celulares y Telefonía","clasica":10,"premium":14.5},{"id":"computacion","n":"Computación","clasica":10,"premium":14.5},{"id":"electronica","n":"Electrónica, Audio y Video","clasica":10,"premium":12.5},{"id":"libros","n":"Libros","clasica":15,"premium":18},{"id":"alimentos","n":"Alimentos y Bebidas","clasica":10,"premium":14.5}]},"ejemplos":[{"n":"Organizador para el hogar a $499 (1 a 2 kg)","v":{"precio":499,"costo":180,"cat":"hogar","peso":3,"rep":1,"tipo":"clasica","rfc":true}},{"n":"Calcetines, paquete de 12 a $189 (0.3 a 0.5 kg)","v":{"precio":189,"costo":70,"cat":"ropa","peso":1,"rep":1,"tipo":"clasica","rfc":true}},{"n":"Pijama quirúrgica a $290 (0.3 a 0.5 kg)","v":{"precio":290,"costo":120,"cat":"ropa","peso":1,"rep":1,"tipo":"clasica","rfc":true}},{"n":"Mismo pijama, pero a $339 con envío gratis","v":{"precio":339,"costo":120,"cat":"ropa","peso":1,"rep":1,"tipo":"clasica","rfc":true}},{"n":"Funda impermeable para moto a $195 (0.5 a 1 kg)","v":{"precio":195,"costo":70,"cat":"vehiculos","peso":2,"rep":1,"tipo":"clasica","rfc":true}},{"n":"Guantes de nitrilo, caja de 100 a $119 (0.5 a 1 kg)","v":{"precio":119,"costo":60,"cat":"salud","peso":2,"rep":1,"tipo":"clasica","rfc":true}},{"n":"Freidora de aire a $1,299 (5 a 7 kg)","v":{"precio":1299,"costo":720,"cat":"hogar","peso":7,"rep":1,"tipo":"premium","rfc":true}},{"n":"El mismo organizador, pero SIN RFC","v":{"precio":499,"costo":180,"cat":"hogar","peso":3,"rep":1,"tipo":"clasica","rfc":false}}],"snapshot":{"categorias":[{"n":"Ropa, bolsas y calzado","mediana":177.52,"full":19,"items":[{"t":"Calcetines Cortos Hombres Dama Unisex Cómodo 12 Pares Gris L","p":59.4,"o":"56% OFF","f":1,"x":0},{"t":"Pack 4 Brasieres Push Up Sin Varilla Para Mujer","p":221.5,"o":"53% OFF","f":1,"x":1},{"t":"Sandalias Corcho Chanclas Mujer Hombre Broche Ajustable","p":219.99,"o":"56% OFF","f":1,"x":0},{"t":"U Bárbara Pijama Quirúrgica Corte Recto Con Bolsas Uniforme","p":289.9,"o":"67% OFF","f":1,"x":0},{"t":"Sandalia Chancla Pantufla Eva Plataforma 4 Cm Confort","p":121,"o":"39% OFF","f":1,"x":0},{"t":"Calcetines Cortos Hombres Dama Unisex Cómodo 12 Pares Negro Sólido 12 Pares…","p":74.25,"o":"45% OFF","f":1,"x":0},{"t":"Tenis New Balance 530 Adulto Comodos Para Diario","p":1999,"o":"5% OFF","f":0,"x":0},{"t":"Calcetines Deportivos Hombre Algodón 100% Paquete 12 Pares","p":189.05,"o":"5% OFF","f":1,"x":0},{"t":"3 Piezas Playeras Caballero Camisa Casual Manga Corta Moda","p":294.97,"o":"21% OFF","f":1,"x":1},{"t":"Ropa Interior Mujer Brasier Strapless Invisible, 2 Unidades","p":89.01,"o":"55% OFF","f":1,"x":0},{"t":"Tenis Sneakers Para Dama Mujer Confort Premium Super Cómodos Negro/negro 24","p":151,"o":"60% OFF","f":1,"x":0},{"t":"Aolanfeixs Sandalia Chancla Pantunfla Eva Plataforma Confort Negro 25 Mx","p":74.95,"o":"49% OFF","f":1,"x":0},{"t":"Sudadera Hombre Hoodie Con Capucha Bolsa De Canguro G Negro","p":165.99,"o":"37% OFF","f":1,"x":0},{"t":"Pantalon Skinny De Mezclilla Strech John Silver Para Hombre","p":298,"o":"","f":1,"x":0},{"t":"U Bárbara Pijama Quirúrgica Para Hombre Corte Recto Uniforme","p":287.92,"o":"67% OFF","f":1,"x":0},{"t":"Leggins Licra Dama Bitono Gym Bolsa Celular","p":138.69,"o":"27% OFF","f":1,"x":0},{"t":"Jelrisofit Pijama Quirúrgica Scrub Jogger Uniforme Antifluid Fucsia M","p":284,"o":"43% OFF","f":1,"x":0},{"t":"Lonchera Térmica Bolsa Trabajo Escolares Gran Capacidad 10l Negro","p":129.99,"o":"34% OFF","f":1,"x":0},{"t":"Paquete 4 Panty Bikini Señoras Tanga Cordón De Encaje Sexy…","p":98,"o":"45% OFF","f":1,"x":0},{"t":"6 Playeras Hombre Deportivas Secado Rápido Gym Y Correr","p":298,"o":"57% OFF","f":1,"x":0}]},{"n":"Accesorios para vehículos","mediana":174.65,"full":20,"items":[{"t":"Funda Impermeable Protección Solar Para Moto Grueso 210d Negro MEXSOLTEC","p":195,"o":"24% OFF","f":1,"x":0},{"t":"12v Cargador Rápido Inteligente Brpom Cargador Con Reparación De Pulso Para…","p":148.22,"o":"71% OFF","f":1,"x":0},{"t":"Punkzz Guantes Para Motociclista Proteccion Pantalla Táctil Negro-pz M","p":98.99,"o":"30% OFF","f":1,"x":0},{"t":"Chaleco de seguridad reflectante industrial súper brillante, color verde,…","p":148.87,"o":"","f":1,"x":0},{"t":"LTH Aceite Motor Sintetico 5W-30 Lubricante Max Pro Tec 5L","p":556,"o":"18% OFF","f":1,"x":0},{"t":"Funda Para Moto Impermeable Protección Solar Grueso 210d Negro MEXSOLTEC","p":189.3,"o":"23% OFF","f":1,"x":0},{"t":"Batería Italika Icb6l-b F06010049 Dm250 Dt150 Ft150 125z","p":395.06,"o":"36% OFF","f":1,"x":0},{"t":"Compresor De Aire Eléctrica Inalámbrico 150psi, Bupmova Bomba Inflador De…","p":298.5,"o":"50% OFF","f":1,"x":0},{"t":"60cm Par Tira Led Drl Flexible Direccional Secuencial Auto Rojo","p":65.99,"o":"32% OFF","f":1,"x":0},{"t":"Direccionales Led Moto Secuencial Indicador Intermitente 4pz Amarillo","p":98.99,"o":"30% OFF","f":1,"x":0},{"t":"Guantes De Proteccion Anti Derrape Pantalla Táctil Para Moto","p":93.2,"o":"9% OFF","f":1,"x":1},{"t":"Energyark Con Inflador 150psi Arrancador De Batería 8000 A 12v 4.8 Kw…","p":617.97,"o":"65% OFF","f":1,"x":0},{"t":"EVD-X Balaclava Negra Secado Rápido UV Protección Deportes y Moto Adultos","p":98.9,"o":"10% OFF","f":1,"x":0},{"t":"Kit De Faros Led Delanteros De 4 Lados H4 H13 9004 9007 Luz H4","p":159.99,"o":"20% OFF","f":1,"x":0},{"t":"Kit De Faros Delanteros De 4 Lados 9007 H4 Led Rayo H13 9004","p":156.75,"o":"54% OFF","f":1,"x":1},{"t":"Chalecos Reflectantes Seguridad Industrial Alta Visibilidad Azul Negro L","p":139.99,"o":"29% OFF","f":1,"x":0},{"t":"Funda Universal Para Asiento De Automóvil 10 Piezas","p":245.16,"o":"16% OFF","f":1,"x":1},{"t":"Arrancador baterias compresor Cargador Con Inflador 150psi Energyark","p":612.19,"o":"67% OFF","f":1,"x":0},{"t":"Guantes Para Moto Motociclista Punkzz Mujer Y Hombre Pz05 Negro M","p":202,"o":"22% OFF","f":1,"x":0},{"t":"Casco Para Motocicleta Con Visor Protector Certificación Ce","p":298.9,"o":"45% OFF","f":1,"x":0}]},{"n":"Salud y equipo médico","mediana":291.5,"full":18,"items":[{"t":"Guantes De Nitrilo Vinil Libre De Latex Sin Polvo Azul Negro","p":116,"o":"27% OFF","f":1,"x":0},{"t":"Creatina Birdman Performance en polvo Sin sabor x 450g","p":424,"o":"24% OFF","f":1,"x":0},{"t":"Beyond Vitamins | Magnesio Complex | Citrato De Magnesio Polvo, Glicinato…","p":199,"o":"50% OFF","f":1,"x":0},{"t":"Guantes De Nitrilo Libre De Latex Sin Polvo Azul Negro 100pz","p":119,"o":"40% OFF","f":1,"x":0},{"t":"Proteína Empower Nutrition Whey Pro en polvo sabor Choco avellana x 2.2kg","p":368,"o":"58% OFF","f":1,"x":0},{"t":"Guante Vinil Synmax Nitrilo Libre De Latex","p":114,"o":"47% OFF","f":1,"x":0},{"t":"Báscula Electrónica Bluetooth Digital Inteligente De Baño color negro","p":149,"o":"50% OFF","f":1,"x":0},{"t":"Creatina Monohidratada Micronizada En Polvo | Pre Workout - 100% Alta…","p":298,"o":"40% OFF","f":1,"x":0},{"t":"Oby Magnesio Complex 5: Citrato, Glicinato, Treonato, Taurato, Gluconato,…","p":337.56,"o":"32% OFF","f":1,"x":0},{"t":"Proteína Suero de leche Unique Nutrition 100% whey en polvo sabor Vainilla…","p":392,"o":"58% OFF","f":1,"x":0},{"t":"Guantes de Nitrilo Fresh Glove Negros, Sin Polvo y Libres de Látex (Pack de…","p":114,"o":"","f":1,"x":0},{"t":"Omega 3 B Life en cápsula Sin sabor de 90 un","p":299,"o":"","f":1,"x":0},{"t":"Nebulizador de Malla Inalámbrico Portátil para Adulto y Niño Sacré Solutions","p":127,"o":"","f":0,"x":0},{"t":"Creatina Monohidratada Micronizada en Polvo Quotidien | Alta Pureza…","p":285,"o":"39% OFF","f":1,"x":0},{"t":"Proteína Birdman Wellness Fitmingo en polvo sabor Blueberry x 510g","p":507,"o":"24% OFF","f":1,"x":0},{"t":"Guantes descartables antideslizantes UniSeal 3.5 grs color azul talle XS de…","p":210,"o":"16% OFF","f":1,"x":0},{"t":"Calcetas Compresión Alivia Varices Y Circulación 6 Pares","p":187.74,"o":"37% OFF","f":1,"x":0},{"t":"Windboss Gotas Botánicas Drenaje Linfático Herbal 59ml Sin Sabor","p":319.79,"o":"15% OFF","f":0,"x":0},{"t":"Omega 3 B Life en cápsula Sin sabor de 180 un","p":749,"o":"","f":1,"x":0},{"t":"Baumanometro Digital Bluetooth Batería Usb Monitor Medidor De Presion…","p":489,"o":"45% OFF","f":1,"x":0}]},{"n":"Celulares y telefonía","mediana":137.66,"full":18,"items":[{"t":"Audífonos In-ear Bluetooth Para Celulares, Tablets y Laptops, Conexión…","p":128.62,"o":"41% OFF","f":1,"x":0},{"t":"Auriculares Inalámbricos Xiaomi Redmi Buds 6 Play Negro","p":209,"o":"12% OFF","f":0,"x":0},{"t":"Audífonos Inalámbricos 1HORA AUT205 In-Ear Bluetooth 6.0 con Micrófono,…","p":179,"o":"47% OFF","f":1,"x":0},{"t":"45w Cargador Para Samsung Cargador Rapida Tipo C Compatible Con Samsung S26…","p":146.69,"o":"44% OFF","f":1,"x":0},{"t":"2 Piezas Mica Privacidad Cristal Templado 9d Para iPhone iPhone 17 Pro Max","p":82.11,"o":"31% OFF","f":1,"x":0},{"t":"35w Cargador Rápido Compatible con iPhone 14 13 12 11 X Xr 8 /iPad Pro…","p":114.27,"o":"64% OFF","f":1,"x":0},{"t":"Audífonos Inalámbricos Sony Wh-ch520 color Azul","p":683,"o":"40% OFF","f":1,"x":0},{"t":"Power Bank 35000mah Batería Portátil Pila 66w Carga Rápida","p":253.93,"o":"71% OFF","f":1,"x":0},{"t":"Kit Funda Para iPhone Magsafe + Mica Pantalla + Mica Cámara. Tra iPhone 13","p":98.9,"o":"50% OFF","f":1,"x":0},{"t":"Apple AirPods 4 color blanco - Excelente (Reacondicionado)","p":170,"o":"","f":1,"x":0},{"t":"45w Cargador Para Samsung Súper Rápida Cargador Tipo C 2m","p":126.86,"o":"56% OFF","f":1,"x":0},{"t":"Funda Para iPhone Transparente Acrigel Esquinas Reforzadas Transparente…","p":59.99,"o":"40% OFF","f":1,"x":0},{"t":"2 Piezas Mica De Cristal Templado Premium Para iPhone iPhone 17 Pro Max","p":94.99,"o":"5% OFF","f":1,"x":0},{"t":"Audífonos 1HORA Inalámbricos Bluetooth 6.0, In-ear con Pantalla LED,…","p":170,"o":"43% OFF","f":1,"x":0},{"t":"Power Bank Batería Portátil 10000mAh Incluye Luz de Iluminación, 4 Cables…","p":192,"o":"22% OFF","f":1,"x":0},{"t":"67w Turbo Cargador Rápida Con 6a Cable Tipo C Para Xiaomi 2m","p":98.88,"o":"66% OFF","f":1,"x":0},{"t":"Audífonos Anker Soundcore P30i In-ear Bluetooth Inalámbrico Cancelación De…","p":538,"o":"46% OFF","f":1,"x":0},{"t":"Pack 2 Unidades Mica Cristal Templado 9h Enviado En Caja iPhone 17 Pro","p":79.6,"o":"60% OFF","f":1,"x":0},{"t":"Funda Case De Uso Rudo 360 Para iPhone Transparente Antigolpes Con Marco…","p":98,"o":"","f":1,"x":0},{"t":"Celular Samsung Galaxy A07 Violeta 128GB","p":2977,"o":"","f":0,"x":0}]},{"n":"Computación","mediana":248.8,"full":18,"items":[{"t":"Auriculares Inalámbricos Xiaomi Redmi Buds 6 Play Negro","p":209,"o":"12% OFF","f":0,"x":0},{"t":"Aldeaprint Papel Fotográfico Glossy Brillante Carta 115g 100 Hojas","p":162,"o":"","f":1,"x":0},{"t":"Kit De Internet Via Satélite Starlink Mini Blanco","p":2999,"o":"40% OFF","f":1,"x":0},{"t":"Kit 3 Tintas Epson T544 L3110 L1110 L3150 L5190 Colores","p":759,"o":"","f":0,"x":0},{"t":"Regulador De Voltaje 8 Contactos Koblenz RS-1410, Para Hogar y Oficina,…","p":370,"o":"13% OFF","f":1,"x":0},{"t":"Audífonos 1HORA Inalámbricos Bluetooth 6.0, In-ear con Pantalla LED,…","p":170,"o":"43% OFF","f":1,"x":0},{"t":"Filamento PLA Matte Sunlu Negro 1.75 mm para Impresora 3D","p":287.32,"o":"23% OFF","f":1,"x":0},{"t":"Papel Fotográfico A4 Kamo Glossy Adhesivo 115gr 120 Hojas Color Blanco","p":290.47,"o":"","f":1,"x":0},{"t":"Filamento Pla Pro Para Impresora 3d 1.75 Mm Mexico Makers Color Verde…","p":298,"o":"","f":1,"x":0},{"t":"Base Soporte Para Laptop Tablet Ajustable De Aluminio Portátil","p":92.66,"o":"","f":1,"x":0},{"t":"Batería Externa 1Hora de 20000mAh con Carga Rápida 22.5W y Cable USB-C","p":296,"o":"50% OFF","f":1,"x":0},{"t":"Mouse Inalámbrico Silencioso Bluetooth Ratón 2.4g Recargable Negro","p":82,"o":"56% OFF","f":1,"x":0},{"t":"Kamo Carta Papel Fotográfico Glossy De 200gr 120 Hojas Color Blanco","p":210.28,"o":"","f":1,"x":0},{"t":"100 Hojas Papel Fotográfico Adhesivo Glossy A4 De 135gr Blanco","p":194.23,"o":"10% OFF","f":1,"x":0},{"t":"Sjrohe X-400 Base Soportes De Pantalla Pared Tv 14 A 55 Pulgadas Soporta…","p":178.98,"o":"55% OFF","f":1,"x":0},{"t":"Repetidor De Wifi 2.4g Amplificador Rompe Muros Router 300mbps 6…","p":206.03,"o":"52% OFF","f":1,"x":0},{"t":"Memoria Usb 2tb Alta Velocidad 3.0 2 En 1 Tipo C Y Usb Plateado Memoria Usb…","p":154.96,"o":"48% OFF","f":1,"x":0},{"t":"Impresora Brother 3 en 1 de inyección de tinta continua a color DCP-T530DW","p":3779,"o":"","f":1,"x":0},{"t":"Control Alámbrico GameSir G7 Pro para Xbox Series X|S y Xbox One, Gamepad…","p":1631,"o":"20% OFF","f":1,"x":0},{"t":"Filamento Impresora 3d Pla Lite Con Bobina Bambu Lab 1.75mm 1KG Alta…","p":319,"o":"","f":1,"x":0}]},{"n":"Consolas y videojuegos","mediana":598.0,"full":13,"items":[{"t":"Audífonos In-ear Bluetooth Para Celulares, Tablets y Laptops, Conexión…","p":128.62,"o":"41% OFF","f":1,"x":0},{"t":"Auriculares Inalámbricos Xiaomi Redmi Buds 6 Play Negro","p":209,"o":"12% OFF","f":0,"x":0},{"t":"Armaf Odyssey Aqua Men 100ml Edp","p":960,"o":"23% OFF","f":1,"x":0},{"t":"Audífonos Inalámbricos 1Hora con Estuche Giratorio, 32h de Batería, Azul","p":187.9,"o":"52% OFF","f":1,"x":0},{"t":"Odissey Homme White Edition Armaf Eau De Parfum 100ml","p":498,"o":"44% OFF","f":1,"x":0},{"t":"Control Alámbrico GameSir G7 Pro para Xbox Series X|S y Xbox One, Gamepad…","p":1631,"o":"20% OFF","f":1,"x":0},{"t":"Ea Sports Fc 27 Xbox Series X/ Xbox One Estándar Físico","p":1265,"o":"25% OFF","f":0,"x":0},{"t":"Micrófono x2 - JBL PartyBox Wireless Mic - Inalámbrico y Recargable - Color…","p":770,"o":"65% OFF","f":0,"x":0},{"t":"Armaf Club De Nuit Urban Man Elixir 105ml","p":631.72,"o":"","f":0,"x":0},{"t":"Audífonos Moto Buds Bass Con Cancelación De Ruido Negro","p":597,"o":"70% OFF","f":1,"x":0},{"t":"Audífonos Skullcandy Inalámbricos Dime 3 Auriculares In-ear","p":599,"o":"","f":1,"x":0},{"t":"Micrófonos Jbl Micbr2 Inalámbrico Dual-Channel Cardioide Negro","p":594,"o":"73% OFF","f":0,"x":0},{"t":"Cmf By Nothing Buds 2 Plus Audifonos Inalámbricos Tws Color Gris Ligero","p":723.2,"o":"47% OFF","f":1,"x":0},{"t":"Videojuego Marvel's Wolverine Ps5 Físico Playstation 5","p":1384,"o":"7% OFF","f":1,"x":0},{"t":"Batería recargable + Cable USB C para control Xbox Series X, S","p":299,"o":"","f":0,"x":0},{"t":"Auriculares Inalámbricos Lenovo Ta410 Bluetooth 5.4 Blanco,Cancelación…","p":295.63,"o":"44% OFF","f":1,"x":0},{"t":"Armaf Club De Nuit Intense Man Edp 200 Ml Spray Hombre","p":828,"o":"32% OFF","f":1,"x":0},{"t":"El controlador con cable UAKLYB es compatible con Xbox 360 y PC con…","p":233.27,"o":"21% OFF","f":1,"x":0},{"t":"Sony PlayStation DualSens Joystick inalámbrico black CFI-ZCT1W","p":1140,"o":"62% OFF","f":0,"x":0},{"t":"Knwell Nintendo Switch 2 Kit De Estuche Y Accesorios Para 36 En 1 ,…","p":254.82,"o":"40% OFF","f":1,"x":0}]}]},"graficas":[{"id":"g-meli","rows":[{"k":"T1 25","v":23},{"k":"T2 25","v":32},{"k":"T3 25","v":34},{"k":"T4 25","v":35},{"k":"T1 26","v":28},{"k":"T2 26","v":26}],"unit":"% más que un año antes","hl":"T2 26"},{"id":"g-cats","h":true,"unit":"%","hl":["Mascotas","Autopartes","Herramientas","Utensilios de cocina","Limpieza del hogar"],"rows":[{"k":"Moda","v":59},{"k":"Comida preparada","v":54},{"k":"Belleza","v":46},{"k":"Electrónicos","v":41},{"k":"Deportes","v":37},{"k":"Juguetes","v":37},{"k":"Electrodomésticos","v":34},{"k":"Consolas","v":34},{"k":"Utensilios de cocina","v":34},{"k":"Muebles y decoración","v":33},{"k":"Limpieza del hogar","v":33},{"k":"Herramientas","v":31},{"k":"Farmacia","v":30},{"k":"Despensa","v":30},{"k":"Autopartes","v":29},{"k":"Mascotas","v":28}]},{"id":"g-trends-f","div":true,"nota":"últimas 52 semanas contra las 52 anteriores","rows":[{"k":"Anua (skincare coreano)","v":66},{"k":"Power bank","v":63},{"k":"Matcha","v":34},{"k":"Cama para perro","v":24},{"k":"Llave de impacto","v":22},{"k":"Skincare coreano","v":20},{"k":"Tira LED","v":17},{"k":"Creatina","v":13},{"k":"Freidora de aire","v":9},{"k":"Filtro de agua","v":7},{"k":"Taladro","v":3},{"k":"Cámara de seguridad","v":-3},{"k":"Refacciones","v":-4},{"k":"Organizador","v":-5},{"k":"Termo Stanley","v":-32},{"k":"Labubu","v":-85}]},{"id":"g-trends-d","div":true,"nota":"2021-22 contra 2025-26","rows":[{"k":"Agenda digital","v":53},{"k":"Plantillas Canva","v":30},{"k":"Cake toppers","v":25},{"k":"EXANI-II","v":12},{"k":"Invitaciones digitales","v":0},{"k":"Plantillas Excel","v":-2},{"k":"Imprimibles","v":-5},{"k":"Recetarios","v":-24},{"k":"Curso de uñas","v":-48},{"k":"Planeaciones","v":-52},{"k":"Stickers de WhatsApp","v":-52},{"k":"Patrones de crochet","v":-71},{"k":"Curso de maquillaje","v":-74},{"k":"Guía COMIPEMS","v":-98}]}],"caminos":[{"id":"mayoreo","tipo":"fisico","nombre":"Reventa con mayoristas mexicanos","resumen":"Compras por mayoreo en México y vendes en Mercado Libre con Full. Productos prácticos y de recompra, vendidos en paquete arriba de $299.","cap":4000,"capIdeal":12000,"horas":8,"semanas":2,"riesgo":2,"espacio":1,"skills":["negociar","numeros"],"contenido":0,"movil":2,"clientes":1,"escala":2,"dificultad":1,"ml":true,"nacional":true,"lugar":[8,6,2,-6],"lugarMsg":["Tienes el Centro y La Merced a la mano","Tienes zonas mayoristas cerca",null,"Lejos de zonas mayoristas: tendrás que comprar en línea o viajar"],"temas":["hogar","herramientas","mascotas","bebes","deportes","moda","fiestas","cocina","salud","belleza","autos","hobbies"],"ideas":{"hogar":["Filtros y repuestos compatibles (agua, aspiradora, cafetera)","Textiles de hogar hechos en México"],"herramientas":["Brocas, discos y puntas en kit (margen de 25–40%)"],"mascotas":["Tapetes absorbentes y bolsas para desechos en paquete","Accesorios de higiene y paseo para mascota"],"bebes":["Baberos y cambiadores en paquete"],"deportes":["Ligas y bandas de resistencia en kit"],"moda":["Calcetines y ropa interior en paquete","Calzado de León en tallas básicas"],"fiestas":["Kits de fiesta sin personajes con licencia"],"cocina":["Moldes y utensilios de repostería"],"salud":["Guantes de nitrilo por caja"],"belleza":["Kits de insumos para uñas"],"autos":["Fundas impermeables para moto"],"hobbies":["Micas, carpetas y cajas para coleccionistas"],"tecnologia":["Papel fotográfico, tintas y filamento 3D"],"_":["Consumibles de recompra en paquete de 3 a 12 piezas","Productos entre $299 y $799 que pesen menos de 2 kg"]},"numeros":["A $499 (1–2 kg) puedes pagar hasta $151 por pieza y ganar 20%","88% de lo más vendido hoy usa Full"],"pasos":["Elige 3 productos y revisa 20 publicaciones de cada uno","Cotiza con 3 mayoristas y pide factura","Compra de 10 a 20 piezas de cada uno para probar","Publica en kit arriba de $299 con fotos propias","Cuando lleves 10 ventas, solicita Full"],"ojo":"Sin factura no recuperas IVA y te cuesta probar de dónde salió la mercancía si te denuncian."},{"id":"b2b","tipo":"fisico","nombre":"Insumos para negocios","resumen":"Vendes consumibles que salones, consultorios, talleres y reposterías compran cada mes: guantes, uniformes, insumos de uñas, empaques. Pedidos que se repiten.","cap":4000,"capIdeal":10000,"horas":7,"semanas":2,"riesgo":1.5,"espacio":1,"skills":["negociar","numeros"],"contenido":0,"movil":1,"clientes":1,"escala":2,"dificultad":1,"ml":true,"nacional":true,"lugar":[6,5,3,0],"lugarMsg":["Hay muchos distribuidores en CDMX","Hay muchos distribuidores cerca",null,null],"temas":["belleza","salud","cocina","herramientas","autos","moda","tecnologia"],"ideas":{"belleza":["Insumos de uñas por caja (tips, limas, algodón, removedor)","Capas, toallas y atomizadores para barbería"],"salud":["Guantes de nitrilo, caja de 100","Sábanas desechables para consultorio"],"cocina":["Empaques para repostería y comida (cajas, bases, domos)","Etiquetas y stickers para negocio"],"herramientas":["Lijas, discos y guantes para talleres"],"autos":["Trapo, toallas y guantes para talleres mecánicos"],"moda":["Chalecos reflejantes y ropa de trabajo"],"tecnologia":["Papel térmico para terminales y tickets","Consumibles de impresión y filamento 3D"],"_":["Consumibles que un negocio compra cada mes","Venta por caja: 50, 100 o 500 piezas"]},"numeros":["Guantes de nitrilo: #1 en Salud a $116","Pedidos repetidos: el mismo cliente vuelve cada mes"],"pasos":["Escoge un giro que conozcas (salón, consultorio, taller, repostería)","Pregunta a 5 negocios qué compran cada mes y dónde","Cotiza con distribuidores mexicanos con factura","Publica por caja o paquete arriba de $299","Ofrece factura: a los negocios les importa"],"ojo":"Guantes anunciados para uso médico entran en regulación de COFEPRIS; ofrécelos para uso industrial o de alimentos, o verifica el registro."},{"id":"motos","tipo":"fisico","nombre":"Accesorios para moto y auto","resumen":"Categoría con comisión de solo 9%, ventas parejas todo el año, pocos vendedores Platinum y los 20 más vendidos en Full. Fundas, guantes, direccionales, focos y piezas de desgaste.","cap":5000,"capIdeal":15000,"horas":8,"semanas":2,"riesgo":2,"espacio":2,"skills":["negociar","numeros"],"contenido":0,"movil":1,"clientes":1,"escala":2,"dificultad":2,"ml":true,"nacional":false,"temas":["autos","herramientas"],"ideas":{"autos":["Fundas impermeables para moto por modelo","Guantes, balaclavas y direccionales para moto","Focos LED H4 y plumas con tabla de compatibilidad","Filtros y piezas de desgaste por modelo"],"herramientas":["Compresores e infladores portátiles","Kits de herramienta para moto"],"_":["Accesorios para motos de trabajo y repartidores","Productos con tabla de compatibilidad por modelo"]},"numeros":["Comisión de 9% en Clásica y 12% en Premium","Margen bruto estimado de 25–40% en accesorios de moto","Menos de 5% de los vendedores son Platinum"],"pasos":["Enfócate en un tipo de vehículo; las motos de trabajo son buen inicio","Arma una tabla de compatibilidad por modelo y año","Compra lotes chicos a distribuidores mexicanos","Publica con fotos del producto instalado","Entra a Full lo antes posible"],"ojo":"Evita cascos (norma de seguridad y responsabilidad). Luces y refacciones piden compatibilidad exacta: autopartes concentra 12% de las devoluciones."},{"id":"uniformes","tipo":"fisico","nombre":"Uniformes médicos y ropa de trabajo","resumen":"Pijamas quirúrgicas, batas y ropa de trabajo de fabricantes mexicanos. No pagan arancel y los modelos más vendidos llevan más de 100 mil piezas.","cap":6000,"capIdeal":15000,"horas":8,"semanas":3,"riesgo":2,"espacio":2,"skills":["negociar","manos"],"contenido":1,"movil":1,"clientes":1,"escala":2,"dificultad":2,"ml":true,"nacional":true,"lugar":[4,5,2,0],"lugarMsg":[null,"Tienes fabricantes de ropa relativamente cerca",null,null],"temas":["salud","moda"],"ideas":{"salud":["Pijama quirúrgica antifluido por talla y color","Batas, gorros y filipinas","Uniformes para estudiantes de enfermería"],"moda":["Chalecos, overoles y camisolas de trabajo","Filipinas para cocina"],"_":["Uniformes con bordado del logo del cliente","Paquetes de 2 o 3 piezas"]},"numeros":["Pijama quirúrgica a ~$290: más de 100 mil vendidas","Ropa paga 15%; por tallas calcula 5–8% de devoluciones"],"pasos":["Contacta 3 fabricantes (DENUE o Moroleón y Uriangato)","Pide muestras y revisa tela y costuras","Empieza con 2 modelos y 4 tallas","Publica con guía de tallas en centímetros","Ofrece bordado a clínicas y escuelas de enfermería"],"ojo":"Las tallas generan devoluciones; tu guía de medidas es clave."},{"id":"china","tipo":"fisico","nombre":"Importar de China con consolidadora","resumen":"Traes un lote chico de un producto con arancel bajo, sin NOM especial y que no abulte; lo etiquetas y lo vendes con Full. Más margen, pero más capital y riesgo.","cap":20000,"capIdeal":50000,"horas":10,"semanas":8,"riesgo":3.5,"espacio":2,"skills":["numeros","negociar"],"contenido":0,"ingles":1,"movil":0,"clientes":1,"escala":3,"dificultad":3,"ml":true,"nacional":false,"temas":["tecnologia","hogar","deportes","mascotas","autos","bebes","hobbies","herramientas"],"ideas":{"tecnologia":["Accesorios de escritorio sin batería ni Bluetooth","Accesorios de impresión 3D"],"hogar":["Organizadores de metal o bambú (revisa el arancel)","Luces solares para jardín"],"deportes":["Accesorios de gym y de pickleball","Equipo de camping"],"mascotas":["Fuentes de agua y comederos","Juguetes resistentes para perro"],"autos":["Accesorios de moto sin partes eléctricas"],"bebes":["Organizadores sin requisitos sanitarios"],"hobbies":["Accesorios para coleccionistas"],"herramientas":["Organizadores (ojo: herramientas chinas pagan cuotas compensatorias)"],"_":["Productos con arancel de 0% a 15%","Nada de ropa, calzado, juguetes ni inalámbricos al inicio"]},"numeros":["Traerlo suele sumar 40–65% sobre el precio en China","Aéreo: 2 a 10 días; marítimo: 18 a 45 días"],"pasos":["Busca la fracción arancelaria en la TIGIE antes de cotizar","Pide muestras por AliExpress o Alibaba","Cotiza por escrito con 2 consolidadoras: fracción, arancel, pedimento y factura","Importa un lote chico por aire para probar","Si vende, repite por mar con más volumen"],"ojo":"Los vendedores chinos que venden directo en Mercado Libre crecieron 60% en el T2 2026."},{"id":"hechoenmx","tipo":"fisico","nombre":"Hecho en México: productores y artesanos","resumen":"Vendes lo que hacen fabricantes o artesanos mexicanos: piel de León, textiles, barro, decoración. No paga arancel y es difícil de copiar para un vendedor chino.","cap":3000,"capIdeal":10000,"horas":10,"semanas":3,"riesgo":2,"espacio":1,"skills":["disenar","negociar"],"contenido":1,"movil":1,"clientes":1,"escala":2,"dificultad":2,"ml":true,"nacional":true,"lugar":[3,3,3,6],"lugarMsg":[null,null,null,"En tu región puede haber productores que nadie vende en línea"],"temas":["moda","hogar","fiestas","belleza","cocina","hobbies"],"ideas":{"moda":["Cinturones, carteras y bolsas de piel de León","Huaraches y calzado artesanal"],"hogar":["Manteles, cojines y textiles artesanales","Cerámica y barro para cocina"],"fiestas":["Recuerdos y decoración mexicana","Papel picado y artículos de Día de Muertos"],"belleza":["Jabones artesanales (revisa NOM-141)"],"cocina":["Molcajetes y utensilios de madera y barro"],"hobbies":["Juguetes tradicionales mexicanos"],"_":["Productos típicos de tu región con buenas fotos y su historia","Piel y calzado de Guanajuato"]},"numeros":["Calzado importado de China cayó 36% por aranceles","Sin arancel y sin competencia directa de vendedores chinos"],"pasos":["Haz una lista de 10 productores de tu región o de León","Negocia consignación o lotes chicos","Toma fotos con buena luz y cuenta el origen","Si es artesanal, marca que no tiene código de barras","Prueba 3 productos y quédate con el que rote"],"ojo":"Si cada pieza es distinta, descríbelo bien para evitar reclamos."},{"id":"personalizados","tipo":"fisico","nombre":"Personalizados: sublimación, láser o 3D","resumen":"Compras un equipo y vendes tazas, termos, llaveros, placas y regalos con nombre o logo. Buen margen por pieza; pide diseño y trato con clientes.","cap":12000,"capIdeal":30000,"horas":12,"semanas":3,"riesgo":2,"espacio":1,"skills":["disenar","manos"],"skillReq":true,"skillReqMsg":"Pide diseño o trabajo manual, y no marcaste ninguno","contenido":1,"movil":0,"clientes":2,"escala":2,"dificultad":2,"ml":true,"nacional":true,"temas":["fiestas","hobbies","tecnologia","hogar","educacion","mascotas"],"ideas":{"fiestas":["Recuerdos personalizados para XV, bodas y bautizos","Termos y tazas con nombre"],"hobbies":["Piezas impresas en 3D para hobbies"],"tecnologia":["Soportes y organizadores impresos en 3D"],"hogar":["Letreros y placas grabadas en madera"],"educacion":["Regalos de fin de curso y graduación"],"mascotas":["Placas de identificación grabadas"],"_":["Regalos con nombre para Navidad, San Valentín y Día de las Madres","Artículos con logo para empresas"]},"numeros":["Equipo inicial: $8,000 a $30,000 (estimación, varía por máquina)","Picos: Navidad, San Valentín, Día de las Madres y graduaciones"],"pasos":["Elige un solo equipo y 2 productos base","Haz 20 muestras para tus fotos","Publica con opciones de personalización claras","Promete entrega de 2 a 4 días y cúmplela","Busca pedidos de empresas y escuelas"],"ojo":"No uses personajes ni logos con licencia sin permiso."},{"id":"liquidaciones","tipo":"fisico","nombre":"Liquidaciones y remates","resumen":"Compras en liquidación de tiendas y outlets y revendes con margen. Arrancas con poco dinero y vendes rápido, pero cuesta tiempo y no escala mucho.","cap":2000,"capIdeal":6000,"horas":10,"semanas":1,"riesgo":2,"espacio":2,"skills":["negociar"],"contenido":0,"movil":3,"clientes":1,"escala":1,"dificultad":1,"ml":true,"nacional":true,"lugar":[8,6,3,-10],"lugarMsg":["En CDMX hay outlets y remates por todos lados","Hay outlets y remates cerca",null,"En ciudad chica hay pocas liquidaciones"],"temas":["hobbies","tecnologia","hogar","moda","deportes","herramientas","bebes"],"ideas":{"hobbies":["Accesorios para coleccionistas (no especules con sobres de Pokémon: los precios ya caen)"],"tecnologia":["Electrónica de marca en liquidación (revisa garantía)"],"hogar":["Electrodomésticos pequeños en remate"],"moda":["Tenis y ropa de marca de outlet"],"deportes":["Equipo deportivo de fin de temporada"],"herramientas":["Herramienta de marca en remate"],"bebes":["Carriolas y artículos de bebé de outlet"],"_":["Artículos de marca con 50% o más de descuento","Productos con precio de referencia claro en Mercado Libre"]},"numeros":["Margen variable: compra solo si puedes vender al doble","Primera venta en días"],"pasos":["Revisa en Mercado Libre el precio real antes de comprar","Compra solo si vendes al doble del costo","Guarda tickets o facturas","Publica rápido y rota la mercancía","Lleva un registro de margen por pieza"],"ojo":"Sin factura no acreditas IVA; y revender marcas puede traer reclamos si no demuestras que son originales."},{"id":"temporada","tipo":"fisico","nombre":"Temporada: Muertos, Buen Fin, Navidad y Reyes","resumen":"Hoy es 30 de septiembre: faltan 6 semanas para el Buen Fin (13 al 17 de noviembre) y 12 para Navidad. Producto de temporada con proveedor nacional, para vender en semanas.","cap":5000,"capIdeal":15000,"horas":12,"semanas":1,"riesgo":3,"espacio":2,"skills":["negociar"],"contenido":1,"movil":2,"clientes":1,"escala":1,"dificultad":2,"ml":true,"nacional":true,"lugar":[6,5,2,-2],"lugarMsg":["El Centro de CDMX es la capital de la temporada",null,null,null],"temas":["fiestas","hogar","bebes","hobbies","moda","cocina"],"ideas":{"fiestas":["Decoración de Día de Muertos y de Navidad","Piñatas y artículos para posadas"],"hogar":["Cobijas y textiles de invierno","Luces navideñas con NOM"],"bebes":["Juguetes didácticos para Reyes con NOM-015"],"hobbies":["Juegos de mesa y rompecabezas"],"moda":["Gorros, bufandas y guantes","Pijamas navideñas familiares"],"cocina":["Moldes y empaques para galletas y roscas"],"_":["Regalos de $299 a $799 para intercambios","Ropa de invierno y cobijas"]},"numeros":["Buen Fin 2025: $219 mil mdp; 21% en línea (+31%)","Buen Fin 2026: del 13 al 17 de noviembre"],"pasos":["Decide esta semana y solo con proveedor nacional","Día de Muertos: publica antes del 10 de octubre","Buen Fin y Navidad: stock en Full antes del 1 de noviembre","Reyes: stock en Full antes del 20 de diciembre","Remata lo que sobre antes de que baje la búsqueda"],"ojo":"Lo que no vendas en temporada se queda guardado un año."},{"id":"invitaciones","tipo":"digital","nombre":"Invitaciones digitales para eventos","resumen":"Diseñas invitaciones para XV años, bodas, bautizos y cumpleaños, y las vendes por Instagram, TikTok y WhatsApp. Sin inventario: vendes diseño y rapidez.","cap":800,"capIdeal":3000,"horas":8,"semanas":2,"riesgo":0.5,"espacio":0,"skills":["disenar"],"skillReq":true,"skillReqMsg":"Necesitas saber diseñar y no lo marcaste","skillMsg":"Usa tu habilidad para diseñar","contenido":2,"clientes":2,"escala":1,"dificultad":1,"ml":false,"temas":["fiestas","bebes"],"ideas":{"fiestas":["Invitaciones en video para XV años y bodas","Paquete: invitación + confirmación de asistencia por WhatsApp"],"bebes":["Baby shower, bautizo y anuncio de nacimiento"],"_":["Colecciones propias por estilo (floral, minimal, mexicano)","Invitación web con mapa, mesa de regalos y confirmación"]},"numeros":["Precio típico: $89 a $585 (casi todas entre $89 y $300)","Escenario realista: 8–25 pedidos al mes = $1,200–11,000 brutos, 1 a 3 horas por pedido"],"pasos":["Diseña 10 muestras propias: XV, boda, bautizo, baby shower y cumpleaños","Abre Instagram y TikTok y sube cada muestra en video","Cobra con link de Mercado Pago o SPEI y entrega por WhatsApp","Ofrece PDF, video y versión web","Pide reseñas y fotos del evento"],"ojo":"Nada de Disney, Marvel ni Bluey: es infracción aunque muchos lo hagan."},{"id":"plantillas","tipo":"digital","nombre":"Plantillas de Excel, Sheets y Canva para negocios","resumen":"Creas plantillas que resuelven un problema de un giro concreto: inventario de una tiendita, costeo de recetas, citas de un salón, finanzas personales. Las haces una vez y las vendes muchas veces.","cap":500,"capIdeal":2000,"horas":6,"semanas":4,"riesgo":0.5,"espacio":0,"skills":["numeros","disenar"],"skillReq":true,"skillReqMsg":"Pide Excel o diseño, y no marcaste ninguno","skillMsg":"Usa lo que sabes de números o diseño","contenido":1,"clientes":0,"escala":3,"dificultad":2,"ml":false,"temas":["hogar","cocina","belleza","salud","tecnologia","herramientas","autos","moda","educacion"],"ideas":{"cocina":["Costeo de recetas y precios para reposteras"],"belleza":["Agenda de citas y control de clientas para salones","Posts de Canva para negocios de uñas"],"salud":["Agenda y control de pacientes para consultorios"],"hogar":["Finanzas personales y control de deudas"],"tecnologia":["Inventario y ventas conectado a Mercado Libre"],"herramientas":["Cotizador para plomeros y electricistas"],"autos":["Control de servicios para talleres"],"moda":["Inventario por talla y color para tiendas de ropa"],"educacion":["Registro de calificaciones para maestros"],"_":["Inventario y ventas para tienditas y emprendedoras","Plantillas de Canva para un giro específico"]},"numeros":["Mediana en Gumroad: ~$230 (Excel) y ~$180 (Canva)","La mayoría vende poco: de 62 plantillas de finanzas en español, solo 8 tienen 10 o más reseñas"],"pasos":["Escoge un giro que conozcas y pregúntale a 5 personas qué les duele","Haz una plantilla que resuelva un solo problema","Graba un video de 30 segundos usándola","Véndela con link de Mercado Pago y en Gumroad o Hotmart","Mejórala con lo que te pidan y sube el precio"],"ojo":"Compites con miles de plantillas gratis; la tuya tiene que resolver algo específico de un giro."},{"id":"guias","tipo":"digital","nombre":"Guías y simuladores para examen de admisión","resumen":"Preparas material propio para EXANI-II, UNAM o IPN: simuladores, bancos de reactivos y resúmenes. Las búsquedas de EXANI-II subieron 12% en 5 años.","cap":500,"capIdeal":2000,"horas":10,"semanas":6,"riesgo":1,"espacio":0,"skills":["ensenar"],"skillReq":true,"skillReqMsg":"Necesitas dominar el temario y saber explicar","skillMsg":"Usa tu habilidad para enseñar","contenido":2,"clientes":1,"escala":3,"dificultad":2,"ml":false,"temas":["educacion"],"ideas":{"educacion":["Simulador EXANI-II por área","Banco de reactivos UNAM por área de conocimiento","Curso intensivo en vivo de 4 semanas"],"_":["Simulador en línea con resultados por tema","Asesoría grupal por videollamada"]},"numeros":["COMIPEMS ya no existe: la SEP lo cambió por “Mi derecho, mi lugar”","Temporadas: enero–febrero (UNAM) y abril–junio"],"pasos":["Elige un examen y domina su temario oficial","Arma tu propio banco de reactivos (no copies guías)","Publica tips gratis en TikTok desde noviembre","Vende en Hotmart o con link de pago","Ofrece una asesoría en vivo como producto más caro"],"ojo":"Mercado Libre prohíbe guías de estudio, y una decisión de la SEP puede borrar un nicho, como pasó con COMIPEMS."},{"id":"maestros","tipo":"digital","nombre":"Material para maestros","resumen":"Planeaciones, exámenes y material didáctico para un grado y una materia. Se vende en grupos de Facebook y WhatsApp de maestros, sobre todo en septiembre y enero.","cap":300,"capIdeal":1500,"horas":8,"semanas":3,"riesgo":0.5,"espacio":0,"skills":["ensenar","disenar"],"skillReq":true,"skillReqMsg":"Pide ser docente o saber enseñar","skillMsg":"Usa lo que sabes de enseñar","contenido":1,"clientes":1,"escala":3,"dificultad":2,"ml":false,"bonus":[-6,"Las búsquedas de planeaciones cayeron 52% en 5 años y hay mucho material gratis"],"temas":["educacion"],"ideas":{"educacion":["Paquete trimestral de planeaciones para un grado","Exámenes y rúbricas listos para imprimir","Material didáctico para preescolar"],"_":["Suscripción mensual con material nuevo"]},"numeros":["Picos: septiembre y enero–febrero","Cobro típico por WhatsApp con SPEI, OXXO o link de pago"],"pasos":["Enfócate en un grado y una materia","Regala una muestra en grupos de maestros","Vende paquetes por trimestre o suscripción","Cobra con link de Mercado Pago (acepta OXXO)","Actualiza con cada cambio de la SEP"],"ojo":"Gana quien es docente y conoce el programa vigente; hay mucho material gratis."},{"id":"cursos","tipo":"digital","nombre":"Curso en línea de un oficio","resumen":"Enseñas algo que sabes hacer con las manos (uñas, pestañas, repostería, barbería) en un curso grabado en Hotmart. Mucho trabajo al inicio y mucha escala después.","cap":3000,"capIdeal":8000,"horas":12,"semanas":8,"riesgo":1,"espacio":0,"skills":["manos","ensenar"],"skillReq":true,"skillReqMsg":"Necesitas dominar un oficio y saber enseñarlo","skillMsg":"Enseñas algo que ya sabes hacer","contenido":3,"clientes":2,"escala":3,"dificultad":3,"ml":false,"bonus":[-5,"Las búsquedas de cursos de oficios cayeron 48–79% en 5 años"],"temas":["belleza","cocina","moda","hobbies"],"ideas":{"belleza":["Curso de uñas acrílicas o gel desde cero","Curso de lifting y extensión de pestañas"],"cocina":["Repostería para vender: costeo incluido","Pan de temporada: rosca y pan de muerto"],"moda":["Costura y arreglos básicos"],"hobbies":["Técnica de un hobby que domines"],"_":["Taller en vivo pagado para validar antes de grabar"]},"numeros":["Hotmart: 9.9% + US$0.50–1 por venta; acepta OXXO y SPEI","Anuncios: cada venta cuesta $60–310, solo convienen con precios de $300 o más"],"pasos":["Valida con un taller en vivo pagado","Graba módulos cortos con buena luz y audio","Súbelo a Hotmart (ojo: pide exclusividad)","Promociona con videos del resultado en TikTok e Instagram","Vende un kit físico de insumos como extra"],"ojo":"Tienes que salir a cámara (al menos tus manos) y dominar el oficio."},{"id":"etsy","tipo":"digital","nombre":"Imprimibles y planners en Etsy (en inglés)","resumen":"Diseñas imprimibles y planners para compradores de Estados Unidos y cobras en dólares. Mercado enorme pero saturado; tarda meses en despegar.","cap":1000,"capIdeal":3000,"horas":10,"semanas":10,"riesgo":1,"espacio":0,"skills":["disenar"],"skillReq":true,"skillReqMsg":"Necesitas saber diseñar","skillMsg":"Usa tu habilidad para diseñar","contenido":1,"ingles":3,"mercado":"Etsy","clientes":0,"escala":3,"dificultad":3,"ml":false,"temas":["hogar","fiestas","educacion","bebes"],"ideas":{"hogar":["Planners de limpieza y presupuesto"],"fiestas":["Juegos imprimibles para baby shower y fiestas"],"educacion":["Hojas de trabajo para homeschool"],"bebes":["Registros de sueño y lactancia"],"_":["Planners para nichos con poca competencia","Colecciones por temporada"]},"numeros":["Etsy: US$0.20 por publicación + 6.5% + 4.5% de procesamiento","Planners en inglés: mercado saturado"],"pasos":["Busca nichos con poca competencia en Etsy","Publica de 30 a 50 productos para empezar a aparecer","Usa Pinterest para atraer tráfico","Registra tu RFC en Etsy (retiene 2.5% de ISR)","Crea colecciones por temporada"],"ojo":"Requiere constancia: lo normal es tardar meses en ver ventas."},{"id":"imprimibles","tipo":"digital","nombre":"Imprimibles para fiestas y repostería","resumen":"Cake toppers, etiquetas y kits imprimibles con diseños propios. Las búsquedas de cake toppers subieron 25% en 5 años. Si tienes plotter, también los vendes ya cortados.","cap":500,"capIdeal":6000,"horas":6,"semanas":3,"riesgo":0.5,"espacio":0,"skills":["disenar","manos"],"skillReq":true,"skillReqMsg":"Pide diseño o manualidad y no marcaste ninguno","skillMsg":"Usa tu habilidad para diseñar o hacer","contenido":2,"clientes":1,"escala":2,"dificultad":1,"ml":false,"temas":["fiestas","cocina","bebes"],"ideas":{"fiestas":["Kits por tema: topper, etiquetas y banderines","Toppers con nombre y edad"],"cocina":["Etiquetas y toppers para reposterías (venta a negocio)"],"bebes":["Kits para baby shower y primer año"],"_":["Temas propios, sin personajes con licencia","Plotter de corte para vender el topper ya hecho"]},"numeros":["Búsqueda de cake toppers: +25% en 5 años","Picos: julio y abril–mayo"],"pasos":["Diseña 20 temas propios","Vende el archivo, o el topper cortado si tienes plotter","Muéstralos en TikTok con pasteles reales","Alíate con reposterías de tu zona","Arma kits por tema para subir el ticket"],"ojo":"La mayoría de lo que se vende usa personajes con licencia: eso es infracción."}],"hechosIA":"- Comercio en línea en México 2025: $941 mil millones de pesos (+19.2%), 77.2 millones de compradores (AMVO 2026). Mercado Libre México creció 26% en el T2 2026.\n- \"Más vendidos\" de Mercado Libre (30 sep 2026): mediana $210; 83 de 120 cuestan menos de $299; 106 de 120 usan Full. Ejemplos: calcetines 12 pares $59 (más de 250 mil vendidos), pijama quirúrgica $290 (más de 100 mil), funda impermeable para moto $195, guantes de nitrilo $116, creatina $424.\n- Costos 2026: comisión Clásica 8–17% (hogar, ropa, mascotas, bebés y juguetes 15%; belleza y salud 14%; herramientas 13.5%; accesorios para vehículos 9%). Premium suma 3.5 a 4.5 puntos y da meses sin intereses. Desde el 6 abr 2026 ya no hay cargo fijo: toda venta paga costo de envío según peso y precio (vendedor nuevo: $30 a $84 si cuesta menos de $299; $63 a $147 si cuesta $299 o más, hasta 7 kg). Envío gratis obligatorio desde $299. Con reputación verde el envío es 17% más barato.\n- Regla: entre $149 y $499, comisión + envío + impuestos + empaque se llevan 48–62% del precio. Para ganar 20%, el costo del producto debe ser como máximo 18–32% del precio de venta; arriba de $800, cerca de 40%. Kits de más de $299 pagan un solo envío.\n- Impuestos: con RFC la plataforma retiene 2.5% ISR + 8% IVA sobre el precio sin IVA; sin RFC, 20% + 16%. Régimen de Plataformas con pago definitivo hasta $300 mil al año. Contador en app desde $189–249 al mes.\n- Aranceles 2026 a China y países sin tratado: ropa y calzado 20–35%, juguetes 20–30%, plásticos 35%, paquetería 33.5%. Importar suma 40–65% sobre el precio en China. Marítimo tarda 18–45 días: para este fin de año ya no llega.\n- Los vendedores chinos directos en Mercado Libre crecieron 60% en el T2 2026: evitar lo ligero, barato y genérico.\n- Nichos para principiante (margen bruto estimado): accesorios de moto 25–40%, refacciones de desgaste 20–35%, consumibles de impresión y 3D 15–25%, insumos para negocio 12–25%, filtros y repuestos 25–40%, higiene y accesorios para mascotas 30–45%, uniformes médicos hechos en México. Evitar: modas agotadas (Stanley, Labubu), especular con Pokémon, electrónica genérica con batería o Bluetooth, ropa con tallas, suplementos y cosméticos sin permisos.\n- Digitales: Mercado Libre prohíbe descargables, ebooks, cursos y guías. Invitaciones digitales $89–585 (8–25 pedidos al mes ≈ $1,200–11,000 brutos); plantillas Excel ~$230 y Canva ~$180 (la mayoría vende poco); EXANI-II +12% en búsquedas; COMIPEMS ya no existe; planeaciones −52%; cursos de oficios −48 a −79%. Cobro: link de Mercado Pago 3.49% + $4 + IVA; Hotmart 9.9% + US$0.50–1 (exige exclusividad); Gumroad 10% + US$0.50; Etsy en inglés. Anuncios en Meta: $60–310 por venta, solo sirven para productos de $300 o más.\n- Fechas: Buen Fin del 13 al 17 nov 2026. Día de Muertos: publicar antes del 10 oct. Stock en Full antes del 1 nov para Buen Fin y Navidad; para Reyes, antes del 20 dic. Programa Despegue: $850 de garantía a cambio de reputación verde, hasta $850 en publicidad y Flex."};
+</script>
+<script>
+(function(){
+"use strict";
+/* ---------- helpers ---------- */
+const $=(s,r=document)=>r.querySelector(s);
+const $$=(s,r=document)=>Array.from(r.querySelectorAll(s));
+const el=(tag,attrs={},...kids)=>{const n=document.createElement(tag);for(const[k,v]of Object.entries(attrs)){if(v==null||v===false)continue;if(k==="class")n.className=v;else if(k==="text")n.textContent=v;else if(k.startsWith("on"))n.addEventListener(k.slice(2),v);else n.setAttribute(k,v===true?"":v);}for(const k of kids.flat()){if(k==null||k===false)continue;n.append(k.nodeType?k:document.createTextNode(String(k)));}return n;};
+const SVGNS="http://www.w3.org/2000/svg";
+const sv=(tag,attrs={})=>{const n=document.createElementNS(SVGNS,tag);for(const[k,v]of Object.entries(attrs))n.setAttribute(k,v);return n;};
+const fmt0=new Intl.NumberFormat("es-MX",{maximumFractionDigits:0});
+const fmt2=new Intl.NumberFormat("es-MX",{minimumFractionDigits:2,maximumFractionDigits:2});
+const money=(v,d=0)=>(v<0?"−$":"$")+(d?fmt2:fmt0).format(Math.abs(d?v:Math.round(v)));
+const pct=(v,d=0)=>(v*100).toFixed(d)+"%";
+const store={get(k){try{return JSON.parse(localStorage.getItem(k)||"null")}catch(e){return null}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
+const D=window.QMCV_DATA;
+
+/* ---------- tooltip ---------- */
+const tip=el("div",{class:"tip",role:"status","aria-live":"polite"});document.body.append(tip);
+function showTip(ev,html){tip.replaceChildren(...html);tip.style.opacity="1";placeTip(ev);}
+function placeTip(ev){let x,y;if(ev&&ev.clientX!=null&&ev.type!=="focus"){x=ev.clientX;y=ev.clientY;}else{const r=ev.target.getBoundingClientRect();x=r.left+r.width/2;y=r.top;}const w=tip.offsetWidth,h=tip.offsetHeight;let L=x+14,T=y-h-12;if(L+w>innerWidth-8)L=x-w-14;if(L<8)L=8;if(T<8)T=y+18;tip.style.left=L+"px";tip.style.top=T+"px";}
+function hideTip(){tip.style.opacity="0";}
+function bindTip(node,build){node.addEventListener("pointerenter",e=>showTip(e,build()));node.addEventListener("pointermove",placeTip);node.addEventListener("pointerleave",hideTip);node.addEventListener("focus",e=>showTip(e,build()));node.addEventListener("blur",hideTip);}
+
+/* ======================================================
+   CUESTIONARIO
+   ====================================================== */
+const Q=D.preguntas, TEMAS=D.temas, LET="ABCDEF";
+const KEY="qmcv-respuestas-v1";
+const state=Object.assign({a:{},temas:[]},store.get(KEY)||{});
+const sheet=$("#hoja");
+function renderSheet(){
+  const body=$("#hoja-preguntas");body.replaceChildren();
+  Q.forEach((q,qi)=>{
+    const opts=el("div",{class:"opts",role:"group","aria-labelledby":"qt-"+q.id});
+    q.o.forEach((o,oi)=>{
+      const b=el("button",{type:"button",class:"opt",id:`q-${q.id}-${oi}`,"aria-pressed":String(state.a[q.id]===oi),onclick:()=>{state.a[q.id]=oi;store.set(KEY,state);$$(".opt",opts).forEach((x,xi)=>x.setAttribute("aria-pressed",String(xi===oi)));updateProgress();}},
+        el("span",{class:"bub","aria-hidden":"true"},LET[oi]),el("span",{},o));
+      opts.append(b);
+    });
+    body.append(el("div",{class:"q"},el("div",{class:"qn"},String(qi+1).padStart(2,"0")),el("div",{},el("div",{class:"qt",id:"qt-"+q.id},q.t),q.h?el("div",{class:"qh"},q.h):null),opts));
+  });
+  // temas
+  const tw=el("div",{class:"temas",role:"group","aria-labelledby":"qt-temas"});
+  TEMAS.forEach(t=>{
+    const b=el("button",{type:"button",class:"tema",id:"tema-"+t.id,"aria-pressed":String(state.temas.includes(t.id)),onclick:()=>{const i=state.temas.indexOf(t.id);if(i>=0)state.temas.splice(i,1);else if(state.temas.length<3)state.temas.push(t.id);store.set(KEY,state);syncTemas();updateProgress();}},t.n);
+    tw.append(b);
+  });
+  body.append(el("div",{class:"q"},el("div",{class:"qn"},String(Q.length+1).padStart(2,"0")),el("div",{},el("div",{class:"qt",id:"qt-temas"},"¿Qué temas te laten o conoces bien?"),el("div",{class:"qh"},"Elige hasta 3. Sirve para sugerirte productos concretos.")),tw));
+  syncTemas();updateProgress();
+}
+function syncTemas(){$$(".tema").forEach(b=>{const on=state.temas.includes(b.id.slice(5));b.setAttribute("aria-pressed",String(on));b.disabled=!on&&state.temas.length>=3;});}
+function answered(){return Q.filter(q=>state.a[q.id]!=null).length;}
+function updateProgress(){const n=answered(),tot=Q.length;$("#prog-txt").textContent=`${n} de ${tot} contestadas`;$("#prog-bar").style.width=(n/tot*100)+"%";$("#btn-res").disabled=n<Math.ceil(tot*0.75);$("#btn-res-hint").textContent=n<Math.ceil(tot*0.75)?`Contesta al menos ${Math.ceil(tot*0.75)} para ver tu resultado.`:(n<tot?"Puedes ver el resultado ya; con todas queda más fino.":"Listo. Tu resultado se calcula aquí mismo.");}
+
+/* ---------- motor de puntaje ---------- */
+const CAP=[2000,6500,20000,45000], HRS=[3,7.5,15,25];
+const SKILL=["disenar","ensenar","negociar","numeros","manos"];
+const SKILL_MSG={disenar:"Saber diseñar es justo lo que pide",ensenar:"Saber explicar es justo lo que pide",negociar:"Negociar con proveedores es la mitad del margen",numeros:"Aquí gana quien controla costos y márgenes",manos:"Lo que sabes hacer con las manos es tu ventaja"};
+function scorePath(p,a,temas){
+  let s=50;const why=[],risk=[];
+  const add=(v,msg)=>{s+=v;if(msg&&v!==0)(v>0?why:risk).push([Math.abs(v),msg]);};
+  const isF=p.tipo==="fisico", isD=p.tipo==="digital";
+  if(a.capital!=null){const c=CAP[a.capital];
+    if(c<p.cap)add(-Math.round(30*(1-c/p.cap)),`Para arrancar bien pide ~${money(p.cap)} y hoy tienes menos`);
+    else add(c>=p.capIdeal?6:3,c>=p.capIdeal?"Tu capital alcanza para probar varios productos":null);
+    if(a.capital===3&&p.escala>=3)add(5,"Tienes capital para escalarlo en serio");}
+  if(a.horas!=null){const h=HRS[a.horas];if(h<p.horas)add(-Math.round(24*(1-h/p.horas)),`Pide ~${p.horas} h a la semana y tienes menos`);else add(3,null);}
+  if(a.rapidez!=null){
+    if(a.rapidez===0){if(p.semanas<=2)add(10,"Tu primera venta puede llegar en 1 o 2 semanas");else if(p.semanas>=6)add(-14,`La primera venta suele tardar ~${p.semanas} semanas`);}
+    else if(a.rapidez===1){if(p.semanas<=4)add(5,null);else if(p.semanas>=10)add(-8,`La primera venta suele tardar ~${p.semanas} semanas`);}
+    else if(p.escala>=3)add(4,"Le das tiempo a algo que crece solo");}
+  if(a.riesgo!=null){
+    if(a.riesgo===0)add(Math.round(12-6*p.riesgo),p.riesgo<=1?"Casi no arriesgas dinero":(p.riesgo>=2.5?"Puedes quedarte con mercancía si no se vende":null));
+    else if(a.riesgo===1)add(Math.round(6-3*p.riesgo),p.riesgo>=3?"Es más riesgo del que quieres aguantar":null);
+    else if(a.riesgo===3)add(2*p.escala,null);}
+  if(a.lugar!=null){const L=p.lugar||[0,0,0,0];add(L[a.lugar],L[a.lugar]>0?p.lugarMsg?.[a.lugar]||null:(L[a.lugar]<0?p.lugarMsg?.[a.lugar]||null:null));}
+  if(a.espacio!=null){const need=p.espacio;if(a.espacio<need)add(-7*(need-a.espacio),"Necesitas más espacio para guardar inventario");else if(need===0)add(4,"No necesitas guardar nada en casa");}
+  if(a.sat!=null&&p.ml){if(a.sat===0)add(6,"Ya tienes RFC: te retienen poco y puedes facturar");else if(a.sat===3)add(-18,"Sin RFC, Mercado Libre te retiene ~31% del precio en impuestos");}
+  if(a.sat===3&&isD)add(-3,null);
+  if(a.exp!=null){if(a.exp===0){if(p.dificultad>=3)add(-10,"Es difícil como primer negocio");else if(p.dificultad<=1)add(5,"Buen primer paso si nunca has vendido");}if(a.exp>=2&&p.dificultad>=3)add(7,"Tu experiencia te ahorra errores caros");}
+  if(a.habilidad!=null){const sk=SKILL[a.habilidad];if(p.skills.includes(sk))add(14,SKILL_MSG[sk]);else if(p.skillReq)add(-8,p.skillReqMsg||"Pide una habilidad que no marcaste");}
+  if(a.camara!=null){const c=p.contenido;if(a.camara===0)add(c>=2?10:(c===1?4:0),c>=2?"Te late la cámara y aquí las ventas salen de redes":null);else if(a.camara===1)add(c>=1?4:0,null);else if(a.camara===2)add(-5*c,c>=2?"Vende sobre todo por redes y no te late grabar":null);else add(p.ml?6:-8*c,p.ml?"Mercado Libre te trae los clientes sin hacer contenido":(c>=1?"Casi todo se vende con contenido en redes":null));}
+  if(a.tipo!=null){const t=a.tipo;if(t===0)add(isF?16:-14,isF?"Es lo que buscas: comprar y revender":null);else if(t===1)add(isD?16:-14,isD?"Es lo que buscas: hacer una vez y vender muchas":null);else if(t===2)add(isF?8:3,null);else add(isD?8:3,null);}
+  if(a.china!=null&&p.id==="china"){add([15,9,-24,-8][a.china],[ "Quieres importar y aquí está el margen","Una consolidadora te resuelve la aduana","Prefieres proveedores en México",null][a.china]);}
+  if(a.china===2&&p.nacional)add(6,"Todo se surte en México");
+  if(a.ingles!=null){const ne=p.ingles||0;if(ne>=2){add([-26,-12,3,12][a.ingles],[`Pide inglés para vender en ${p.mercado||"el extranjero"}`,"Tu inglés básico te limita aquí",null,"Tu inglés te abre el mercado en dólares"][a.ingles]);}}
+  if(a.movilidad!=null){const m=p.movil||0;if(m>=2){add([8,4,-6,-15][a.movilidad],[ "Con carro cazas mercancía y la llevas a paquetería","La moto te sirve para ir por mercancía",m>=3?"Sin carro es pesado cargar mercancía":null,"Tienes que salir a buscar mercancía"][a.movilidad]);}else if(a.movilidad===3&&m===0)add(4,null);}
+  if(a.clientes!=null){const c=p.clientes;if(a.clientes===0)add(c>=2?6:0,c>=2?"Te gusta tratar con gente y aquí cuenta mucho":null);else if(a.clientes===3)add(c>=2?-12:(c===0?5:0),c>=2?"Hay mucho trato directo con clientes":(c===0?"Casi no tienes que atender a nadie":null));}
+  if(a.meta!=null){if(a.meta<=0&&p.dificultad<=1)add(4,null);if(a.meta>=2)add((p.escala-2)*6,p.escala>=3?"Tiene techo alto si le va bien":(p.escala<=1?"Tiene techo bajo para la meta que buscas":null));}
+  let tm=0;(temas||[]).forEach(t=>{if(p.temas.includes(t))tm+=1;});if(tm)add(Math.min(tm,2)*7,`Encaja con lo que te gusta (${(temas||[]).filter(t=>p.temas.includes(t)).map(t=>TEMAS.find(x=>x.id===t).n.toLowerCase()).join(", ")})`);
+  if(p.bonus)add(p.bonus[0],p.bonus[1]);
+  s=Math.max(3,Math.min(98,Math.round(100/(1+Math.exp(-(s-60)/22)))));
+  why.sort((x,y)=>y[0]-x[0]);risk.sort((x,y)=>y[0]-x[0]);
+  return {id:p.id,s,why:why.map(x=>x[1]),risk:risk.map(x=>x[1])};
+}
+function rankAll(a,temas){return D.caminos.map(p=>({p,...scorePath(p,a,temas)})).sort((x,y)=>y.s-x.s);}
+window.__qmcv_rank=rankAll; // para pruebas
+
+function ideasFor(p,temas){
+  const out=[];(temas||[]).forEach(t=>{(p.ideas[t]||[]).forEach(i=>{if(!out.includes(i))out.push(i);});});
+  (p.ideas._||[]).forEach(i=>{if(out.length<4&&!out.includes(i))out.push(i);});
+  return out.slice(0,4);
+}
+function answersCode(){return Q.map((q,i)=>`${i+1}${state.a[q.id]!=null?LET[state.a[q.id]]:"-"}`).join(" ")+(state.temas.length?` · temas: ${state.temas.join(",")}`:"");}
+
+let lastRank=null;
+function showResult(scroll=true){
+  const r=rankAll(state.a,state.temas);lastRank=r;
+  const box=$("#resultado");box.hidden=false;
+  // ranking bars
+  const rk=$("#rank");rk.replaceChildren();
+  r.forEach((x,i)=>{rk.append(el("div",{class:"rrow"+(i<3?" top":"")},el("div",{class:"rn"},x.p.nombre,el("small",{},x.p.tipo==="digital"?"digital":"físico")),el("div",{class:"rb","aria-hidden":"true"},(()=>{const b=el("i");b.style.width=x.s+"%";return b;})()),el("div",{class:"rv"},x.s+"%")));});
+  // top 3
+  const pk=$("#picks");pk.replaceChildren();
+  r.slice(0,3).forEach((x,i)=>{
+    const p=x.p, ideas=ideasFor(p,state.temas);
+    pk.append(el("article",{class:"pick"},
+      el("div",{class:"place"},["Tu mejor opción","Segunda opción","Tercera opción"][i]+` · ${x.s}%`),
+      el("h3",{},p.nombre),
+      el("p",{class:"small"},p.resumen),
+      x.why.length?el("div",{},el("div",{class:"lbl"},"Por qué te queda"),el("ul",{class:"why"},...x.why.slice(0,3).map(w=>el("li",{},w)))):null,
+      ideas.length?el("div",{},el("div",{class:"lbl"},"Productos para investigar"),el("ul",{},...ideas.map(w=>el("li",{},w)))):null,
+      el("div",{},el("div",{class:"lbl"},"Números de referencia"),el("ul",{},...p.numeros.map(w=>el("li",{},w)))),
+      el("div",{},el("div",{class:"lbl"},"Primeros pasos"),el("ul",{},...p.pasos.slice(0,4).map(w=>el("li",{},w)))),
+      (x.risk.length||p.ojo)?el("div",{},el("div",{class:"lbl"},"Ojo con"),el("ul",{class:"risk"},...[...x.risk.slice(0,2),...(p.ojo?[p.ojo]:[])].map(w=>el("li",{},w)))):null
+    ));
+  });
+  const satW=$("#sat-warn");satW.hidden=!(state.a.sat>=1);
+  $("#code").textContent=answersCode();
+  if(scroll)box.scrollIntoView({behavior:matchMedia("(prefers-reduced-motion: reduce)").matches?"auto":"smooth",block:"start"});
+  saveToDb(r);
+  $("#ai-box").hidden=!sampleFn;
+}
+
+/* ---------- guardar en db para que Claude lo lea ---------- */
+let dbRef=null,uid=null,dbTried=false;
+async function initDb(){
+  if(dbTried)return;dbTried=true;
+  try{const db=await window.claude?.use?.("db");const user=await window.claude?.use?.("user");uid=user?await user.id():null;if(db&&uid)dbRef=db.doc("respuestas/"+uid);}catch(e){dbRef=null;}
+}
+let saving=false,pendingSave=null;
+async function saveToDb(r){
+  const st=$("#save-state");
+  await initDb();
+  if(!dbRef){st.replaceChildren("Aquí no se pueden guardar tus respuestas en línea. Copia el código de abajo y pégalo en el chat con Claude.");return;}
+  const body={respuestas:Object.fromEntries(Q.map(q=>[q.id,state.a[q.id]!=null?{letra:LET[state.a[q.id]],texto:q.o[state.a[q.id]],pregunta:q.t}:null])),temas:state.temas.slice(),ranking:r.slice(0,6).map(x=>({id:x.id,nombre:x.p.nombre,compatibilidad:x.s})),codigo:answersCode(),actualizado:new Date().toISOString(),version:1};
+  if(saving){pendingSave=body;return;}
+  saving=true;st.replaceChildren("Guardando tus respuestas…");
+  try{await dbRef.set(body);st.replaceChildren(el("b",{},"Respuestas guardadas. "),"Regresa al chat y escribe “listo”: Claude las lee y te arma el plan a detalle.");}
+  catch(e){st.replaceChildren("No se pudieron guardar ("+(e&&e.code||"error")+"). Copia el código de abajo y pégalo en el chat.");}
+  finally{saving=false;if(pendingSave){const b=pendingSave;pendingSave=null;saving=true;try{await dbRef.set(b);}catch(e){}saving=false;}}
+}
+
+/* ---------- plan con Claude (sample) ---------- */
+let sampleFn=null,aiCtl=null;
+(async()=>{try{sampleFn=await window.claude?.use?.("sample")||null;}catch(e){sampleFn=null;}if(lastRank)$("#ai-box").hidden=!sampleFn;})();
+function mdLite(text){
+  const out=el("div");let list=null;
+  const inline=(s)=>{const frag=document.createDocumentFragment();const parts=s.split(/(\*\*[^*]+\*\*)/g);parts.forEach(pt=>{if(/^\*\*[^*]+\*\*$/.test(pt))frag.append(el("b",{},pt.slice(2,-2)));else if(pt)frag.append(document.createTextNode(pt));});return frag;};
+  text.split(/\n/).forEach(line=>{const l=line.trim();
+    if(!l){list=null;return;}
+    const h=l.match(/^#{1,4}\s+(.*)$/);if(h){list=null;out.append(el("h4",{},inline(h[1].replace(/\*\*/g,""))));return;}
+    const li=l.match(/^(?:[-*•]|\d+[.)])\s+(.*)$/);if(li){if(!list){list=el("ul");out.append(list);}list.append(el("li",{},inline(li[1])));return;}
+    list=null;out.append(el("p",{},inline(l)));});
+  return out;
+}
+function aiPrompt(){
+  const r=lastRank||rankAll(state.a,state.temas);
+  const ans=Q.map((q,i)=>`${i+1}. ${q.t} → ${state.a[q.id]!=null?q.o[state.a[q.id]]:"(sin contestar)"}`).join("\n");
+  const temas=state.temas.map(t=>TEMAS.find(x=>x.id===t).n).join(", ")||"(ninguno)";
+  const top=r.slice(0,5).map(x=>`- ${x.p.nombre} (${x.s}%): ${x.p.resumen} Números: ${x.p.numeros.join("; ")}`).join("\n");
+  return `Eres asesor de comercio electrónico en México (hoy es ${D.fecha}). Una persona contestó un cuestionario para decidir qué vender en Mercado Libre México o como producto digital. Escríbele en español de México, de tú, claro y directo, sin inventar cifras que no estén abajo (si das un número nuevo, márcalo como estimación).
+
+SUS RESPUESTAS
+${ans}
+Temas que le laten: ${temas}
+
+RANKING CALCULADO (compatibilidad)
+${top}
+
+DATOS DE LA INVESTIGACIÓN (sept 2026)
+${D.hechosIA}
+
+QUÉ ENTREGAR (máximo ~600 palabras, con encabezados cortos con # y viñetas):
+# Mi recomendación
+Elige UNA opción principal (y una secundaria si tiene sentido) y explica en 3 viñetas por qué, citando sus respuestas.
+# Qué producto probar primero
+3 productos o variantes concretas para investigar esta semana, con precio de venta objetivo y costo máximo de compra para ganar al menos 20%.
+# Tu dinero
+Cómo repartir su capital inicial (monto por concepto).
+# Plan de 30 días
+Semana 1 a semana 4, 2 o 3 acciones por semana.
+# Lo que te puede tumbar
+3 riesgos específicos y cómo evitarlos.`;
+}
+async function runAI(){
+  if(!sampleFn)return;
+  const out=$("#ai-out"),btn=$("#btn-ai"),stop=$("#btn-ai-stop"),note=$("#ai-note");
+  out.hidden=false;out.replaceChildren(el("p",{class:"small"},"Pensando… (puede tardar hasta un minuto)"));note.textContent="";
+  btn.disabled=true;stop.hidden=false;aiCtl=new AbortController();
+  try{const res=await sampleFn(aiPrompt(),{signal:aiCtl.signal,modelTier:"default",onText:({text})=>{out.replaceChildren(mdLite(text));}});
+    out.replaceChildren(mdLite(res.text));if(res.truncated)note.textContent="La respuesta se cortó. Pídele el plan en el chat para verlo completo.";}
+  catch(e){const code=e&&e.code;if(e&&e.text)out.replaceChildren(mdLite(e.text));else if(code!=="cancelled")out.hidden=true;
+    const msg={not_granted:"No diste permiso para usar Claude desde esta página. Puedes pedir el plan en el chat.",sampling_disabled:"Tu cuenta no permite usar Claude desde páginas. Pide el plan en el chat.",rate_limited:"Muchas solicitudes seguidas. Intenta en un rato.",session_expired:"Tu sesión expiró; vuelve a iniciar sesión.",refused:"Claude no pudo responder esta solicitud. Pide el plan en el chat.",cancelled:"Detenido."}[code]||"Se interrumpió la respuesta. Intenta de nuevo o pídelo en el chat.";
+    note.textContent=msg;if(["not_granted","sampling_disabled","not_declared","capability_disabled","capability_removed"].includes(code))$("#ai-box").hidden=true;}
+  finally{btn.disabled=false;stop.hidden=true;}
+}
+
+/* ======================================================
+   CALCULADORA
+   ====================================================== */
+const F=D.costos;
+const calc={precio:499,costo:180,cat:"hogar",tipo:"clasica",peso:2,rep:1,rfc:true,ads:0,dev:3,emp:12,gratisBajo:false};
+Object.assign(calc,store.get("qmcv-calc-v2")||{});
+function band(P){const b=F.bandas;for(let i=0;i<b.length;i++){if(P<b[i])return i;}return b.length;}
+function shipCost(P,w,rep,gratisBajo){const t=F.envio[rep].t[w];if(P<F.umbralEnvioGratis){return gratisBajo?t[3]:t[band(P)];}return t[band(P)];}
+function compute(c){
+  const cat=F.categorias.find(x=>x.id===c.cat)||F.categorias[0];
+  const P=+c.precio||0,C=+c.costo||0;
+  const pc=c.tipo==="premium"?cat.premium:cat.clasica;
+  const comision=P*pc/100, envio=shipCost(P,c.peso,c.rep,c.gratisBajo);
+  const base=P/(1+F.iva);
+  const isr=base*(c.rfc?F.isrConRfc:F.isrSinRfc), iva=base*(c.rfc?F.ivaRetConRfc:F.ivaRetSinRfc);
+  const ads=P*(+c.ads||0)/100, dev=P*(+c.dev||0)/100, emp=+c.emp||0;
+  const deposito=P-comision-envio-isr-iva;
+  const neto=deposito-ads-dev-emp-C;
+  return {P,C,pc,comision,envio,isr,iva,ads,dev,emp,deposito,neto,margen:P?neto/P:0,roi:C?neto/C:0,ml:comision+envio,imp:isr+iva,otros:ads+dev+emp};
+}
+window.__qmcv_compute=compute;
+function renderCalc(){
+  const r=compute(calc);
+  const t=$("#ticket-lines");t.replaceChildren();
+  const line=(label,v,cls,sw)=>el("div",{class:"tl "+(cls||"")},el("span",{},sw?(()=>{const i=el("i",{class:"sw"});i.style.background=`var(${sw})`;return i;})():null,label),el("span",{},v));
+  t.append(line("Precio de venta",money(r.P,2)),
+    line(`Comisión ${calc.tipo==="premium"?"Premium":"Clásica"} (${r.pc}%)`,money(-r.comision,2),"minus","--c-ml"),
+    line(r.P<F.umbralEnvioGratis?(calc.gratisBajo?"Envío gratis que ofreces":"Costo por envío (menos de $299)"):"Envío gratis obligatorio",money(-r.envio,2),"minus","--c-ml"),
+    line(`Retención ISR (${pct(calc.rfc?F.isrConRfc:F.isrSinRfc,1)})`,money(-r.isr,2),"minus","--c-tax"),
+    line(`Retención IVA (${pct(calc.rfc?F.ivaRetConRfc:F.ivaRetSinRfc,0)})`,money(-r.iva,2),"minus","--c-tax"),
+    line("Te depositan",money(r.deposito,2),"sub"),
+    line(`Publicidad (${calc.ads}%)`,money(-r.ads,2),"minus"),
+    line(`Devoluciones (${calc.dev}%)`,money(-r.dev,2),"minus"),
+    line("Empaque",money(-r.emp,2),"minus"),
+    line("Costo del producto",money(-r.C,2),"minus","--c-prod"),
+    line("Te queda por venta",money(r.neto,2),"total"));
+  $("#k-margen").textContent=pct(r.margen,1);$("#k-roi").textContent=r.C?pct(r.roi,0):"—";
+  $("#k-100").textContent=money(r.neto*100);
+  const v=$("#calc-verdict");let cls="mal",txt="Pierdes dinero";
+  if(r.margen>=0.2){cls="bien";txt="Buen margen";}else if(r.margen>=0.1){cls="regular";txt="Margen justo";}else if(r.neto>0){cls="regular";txt="Ganas muy poco";}
+  v.replaceChildren(el("span",{class:"pill "+cls},txt));
+  $("#calc-min").textContent=minPrice(calc,0.2);
+  renderStack();
+  store.set("qmcv-calc-v2",calc);
+}
+function minPrice(c,target){const ratio=c.costo/(c.precio||1);for(let P=50;P<=20000;P+=1){const r=compute({...c,precio:P,costo:c.costo});if(r.margen>=target)return money(P);}return "más de $20,000";}
+function bindCalc(){
+  $("#calc-form").addEventListener("submit",e=>e.preventDefault());
+  const sel=$("#c-cat");F.categorias.forEach(c=>sel.append(el("option",{value:c.id},`${c.n} · ${c.clasica}% / ${c.premium}%`)));
+  const selP=$("#c-peso");F.pesos.forEach((n,i)=>selP.append(el("option",{value:i},n)));
+  const selR=$("#c-rep");F.envio.forEach((e,i)=>selR.append(el("option",{value:i},e.n)));
+  const gb=$("#c-gratis");gb.checked=!!calc.gratisBajo;gb.addEventListener("change",()=>{calc.gratisBajo=gb.checked;renderCalc();});
+  const map={"c-precio":"precio","c-costo":"costo","c-ads":"ads","c-dev":"dev","c-emp":"emp"};
+  for(const[id,k]of Object.entries(map)){const n=$("#"+id);n.value=calc[k];n.addEventListener("input",()=>{calc[k]=parseFloat(n.value)||0;renderCalc();});}
+  sel.value=calc.cat;sel.addEventListener("change",()=>{calc.cat=sel.value;renderCalc();});
+  selP.value=calc.peso;selP.addEventListener("change",()=>{calc.peso=+selP.value;renderCalc();});
+  selR.value=calc.rep;selR.addEventListener("change",()=>{calc.rep=+selR.value;renderCalc();});
+  const segT=$$("#c-tipo button"),segR=$$("#c-rfc button");
+  const syncSeg=()=>{segT.forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.v===calc.tipo)));segR.forEach(b=>b.setAttribute("aria-pressed",String((b.dataset.v==="1")===calc.rfc)));};
+  segT.forEach(b=>b.addEventListener("click",()=>{calc.tipo=b.dataset.v;syncSeg();renderCalc();}));
+  segR.forEach(b=>b.addEventListener("click",()=>{calc.rfc=b.dataset.v==="1";syncSeg();renderCalc();}));
+  syncSeg();
+  const ex=$("#c-ejemplo");D.ejemplos.forEach((e,i)=>ex.append(el("option",{value:i},e.n)));
+  ex.addEventListener("change",()=>{const e=D.ejemplos[+ex.value];if(!e)return;Object.assign(calc,{gratisBajo:false,ads:0,dev:3,emp:12},e.v);for(const[id,k]of Object.entries(map))$("#"+id).value=calc[k];sel.value=calc.cat;selP.value=calc.peso;selR.value=calc.rep;gb.checked=!!calc.gratisBajo;syncSeg();renderCalc();});
+}
+
+/* ---------- gráfica: a dónde se va el dinero (barras apiladas 100%) ---------- */
+const SEGS=[["prod","Costo del producto","--c-prod"],["ml","Mercado Libre (comisión y envío)","--c-ml"],["imp","Impuestos retenidos","--c-tax"],["gan","Te queda (después de empaque, anuncios y devoluciones)","--c-gain"]];
+function renderStack(){
+  const box=$("#stack");if(!box)return;
+  const ratio=calc.precio?calc.costo/calc.precio:0.35;
+  const prices=[149,299,599,1199];
+  const rows=prices.map(P=>{const r=compute({...calc,precio:P,costo:Math.round(P*ratio)});return {P,prod:r.C,ml:r.ml,imp:r.imp,otros:r.otros,gan:r.neto};});
+  const W=640,rowH=34,gap=18,left=64,right=12,top=6,H=top+rows.length*(rowH+gap);
+  const svg=sv("svg",{viewBox:`0 0 ${W} ${H}`,width:"100%",role:"img","aria-label":"Reparto de cada venta por precio"});
+  const pw=W-left-right;
+  rows.forEach((r,i)=>{const y=top+i*(rowH+gap);
+    const lab=sv("text",{x:left-10,y:y+rowH/2+4,"text-anchor":"end","font-size":"12","font-family":"var(--f-mono)"});lab.textContent=money(r.P);svg.append(lab);
+    const parts=[["prod",r.prod],["ml",r.ml],["imp",r.imp],["gan",r.gan]];
+    const pos=parts.map(([k,v])=>[k,Math.max(0,v)]);const tot=pos.reduce((a,[,v])=>a+v,0)||1;
+    let x=left;
+    pos.forEach(([k,v],j)=>{const w=pw*v/tot;if(w<=0)return;const seg=SEGS.find(s=>s[0]===k);
+      const gapW=j<pos.length-1?2:0;
+      const rect=sv("rect",{x:x,y:y,width:Math.max(0,w-gapW),height:rowH,fill:`var(${seg[2]})`,rx:j===pos.length-1||pos.slice(j+1).every(([,vv])=>vv<=0)?4:0,tabindex:"0"});
+      const val=parts.find(p=>p[0]===k)[1];
+      bindTip(rect,()=>[el("b",{},`${money(val)} · ${pct(val/r.P,0)}`),el("div",{},`${seg[1]} en una venta de ${money(r.P)}`)]);
+      svg.append(rect);
+      const lbl=pct(val/r.P,0);if(w>46){const t=sv("text",{x:x+(w-gapW)/2,y:y+rowH/2+4,"text-anchor":"middle","font-size":"12","font-weight":"600",fill:k==="imp"?"#1b1400":"#ffffff",style:"fill:"+(k==="imp"?"#1b1400":"#ffffff")});t.textContent=lbl;svg.append(t);}
+      x+=w;});
+    if(r.gan<=0){const t=sv("text",{x:W-right,y:y+rowH+13,"text-anchor":"end","font-size":"11",style:"fill:var(--bad)"});t.textContent=`pierdes ${money(-r.gan)} por venta`;svg.append(t);}
+  });
+  box.replaceChildren(svg);
+  const tb=$("#stack-table");tb.replaceChildren(el("thead",{},el("tr",{},el("th",{},"Precio"),el("th",{class:"n"},"Producto"),el("th",{class:"n"},"Mercado Libre"),el("th",{class:"n"},"Impuestos"),el("th",{class:"n"},"Otros"),el("th",{class:"n"},"Te queda"))),el("tbody",{},...rows.map(r=>el("tr",{},el("td",{},money(r.P)),el("td",{class:"n"},money(r.prod)),el("td",{class:"n"},money(r.ml)),el("td",{class:"n"},money(r.imp)),el("td",{class:"n"},money(r.otros)),el("td",{class:"n"},money(r.gan))))));
+  $("#stack-note").textContent=`Mismo costo relativo que tu cálculo (${pct(ratio,0)} del precio) y mismas opciones de publicación, envío e impuestos.`;
+}
+
+/* ---------- gráfica: precios de lo más vendido ---------- */
+function renderStrip(){
+  const box=$("#strip");if(!box)return;
+  const cats=D.snapshot.categorias;
+  const W=680,rowH=40,left=150,right=18,top=26,bottom=34,H=top+cats.length*rowH+bottom;
+  const min=40,max=4000,lx=v=>left+(Math.log(v)-Math.log(min))/(Math.log(max)-Math.log(min))*(W-left-right);
+  const svg=sv("svg",{viewBox:`0 0 ${W} ${H}`,width:"100%",role:"img","aria-label":"Precio de los 20 más vendidos por categoría"});
+  const g=sv("g",{class:"axis"});
+  [50,100,200,500,1000,2000,4000].forEach(v=>{const x=lx(v);g.append(sv("line",{x1:x,x2:x,y1:top-6,y2:H-bottom+4,stroke:"var(--line-2)","stroke-width":"1"}));const t=sv("text",{x:x,y:H-bottom+20,"text-anchor":"middle"});t.textContent="$"+fmt0.format(v);g.append(t);});
+  svg.append(g);
+  const th=lx(D.costos.umbralEnvioGratis);
+  svg.append(sv("line",{x1:th,x2:th,y1:top-14,y2:H-bottom+4,stroke:"var(--rosa-fill)","stroke-width":"1.5"}));
+  const tl=sv("text",{x:th+6,y:top-6,"font-size":"11",style:"fill:var(--rosa)"});tl.textContent=`$${D.costos.umbralEnvioGratis}: desde aquí el envío gratis corre por tu cuenta`;svg.append(tl);
+  cats.forEach((c,i)=>{const y=top+i*rowH+rowH/2;
+    const lab=sv("text",{x:left-12,y:y+4,"text-anchor":"end","font-size":"12.5"});lab.textContent=c.n;svg.append(lab);
+    const med=sv("line",{x1:lx(c.mediana),x2:lx(c.mediana),y1:y-12,y2:y+12,stroke:"var(--ink)","stroke-width":"2"});svg.append(med);
+    const seen={};
+    c.items.forEach(it=>{const k=Math.round(lx(it.p)/5);seen[k]=(seen[k]||0)+1;const jitter=((seen[k]%3)-1)*7;
+      const cx=lx(Math.max(min,Math.min(max,it.p)));
+      const dot=sv("circle",{cx:cx,cy:y+jitter,r:4.5,fill:it.f?"var(--dot)":"var(--paper)",stroke:it.f?"var(--paper)":"var(--dot)","stroke-width":it.f?"1.5":"1.8",tabindex:"0"});
+      const hit=sv("circle",{cx:cx,cy:y+jitter,r:11,fill:"transparent"});
+      const b=()=>[el("b",{},money(it.p)+(it.o?` · ${it.o}`:"")),el("div",{},it.t),el("div",{style:"opacity:.8;margin-top:3px"},`${c.n}${it.f?" · Full":""}${it.x?" · vendedor internacional":""}`)];
+      bindTip(dot,b);bindTip(hit,b);svg.append(dot,hit);});
+  });
+  box.replaceChildren(svg);
+  const tb=$("#strip-table");tb.replaceChildren(el("thead",{},el("tr",{},el("th",{},"Categoría"),el("th",{class:"n"},"Mediana"),el("th",{class:"n"},"Con Full"),el("th",{class:"n"},"Menos de $299"),el("th",{},"Producto #1"))),el("tbody",{},...cats.map(c=>el("tr",{},el("td",{},c.n),el("td",{class:"n"},money(c.mediana)),el("td",{class:"n"},`${c.full} de ${c.items.length}`),el("td",{class:"n"},`${c.items.filter(i=>i.p<D.costos.umbralEnvioGratis).length} de ${c.items.length}`),el("td",{},`${c.items[0].t} (${money(c.items[0].p)})`)))));
+}
+
+/* ---------- gráfica: barras simples (mercado) ---------- */
+function renderBars(id,rows,unit,hl){
+  const box=$("#"+id);if(!box||!rows)return;
+  const W=640,left=58,right=14,top=22,bottom=30,H=230,max=Math.max(...rows.map(r=>r.v))*1.12;
+  const bw=Math.min(24*2,(W-left-right)/rows.length*0.5);
+  const svg=sv("svg",{viewBox:`0 0 ${W} ${H}`,width:"100%",role:"img","aria-label":box.dataset.label||""});
+  const y=v=>H-bottom-(v/max)*(H-top-bottom);
+  const g=sv("g",{class:"axis"});
+  const step=niceStep(max/4);for(let v=0;v<=max;v+=step){g.append(sv("line",{x1:left,x2:W-right,y1:y(v),y2:y(v),stroke:v===0?"var(--line)":"var(--line-2)","stroke-width":"1"}));const t=sv("text",{x:left-8,y:y(v)+4,"text-anchor":"end"});t.textContent=fmt0.format(v);g.append(t);}
+  svg.append(g);
+  rows.forEach((r,i)=>{const cx=left+(i+0.5)*(W-left-right)/rows.length;const h=H-bottom-y(r.v);
+    const path=sv("path",{d:roundTop(cx-bw/2,y(r.v),bw,h,4),fill:r.k===hl||hl==null?"var(--c-prod)":"color-mix(in srgb,var(--c-prod) 45%,var(--paper))",tabindex:"0"});
+    bindTip(path,()=>[el("b",{},`${fmt0.format(r.v)}${unit}`),el("div",{},r.k+(r.nota?` · ${r.nota}`:""))]);svg.append(path);
+    const t=sv("text",{x:cx,y:H-bottom+18,"text-anchor":"middle","font-size":"11.5","font-family":"var(--f-mono)"});t.textContent=r.k;svg.append(t);
+    if(i===rows.length-1||r.k===hl){const vt=sv("text",{x:cx,y:y(r.v)-7,"text-anchor":"middle","font-size":"12","font-weight":"650",style:"fill:var(--ink)"});vt.textContent=fmt0.format(r.v)+(unit.startsWith("%")?"%":"");svg.append(vt);}
+  });
+  box.replaceChildren(svg);
+}
+function renderHBars(id,rows,suffix,hl){
+  const box=$("#"+id);if(!box||!rows)return;
+  const W=640,left=190,right=46,rowH=26,top=4,H=top+rows.length*rowH+4,max=Math.max(...rows.map(r=>r.v));
+  const svg=sv("svg",{viewBox:`0 0 ${W} ${H}`,width:"100%",role:"img","aria-label":box.dataset.label||""});
+  const x=v=>(v/max)*(W-left-right);
+  rows.forEach((r,i)=>{const y=top+i*rowH;const on=hl?hl.includes(r.k):true;
+    const t=sv("text",{x:left-10,y:y+rowH/2+4,"text-anchor":"end","font-size":"12.5",style:on?"fill:var(--ink)":"fill:var(--ink-2)"});t.textContent=r.k;svg.append(t);
+    const w=Math.max(2,x(r.v)),h=14;
+    const p=sv("path",{d:`M${left},${y+(rowH-h)/2}H${left+w-4}Q${left+w},${y+(rowH-h)/2} ${left+w},${y+(rowH-h)/2+4}V${y+(rowH+h)/2-4}Q${left+w},${y+(rowH+h)/2} ${left+w-4},${y+(rowH+h)/2}H${left}Z`,fill:on?"var(--c-ml)":"color-mix(in srgb,var(--muted) 45%,var(--paper))",tabindex:"0"});
+    bindTip(p,()=>[el("b",{},r.v+suffix),el("div",{},r.k+(r.nota?` · ${r.nota}`:""))]);svg.append(p);
+    const vt=sv("text",{x:left+w+6,y:y+rowH/2+4,"font-size":"12","font-family":"var(--f-mono)",style:"fill:var(--ink-2)"});vt.textContent=r.v+suffix;svg.append(vt);
+  });
+  svg.append(sv("line",{x1:left,x2:left,y1:0,y2:H,stroke:"var(--line)","stroke-width":"1"}));
+  box.replaceChildren(svg);
+}
+function renderDiverging(id,rows,nota){
+  const box=$("#"+id);if(!box||!rows)return;
+  const W=640,left=196,right=52,rowH=25,top=22,H=top+rows.length*rowH+6;
+  const max=Math.max(...rows.map(r=>Math.abs(r.v)));
+  const span=W-left-right, zero=left+span*(max/(2*max));
+  const x=v=>zero+(v/max)*(span/2);
+  const svg=sv("svg",{viewBox:`0 0 ${W} ${H}`,width:"100%",role:"img","aria-label":box.dataset.label||""});
+  const hdr1=sv("text",{x:zero-8,y:12,"text-anchor":"end","font-size":"11","font-family":"var(--f-mono)",style:"fill:var(--muted)"});hdr1.textContent="← se busca menos";svg.append(hdr1);
+  const hdr2=sv("text",{x:zero+8,y:12,"font-size":"11","font-family":"var(--f-mono)",style:"fill:var(--muted)"});hdr2.textContent="se busca más →";svg.append(hdr2);
+  rows.forEach((r,i)=>{const y=top+i*rowH,h=13,yy=y+(rowH-h)/2;
+    const t=sv("text",{x:left-10,y:y+rowH/2+4,"text-anchor":"end","font-size":"12.5",style:"fill:var(--ink)"});t.textContent=r.k;svg.append(t);
+    const x0=Math.min(zero,x(r.v)),w=Math.max(2,Math.abs(x(r.v)-zero));
+    const pos=r.v>=0;
+    const d=pos?`M${x0},${yy}H${x0+w-4}Q${x0+w},${yy} ${x0+w},${yy+4}V${yy+h-4}Q${x0+w},${yy+h} ${x0+w-4},${yy+h}H${x0}Z`:`M${x0+w},${yy}H${x0+4}Q${x0},${yy} ${x0},${yy+4}V${yy+h-4}Q${x0},${yy+h} ${x0+4},${yy+h}H${x0+w}Z`;
+    const p=sv("path",{d,fill:pos?"var(--c-prod)":"var(--c-ml)",tabindex:"0"});
+    bindTip(p,()=>[el("b",{},(r.v>0?"+":"")+r.v+"%"),el("div",{},`${r.k}: cambio en búsquedas de Google México, ${nota||""}`)]);svg.append(p);
+    const vt=sv("text",{x:pos?x0+w+6:x0-6,y:y+rowH/2+4,"text-anchor":pos?"start":"end","font-size":"11.5","font-family":"var(--f-mono)",style:"fill:var(--ink-2)"});vt.textContent=(r.v>0?"+":"")+r.v+"%";svg.append(vt);
+  });
+  svg.append(sv("line",{x1:zero,x2:zero,y1:top-4,y2:H,stroke:"var(--muted)","stroke-width":"1"}));
+  box.replaceChildren(svg);
+}
+function niceStep(x){const p=Math.pow(10,Math.floor(Math.log10(x)));const n=x/p;return (n<1.5?1:n<3?2:n<7?5:10)*p;}
+function roundTop(x,y,w,h,r){r=Math.min(r,h,w/2);return `M${x},${y+h}V${y+r}Q${x},${y} ${x+r},${y}H${x+w-r}Q${x+w},${y} ${x+w},${y+r}V${y+h}Z`;}
+
+/* ---------- boot ---------- */
+function boot(){
+  renderSheet();
+  $("#btn-res").addEventListener("click",()=>showResult(true));
+  $("#btn-reset").addEventListener("click",()=>{state.a={};state.temas=[];store.set(KEY,state);renderSheet();$("#resultado").hidden=true;});
+  $("#btn-copy").addEventListener("click",async()=>{const txt=$("#code").textContent;const b=$("#btn-copy");try{await navigator.clipboard.writeText(txt);b.textContent="Copiado";}catch(e){const r=document.createRange();r.selectNodeContents($("#code"));const s=getSelection();s.removeAllRanges();s.addRange(r);b.textContent="Selecciónalo y copia";}setTimeout(()=>b.textContent="Copiar código",2200);});
+  $("#btn-ai").addEventListener("click",runAI);
+  $("#btn-ai-stop").addEventListener("click",()=>aiCtl?.abort());
+  bindCalc();renderCalc();renderStrip();
+  (D.graficas||[]).forEach(g=>g.div?renderDiverging(g.id,g.rows,g.nota):(g.h?renderHBars(g.id,g.rows,g.unit,g.hl):renderBars(g.id,g.rows,g.unit,g.hl)));
+  if(answered()>=Math.ceil(Q.length*0.75))showResult(false);
+  initDb();
+}
+if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",boot);else boot();
+})();
+
+</script>
+
+</body></html>
