@@ -392,6 +392,54 @@ La bodega no te ahorra envío. En Mercado Libre, Full paga la misma tarifa que s
 
 ---
 
+## Servicio de reels y carruseles para negocios
+
+**Idea:** les haces cada mes reels y carruseles a negocios de tu ciudad y cobras por cliente, no por pieza. Con Google AI Ultra y Adobe produces rápido, y puedes hacerlo sin salir en cámara. Es un servicio: cada cliente te pide horas cada mes. En la página tiene su calculadora, y el cuestionario ya lo incluye como camino ("servicio").
+
+**Qué cobra el mercado:** de $3,000 a $8,000 al mes por manejar las redes de un negocio chico, con un paquete típico de 8 publicaciones y 2 reels (Holográfico, mayo 2026). Blogs de agencias ponen a un freelance junior en $3,500–7,000 y a uno semi-senior en $7,000–12,000.
+
+| | Básico | Crecimiento |
+|---|---|---|
+| Piezas al mes | 8 carruseles o fijas y 2 reels | 12 carruseles o fijas y 4 reels |
+| Incluye | Calendario y 2 rondas de cambios | Además, reporte mensual y una llamada |
+| Precio sugerido, sin IVA | $3,500–4,500 | $6,000–7,500 |
+
+Los precios de la tabla son una propuesta a partir de esos rangos; ajústalos con tu primer cliente.
+
+**Cuántos clientes necesitas** (ISR de 1% en RESICO, 4.33 semanas por mes, 10 horas por cliente al mes, que es una estimación):
+- Con $4,500 por cliente te quedan $4,455. Para ganar $15,000 necesitas 4 clientes, que te toman unas 9.2 horas a la semana.
+- Con 8 horas a la semana te caben 3 clientes. Para llegar a $15,000, cada uno tendría que pagarte $5,051, o cada cliente tendría que tomarte 8.7 horas o menos al mes.
+- Con anuncios (a $15 + IVA por conversación de WhatsApp y 2% de cierre, ambas estimaciones), un cliente te cuesta unos $870. Para 4 clientes, unas 200 conversaciones y unos $3,480.
+
+**Cómo lo produces:**
+
+| Paso | Con Google AI Ultra | Con Adobe |
+|---|---|---|
+| Entender al cliente y planear | Gemini Notebook con su menú y perfil para un calendario y guiones; Deep Research para ver a su competencia | Kit de marca (colores, letras, logo) |
+| Carruseles | Nano Banana Pro en Google AI Studio para ilustraciones y fondos; Gemini para el texto | Plantillas en Illustrator, Photoshop o Express; Firefly con modelos de Adobe |
+| Reels | Flow para 1 o 2 clips de apoyo por reel | Premiere para editar y subtitular; Express para vertical y cuadrado |
+| Entregar y guardar | 20 o 30 TB de almacenamiento, según tu plan | Una biblioteca de Creative Cloud por cliente |
+
+Revisa cuántos créditos te quedan en cada cuenta. El video suele gastar más que la imagen; mira su costo en Flow antes de producir.
+
+**Reglas para no meterte en broncas:**
+- **Google:** todo lo de Flow lleva la marca invisible SynthID; no intentes quitarla. Google dice que no reclama la propiedad de lo que generas, pero sus condiciones de uso mandan. En la ayuda de Flow no encontré una licencia comercial explícita, y unos blogs dicen que el uso comercial pide Vertex AI (no lo pude confirmar). Usa los clips como apoyo, no como la pieza principal.
+- **Adobe:** dice que sus modelos Firefly son seguros para uso comercial (Adobe Stock y dominio público). Los modelos de otras empresas dentro de Firefly se rigen por sus propias condiciones; es una lectura mía, confírmala en tu plan.
+- **Personas falsas:** no hagas gente ni testimonios con IA. Instagram etiqueta como "Perfil generado con IA" a las cuentas con personas generadas y limita el alcance de las que no lo ponen (31 ago 2026). Usar IA como herramienta para diseñar no exige la etiqueta.
+- **Contrato:** por escrito, piezas al mes, 2 rondas de cambios, cobro por adelantado y que usas IA. Sin logos ni personajes de terceros.
+- **Música:** las cuentas de negocio no pueden usar cualquier canción; usa audios libres de derechos o la biblioteca de Meta para negocios. Revísalo antes de publicar.
+- **Impuestos:** factura CFDI. RESICO paga de 1% a 2.5% de ISR según lo que factures; si además vendes en Mercado Libre, el SAT considera que no puedes estar en RESICO. Confírmalo con tu contador.
+
+**Tus primeros 30 días:**
+1. **Semana 1:** elige un giro (si te gustan las fiestas, salones, pastelerías y organizadores). Haz 6 carruseles y 3 reels de muestra con marcas inventadas en una cuenta de Instagram solo para esto.
+2. **Semana 2:** lista de 30 negocios con Instagram activo y contenido flojo. Escríbeles a 10 por día y visita a 5. Meta sugerida: 3 llamadas.
+3. **Semana 3:** primer cliente con un primer mes a precio de lanzamiento a cambio de un testimonio. Cobra por adelantado y produce todo el mes en un día.
+4. **Semana 4:** reporte con alcance, visitas al perfil y mensajes. Con 1 o 2 clientes, anuncia tu mejor reel 7 días con clic a WhatsApp, a $100–150 diarios, y mide cuánto te cuesta cada conversación.
+
+**Mensaje para ofrecerlo:** "Hola, buen día. Soy [tu nombre]; hago reels y carruseles para [giro] en [ciudad]. Vi que [nombre del negocio] publica seguido y quiero mostrarte cómo se vería su contenido: te preparo 2 piezas de muestra sin costo. ¿Te las mando por aquí? Si te gustan, tengo un paquete mensual de 8 publicaciones y 2 reels. ¡Gracias!"
+
+---
+
 ## 6. SAT 2026
 
 | Retención | Con RFC | Sin RFC |
@@ -424,7 +472,7 @@ La bodega no te ahorra envío. En Mercado Libre, Full paga la misma tarifa que s
 
 ## 8. Cuestionario (versión texto)
 
-Contéstalo en la página interactiva. Con tus respuestas calcula tu compatibilidad con 18 caminos (11 físicos y 7 digitales) y te dice dónde conviene venderlo. Tus respuestas se guardan solas. También puedes mandarlas en el chat en este formato: `1B 2C 3A …` y los temas.
+Contéstalo en la página interactiva. Con tus respuestas calcula tu compatibilidad con 19 caminos (11 físicos, 7 digitales y 1 servicio) y te dice dónde conviene venderlo. Tus respuestas se guardan solas. También puedes mandarlas en el chat en este formato: `1B 2C 3A …` y los temas.
 
 1. ¿Cuánto puedes invertir para arrancar sin que te duela? A) Menos de $3,000 · B) $3,000 a $10,000 · C) $10,000 a $30,000 · D) Más de $30,000
 2. ¿Cuántas horas a la semana le puedes meter? A) Menos de 5 · B) De 5 a 10 · C) De 10 a 20 · D) Más de 20
@@ -485,5 +533,12 @@ Contéstalo en la página interactiva. Con tus respuestas calcula tu compatibili
 - Amazon, transportista asociado: https://sellercentral.amazon.com.mx/help/hub/reference/external/G201119120 · Nueva Selección: https://sellercentral.amazon.com.mx/help/hub/reference/external/GWHQRT98SAZC29VQ
 - Meta, productos digitales en comercio: https://www.facebook.com/policies_center/commerce/subscriptions_and_digital_products
 - Holográfico, costos de anuncios en México 2026: https://holografico.mx/cuanto-cuesta-publicidad-facebook-mexico-2026
+
+**Servicio de reels y herramientas**
+- Holográfico, cuánto cuesta un community manager: https://holografico.mx/cuanto-cuesta-community-manager-mexico
+- Luzzi Digital, precios de redes sociales 2026: https://www.luzzidigital.com/cuanto-cobrar-por-gestionar-redes-sociales-precios-reales-latam-2026/
+- Google One, beneficios de Google AI Ultra: https://support.google.com/googleone/answer/16286513?hl=es-mx · Ayuda de Flow: https://support.google.com/flow/answer/16353333?hl=en
+- Adobe Firefly: https://www.adobe.com/es/products/firefly.html
+- Infobae, etiqueta "Perfil generado con IA" (31 ago 2026): https://www.infobae.com/tecno/2026/08/31/instagram-cambia-la-etiqueta-creador-de-ia-por-perfil-generado-con-ia-para-identificar-cuentas-de-videos-hechos-por-robots/
 
 La lista completa de fuentes está en la página interactiva.
