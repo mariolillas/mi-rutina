@@ -225,11 +225,11 @@ Además, en Ropa hay un pantalón de mezclilla de $298 con más de 250 mil vendi
 | Kit de fiesta de $349 (0.5–1 kg, costo $100) | $71 | $81 | $195 |
 
 **Programa para vendedores nuevos** (inscripción del 15 de julio al 30 de diciembre de 2026):
-- 3 meses sin comisión por venta, que pueden ser hasta 5 si cumples metas.
-- Según los términos, tampoco cobra tarifas de logística en ese periodo.
+- 3 meses sin comisión por venta y sin tarifas de logística en FBA, Easy Ship y Seller Flex. Son hasta 5 meses si mantienes tu publicidad en 5% de tus ventas o 80% de tus ventas con FBA.
+- Los 3 meses empiezan cuando Amazon te inscribe, hasta 2 semanas después de que tengas un producto activo.
+- Tope de $200 mil de beneficio por vendedor, según los términos oficiales.
 - Crédito de publicidad de hasta $20 mil.
 - 5% de descuento en comisión durante un año si registras tu marca.
-- Los topes cambian según la fuente; revísalos en Seller Central.
 
 **Registro de marca:** en el IMPI cuesta ~$3,126 por clase, y con la marca en trámite ya puedes entrar a Brand Registry.
 
@@ -353,6 +353,45 @@ Todos los proveedores de esta sección se verificaron en su sitio oficial el 30 
 
 ---
 
+## Para arrancar rápido: ¿bodega de Mercado Libre o de Amazon?
+
+**Respuesta corta:** vende desde tu casa esta semana; a bodega, primero Amazon (FBA) y luego Mercado Libre (Full).
+
+La bodega no te ahorra envío. En Mercado Libre, Full paga la misma tarifa que si mandas desde tu casa, y en Amazon, FBA cuesta casi lo mismo que Easy Ship. Lo que te da es visibilidad (la etiqueta Full y Prime), entregas más rápidas y menos trabajo. Para empezar rápido, vende desde tu casa y manda a bodega solo lo que ya comprobaste que se vende.
+
+1. **Esta semana, desde tu casa.** Publica en Mercado Libre y entrega en una agencia o con la colecta: pagas el mismo envío que con Full. Evalúa el Programa Despegue: dejas $850 en garantía y a cambio te muestran en verde, te dan hasta $850 en publicidad y acceso a Flex. Ese mismo día abre tu cuenta de Amazon (la verificación tarda cerca de una semana) y llena el formulario de Full.
+2. **Primera bodega: Amazon FBA.** Te acepta sin historial. Si te inscribes antes del 30 de diciembre, no te cobra comisión ni logística durante 90 días (tope de $200 mil), y con el programa Nueva Selección tus primeras 30 piezas no pagan almacenamiento. Tu kit sale con Prime, y en Guadalajara y Monterrey el transportista de Amazon recoge el inventario en tu casa.
+3. **Segunda bodega: Full.** Ahí está el volumen: 106 de los 120 más vendidos salen de Full. Hay bodegas en El Salto, Jalisco (una nueva desde el 25 de septiembre), y en Apodaca, Nuevo León; si tú llevas la mercancía, no pagas el traslado. Llenas un formulario y Mercado Libre decide cuándo te acepta.
+4. **Fecha límite: 1 de noviembre**, para el Buen Fin (13 al 17). Manda solo lo que esperas vender en unos 2 meses: en Full, lo que pasa de 3 meses en bodega paga desde $21 extra por kit al mes.
+
+**Lo que te queda por kit** (kit de fiesta de ejemplo, costo $112, 0.5–1 kg, categoría Hogar, con RFC, 3% de devoluciones y sin anuncios):
+
+| Opción | Kit a $399 | Kit a $499 |
+|---|---|---|
+| Mercado Libre, vendedor nuevo (desde tu casa o con Full) | $107 | $162 |
+| Mercado Libre en verde | $119 | $177 |
+| Amazon Easy Ship (Amazon recoge cada pedido en tu casa) | $119 | $178 |
+| Amazon FBA (su bodega, con Prime) | $117 | $176 |
+| Amazon, primeros 90 días (FBA o Easy Ship) | $238 | $326 |
+
+| | Full · Mercado Libre | FBA · Amazon |
+|---|---|---|
+| ¿Te aceptan ya? | Llenas un formulario y Mercado Libre decide cuándo; no publica un mínimo de ventas | Sí, en cuanto verifican tu cuenta: cerca de una semana, contando la validación de tu RFC |
+| Qué te piden | Productos nuevos, de hasta 25 kg y con caducidad de más de 90 días | Código de barras GS1 (desde $630 al año) o exención de marca propia, y menos de 1% de pedidos con defecto |
+| Cómo mandas el inventario | Agendas cita y lo llevas tú sin costo, o pides la colecta (desde $108) | El transportista de Amazon lo recoge en tu casa en Guadalajara y Monterrey; el costo se descuenta de tus ventas |
+| Bodegas cerca | El Salto, Jal. (nueva, 25 sep 2026) · Apodaca, N.L. | Guadalajara (GDL1 y GDL2) · Monterrey (MTY1 a MTY3) |
+| Almacenamiento de un kit | Unos $1.80 al mes | Unos $2.65 al mes de octubre a diciembre; $0 en tus primeros 90 días |
+| Si no se vende | Desde el 4.º mes paga $21 extra por kit al mes, y del 6.º al 12.º, $68. Retirarlo cuesta desde $150 | Paga recargo desde el día 181. Retirarlo cuesta unos $17 por kit ($0 en tus primeros 90 días) |
+| Multas | $12.50 por pieza si faltas a la cita o llevas otra cantidad | Si no cumples las métricas, te pueden desactivar la cuenta y retener tu dinero |
+| Cuándo te pagan | 2 días después de la entrega (6 mientras no tengas reputación) | Cada 14 días, con reserva hasta 7 días después de la entrega |
+| Lo mejor | Más compradores, la etiqueta Full y entrega al día siguiente | Prime, 90 días sin comisión ni logística, y te acepta desde el principio |
+
+**Tu primer lote** (ejemplo con 50 kits, unos $5,600): 20 se quedan en tu casa para Mercado Libre y 30 van a Amazon. Publica en Amazon con Easy Ship en cuanto aprueben tu cuenta. Los 90 días empiezan cuando Amazon te inscribe, hasta 2 semanas después de que tengas un producto activo; si abres ya, te tocan el Buen Fin y Navidad. Con 10 ventas o medio lote vendido, cambia el kit a FBA y manda las 30 piezas con el transportista asociado. Cuando Mercado Libre te acepte en Full, agenda la cita y lleva la cantidad exacta.
+
+**Si tienes carro:** con Flex tú entregas el mismo día en tu ciudad. Te lo dan con reputación amarilla o verde, o con el Programa Despegue. En kits de más de $299 no te ahorra el envío, porque Mercado Libre solo te bonifica hasta 10% de la tarifa.
+
+---
+
 ## 6. SAT 2026
 
 | Retención | Con RFC | Sin RFC |
@@ -379,7 +418,7 @@ Todos los proveedores de esta sección se verificaron en su sitio oficial el 30 
 1. **Semana 1:** saca tu RFC y agenda la cita para la e.firma. Elige 3 candidatos y cotiza con 3 proveedores mexicanos que den factura.
 2. **Semana 2:** compra un lote de 20 a 50 piezas. Toma tus propias fotos y publica en kit de más de $299. Registra tu RFC en Mercado Libre y evalúa el Programa Despegue.
 3. **Semana 3:** revisa visitas y ventas cada 3 días. Ajusta precio, fotos o título, y prueba Product Ads con poco presupuesto.
-4. **Semana 4:** si vendiste la mitad del lote con 20% de margen, recompra el doble y entra a Full antes del 1 de noviembre. Si no, liquida y prueba el siguiente candidato.
+4. **Semana 4:** si vendiste la mitad del lote con 20% de margen, recompra el doble: manda 30 piezas a Amazon FBA y pide entrar a Full, todo antes del 1 de noviembre. Si no, liquida y prueba el siguiente candidato.
 
 ---
 
@@ -416,6 +455,8 @@ Contéstalo en la página interactiva. Con tus respuestas calcula tu compatibili
 - Contenido digital prohibido: https://www.mercadolibre.com.mx/ayuda/1079
 - Más vendidos: https://www.mercadolibre.com.mx/mas-vendidos
 - ProfitOS, cambios de abril 2026: https://www.profitosapp.com/blog/cambios-mercado-envios-full-mexico-abril-2026
+- Full: https://envios.mercadolibre.com.mx/vender-con-full · stock antiguo: https://www.mercadolibre.com.mx/ayuda/15731 · incumplimientos: https://www.mercadolibre.com.mx/ayuda/35470
+- Bodega Full nueva en El Salto, 25 sep 2026 (TyT): https://www.tyt.com.mx/nota/mercado-libre-abre-las-puertas-de-su-nuevo-fulfillment-center-en-jalisco · centros en Nuevo León (T21): https://t21.com.mx/mercado-libre-anuncia-nuevo-centro-de-distribucion-en-nuevo-leon/
 - MercadoLibre, carta del T2 2026 (SEC): https://www.sec.gov/Archives/edgar/data/0001099590/000109959026000021/meli-20260805xex991.htm
 
 **Mercado y tendencias**
@@ -441,6 +482,7 @@ Contéstalo en la página interactiva. Con tus respuestas calcula tu compatibili
 **Amazon y Facebook**
 - Amazon, precios para vendedores: https://vender.amazon.com.mx/precios
 - Amazon, términos de la promoción para nuevos vendedores: https://vender.amazon.com.mx/terminos/promocion
+- Amazon, transportista asociado: https://sellercentral.amazon.com.mx/help/hub/reference/external/G201119120 · Nueva Selección: https://sellercentral.amazon.com.mx/help/hub/reference/external/GWHQRT98SAZC29VQ
 - Meta, productos digitales en comercio: https://www.facebook.com/policies_center/commerce/subscriptions_and_digital_products
 - Holográfico, costos de anuncios en México 2026: https://holografico.mx/cuanto-cuesta-publicidad-facebook-mexico-2026
 
