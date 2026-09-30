@@ -283,6 +283,76 @@ Además, en Ropa hay un pantalón de mezclilla de $298 con más de 250 mil vendi
 
 ---
 
+## Dónde comprar
+
+Todos los proveedores de esta sección se verificaron en su sitio oficial el 30 de septiembre de 2026. Los precios casi nunca son públicos: pide la lista de mayoreo por WhatsApp. En la página interactiva están completos, con links y condiciones.
+
+> **Herramienta de marca:** Truper tiene tienda oficial en Mercado Libre. Urrea tiene tiendas de Urrea, Surtek y Lock en Mercado Libre y además vende en Amazon. Si revendes esas marcas, compites contra ellas y te pueden denunciar. Conviene armar kits con piezas genéricas y tu propia marca, o preguntar por el [programa de distribuidor e-commerce de Urrea](https://urrea.com/quiero-ser-distribuidor-ecommerce).
+
+**Guadalajara**
+- **Fiesta y globos:** el corredor está junto al Mercado Corona (Juan Manuel, Independencia, González Ortega). Ahí están DIGLOSA, Joinet (portal de mayoreo con RFC) y Bolsas y Empaques Ceja. Globos Payaso fabrica en Guadalajara y vende por distribuidores.
+- **Papelería:** Lumen (Pedro Moreno 589, con 35–55% de descuento sobre lista) y Tony mayoreo.
+- **Herramienta:** en Calz. Independencia Sur están Mayoreo Ferretero Atlas y Continente Ferretero. En Zapopan está Surtimex, que importa discos, brocas y abrasivos.
+- **Empaque:** CARCOR, Lozapack, NeiPack y Etiquetas BEDEG.
+- **Producción:** Corte Láser GDL, Cliché Digital (desde 1 pieza), Impresos de Calidad y Tecnowire (vinil y plotters).
+
+**Monterrey**
+- **Fiesta y globos:** la zona está en el Centro, alrededor del Mercado Juárez, y en Av. San José. Ahí están San Jorge Party (bolsa de 50 globos Payaso #12 a $81.50), Macrodulcerías, El Castillo del Dulce y La Hidalgo (precio de mayoreo desde 6 piezas).
+- **Herramienta:** Dinámica Ferretera (mayorista de Truper), Tool Center y Ferretera Elizondo Hermanos (distribuidor de Urrea).
+- **Empaque:** Para Paquetes, Uline, Plásticos y Bolsas de México y ECT Cajas.
+- **Producción:** Punto Clave (láser sin mínimo), Vector Laser, Grafimax (lona a $145–195 por m²) y CediGrafic.
+- **Expo Hazlo Tú:** del 2 al 4 de octubre de 2026 en Cintermex.
+
+**En línea, con envío a todo México**
+- **Globos y fiesta:** Señor Globo (sin mínimo, envío gratis desde $2,000), Globolink, Teleglobos y Mega Mayoreo.
+- **Papelería:** APSA (opalina de 200 g a $1,395 la caja de 1,200 hojas) y La Reyna de Mesones.
+- **Etiquetas:** Pop México (500 de 5 cm por $388).
+- **Empaque:** Para Paquetes (bolsa de 22×30 cm a $228 por 100; caja de 15×15×15 cm a $207 por 25) y Uline (sin mínimo).
+- **Corte láser:** FIC ($9 por minuto; desde 1 pieza), CutCAD (cotizador en línea) y Fábrica de Acrílicos.
+- **Herramienta:** Ferrex Mayorista (marcas del grupo Truper) y Urrea Shop.
+
+**Si produces en casa:**
+
+| Equipo | Precio |
+|---|---|
+| Cricut Joy | $3,519 |
+| Cricut Joy Xtra | $4,900–5,500 |
+| Silhouette Cameo 5 | $7,990 |
+| Cricut Maker 4 | $8,499 |
+| Impresora láser color Brother | $9,392 |
+
+**Licencias:**
+- Canva vende plantillas con elementos Pro solo como enlace.
+- Creative Market y Envato prohíben que el cliente personalice el producto (por ejemplo, poner nombres).
+
+**Costo por kit de ejemplo:**
+- Kit de fiesta: ~$112. Incluye globos, banner, toppers de acrílico, banderines, etiquetas y bolsa, más flete y 3% de merma.
+- Kit de herramienta sin marca de terceros: ~$197.
+
+**Mensaje para cotizar por WhatsApp:**
+> Hola, buen día. Tengo una tienda en línea (Mercado Libre y Amazon) y busco proveedor de ______ para compras cada mes. ¿Me pueden compartir? 1) Lista de precios de mayoreo y pedido mínimo 2) Precio por 50, 100 y 500 piezas 3) Si facturan (CFDI) y formas de pago 4) Tiempo de entrega y costo de envío a ______ 5) Fotos o fichas técnicas que pueda usar en mis publicaciones. ¡Gracias!
+
+**Cómo comprar sin broncas:**
+- Pide una muestra antes del pedido grande.
+- Pide factura CFDI 4.0 con uso G01 y valídala en el verificador del SAT.
+- Paga por transferencia los montos de más de $2,000, a cuentas a nombre de quien factura.
+- Guarda tus facturas: Amazon pide facturas de los últimos 180 días para aprobar marcas.
+- Si armas un kit, la etiqueta NOM-050 es responsabilidad tuya.
+
+**Para encontrar fabricantes en el DENUE,** busca por estos códigos:
+
+| Producto | Código |
+|---|---|
+| Globos | 326290 |
+| Artículos de papel para fiesta | 322299 |
+| Desechables al mayoreo | 434240 |
+| Papelería al mayoreo | 433410 |
+| Cajas de cartón | 322210 |
+| Herramienta de mano | 332211 |
+| Imprentas | 323119 |
+
+---
+
 ## 6. SAT 2026
 
 | Retención | Con RFC | Sin RFC |
