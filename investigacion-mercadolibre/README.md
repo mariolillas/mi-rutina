@@ -1,4 +1,4 @@
-# ¿Qué me conviene vender? — Mercado Libre México y productos digitales
+# ¿Qué me conviene vender? — Mercado Libre, Amazon México y productos digitales
 
 Investigación al **30 de septiembre de 2026**. Versión interactiva (calculadora + cuestionario que guarda tus respuestas): https://claude.ai/artifact/6yXhANQHyHGZpVCkZURAKR
 
@@ -8,7 +8,7 @@ Una copia local de la página está en [`pagina.html`](pagina.html). Ábrela en 
 
 ---
 
-## Resumen: 8 cosas que cambian qué te conviene vender
+## Resumen: 10 cosas que cambian qué te conviene vender
 
 1. **El mercado sí da.** En 2025 se vendieron en línea **$941 mil millones de pesos** (+19.2%) y hay **77.2 millones de compradores** (AMVO 2026). Mercado Libre México creció **26%** en el T2 2026 y se disputa el primer lugar en visitas con Amazon.
 2. **Lo más vendido es barato, práctico y de recompra.** De los 120 productos de "Más vendidos" de hoy, la mediana cuesta **$210**, **83** cuestan menos de $299 y **106** usan Full.
@@ -17,7 +17,9 @@ Una copia local de la página está en [`pagina.html`](pagina.html). Ábrela en 
 5. **China ya no es la ganga.** Desde el 1 de enero de 2026, los productos de países sin tratado pagan aranceles de **5% a 50%**: ropa y calzado de 20% a 35%, juguetes de 20% a 30%, plásticos 35%. Por paquetería pagan 33.5%. Además, las ventas de vendedores chinos directo en Mercado Libre crecieron **60%** en el T2 2026.
 6. **Nichos buenos para empezar:** accesorios de moto (comisión de 9%), refacciones de desgaste, consumibles de impresión y 3D, insumos para negocios, filtros y repuestos, higiene para mascotas y uniformes médicos hechos en México.
 7. **Lo digital, fuera de Mercado Libre.** Ahí están prohibidos los descargables, los ebooks, los cursos y las guías. Lo que se mantiene: invitaciones con diseño propio y plantillas para negocios, cobradas con link de Mercado Pago o por SPEI. La guía COMIPEMS ya no sirve porque el examen desapareció.
-8. **El reloj corre.** El Buen Fin es del **13 al 17 de noviembre**. Para este fin de año ya no da tiempo de importar por barco: surte con proveedor nacional y ten stock en Full antes del 1 de noviembre.
+8. **Amazon México se volvió competitivo.** Su logística (FBA) cuesta menos que el envío de Mercado Libre en productos chicos: $28 contra $38 en un producto de $149. Además, no cobra mensualidad el primer año, y quien se inscriba antes del **30 de diciembre de 2026** no paga comisión en sus primeros meses. Mercado Libre sigue teniendo más compradores en la app y más vendedores.
+9. **En Facebook, lo digital se promociona pero no se publica en Marketplace.** Meta prohíbe PDFs y plantillas en Marketplace, en las tiendas y en los catálogos. Sí se pueden promocionar en la página, en Reels y en grupos temáticos, y la venta se cierra por WhatsApp con link de pago.
+10. **El reloj corre.** El Buen Fin es del **13 al 17 de noviembre**. Para este fin de año ya no da tiempo de importar por barco: surte con proveedor nacional y ten stock en Full antes del 1 de noviembre.
 
 **Recomendación general.** Empieza con un nicho "aburrido" de recompra, con proveedor mexicano que te dé factura. Véndelo en kit de más de $299, con RFC y Full. Si tienes una habilidad (diseño, Excel, enseñar), arma en paralelo un producto digital y véndelo por WhatsApp.
 
@@ -198,6 +200,89 @@ Además, en Ropa hay un pantalón de mezclilla de $298 con más de 250 mil vendi
 
 ---
 
+## Amazon México contra Mercado Libre
+
+| | Mercado Libre | Amazon México |
+|---|---|---|
+| Visitas web (ago 2026) | 114 M (Similarweb) · 75 M (Semrush) | 109 M · 102 M |
+| App | 4.ª app más descargada de 2025 | Fuera del top 10 |
+| Vendedores | Más de 220 mil pymes | ~51–68 mil (est.) |
+| Mensualidad | $0 | $0 el primer año; luego $75 al mes (hasta $26 mil en ventas) o $600 |
+| Comisión | 9–15% en publicación Clásica | 8–15%, con mínimo de $8 |
+| Envío de un producto de $499 y 1 kg (vendedor nuevo) | $89.40 | $72.70 con FBA · $74 con Easy Ship |
+| Envío de un producto de $149 y 0.3 kg | $38.40 | $28.10 con FBA |
+| Cuándo te pagan | 2 días después de la entrega (6 si eres nuevo) | Cada 14 días, con reserva de hasta 7 días |
+| Código de barras | Casi nunca | Obligatorio, salvo marca propia o hecho a mano (GS1 desde $630) |
+| Aprobación previa | No | Salud, belleza, automotriz, ropa y libros |
+| Más fuerte en | Autopartes, moda y hogar | Despensa, consumibles de recompra y alimento para mascotas |
+
+**Lo que te queda por venta** (con RFC, vendedor nuevo, 3% de devoluciones, $12 de empaque y costos supuestos):
+
+| Producto | Mercado Libre | Amazon FBA | Amazon, primeros 90 días |
+|---|---|---|---|
+| Kit de herramienta de $499 (1–2 kg, costo $150) | $108 | $119 | $277 |
+| Kit de fiesta de $499 (0.5–1 kg, costo $140) | $123 | $137 | $287 |
+| Kit de fiesta de $349 (0.5–1 kg, costo $100) | $71 | $81 | $195 |
+
+**Programa para vendedores nuevos** (inscripción del 15 de julio al 30 de diciembre de 2026):
+- 3 meses sin comisión por venta, que pueden ser hasta 5 si cumples metas.
+- Según los términos, tampoco cobra tarifas de logística en ese periodo.
+- Crédito de publicidad de hasta $20 mil.
+- 5% de descuento en comisión durante un año si registras tu marca.
+- Los topes cambian según la fuente; revísalos en Seller Central.
+
+**Registro de marca:** en el IMPI cuesta ~$3,126 por clase, y con la marca en trámite ya puedes entrar a Brand Registry.
+
+**Bodegas:** Amazon tiene centros en Guadalajara, Monterrey, Valle de México, Toluca y el Bajío. Recoge tu inventario en CDMX, Guadalajara y Monterrey.
+
+**Dónde conviene cada una:**
+- **Mercado Libre:** reventa, genéricos, usados, autopartes y moda.
+- **Amazon:** marca propia, consumibles de recompra de menos de $299 y productos de $500 o más.
+- **Las dos:** cuando ya ganes 20% neto.
+
+---
+
+## Productos digitales por Facebook
+
+**Reglas de Meta:**
+- **Prohibido:** contenido descargable (PDF, plantillas), suscripciones y servicios en Marketplace, en las tiendas de Facebook e Instagram, en los grupos de compraventa y en el catálogo de WhatsApp. En WhatsApp sí puedes listar el servicio de personalización.
+- **Permitido:** promocionar en tu página, en Reels, en grupos temáticos (respetando sus reglas) y en anuncios. Cierras por WhatsApp o Messenger con link de pago.
+
+**Lo que funciona en 2026:**
+- Los Reels son el formato con más interacción.
+- Las publicaciones con enlace son las que menos alcanzan. Meta prueba limitarlas a 2 al mes, así que pon el enlace en un comentario o mándalo por mensaje.
+- Los anuncios con clic a WhatsApp dan 72 horas de mensajes gratis.
+
+**Anuncios en México:**
+- Costos: $40–96 por mil impresiones y $4–10 por clic. Una venta en tienda en línea cuesta $180–700 en anuncios. Meta suma 16% de IVA.
+- Con $15 + IVA por cada conversación de WhatsApp, estas son las compras que necesitas por cada 100 conversaciones para no perder:
+
+| Precio | Compras necesarias de cada 100 conversaciones |
+|---|---|
+| $150 | 15 |
+| $300 | 7 |
+| $600 | 4 |
+
+**Cobro y entrega:**
+- Link de Mercado Pago: 3.49% + $4 + IVA.
+- SPEI: sin comisión, pero valida cada pago con el CEP de Banxico antes de entregar.
+- Hotmart o Gumroad: entregan el archivo en automático y lo marcan con los datos del comprador.
+- Si tu plantilla de Canva usa elementos Pro, solo puedes venderla como enlace.
+
+**Plan de 30 días:**
+1. **Semana 1:** crea tu página y WhatsApp Business con el catálogo de tu servicio. Únete a grupos de tu tema y aporta sin vender.
+2. **Semana 2:** publica un Reel diario y un en vivo por semana.
+3. **Semana 3:** arma una escalera de precios: $49–99, $150–300 y un paquete de $600.
+4. **Semana 4:** pon anuncio con clic a WhatsApp 7 días, a $100–150 diarios.
+
+**Marketplace para productos físicos:** vender local no cobra comisión, así que sirve para probar un producto antes de subirlo a Mercado Libre. Cuidado con los comprobantes falsos.
+
+**Impuestos si vendes directo:**
+- En RESICO pagas de 1% a 2.5% de ISR, más 16% de IVA.
+- Si también vendes en plataformas como Mercado Libre, el SAT dice que no puedes estar en RESICO. Confírmalo con un contador.
+
+---
+
 ## 6. SAT 2026
 
 | Retención | Con RFC | Sin RFC |
@@ -230,7 +315,7 @@ Además, en Ropa hay un pantalón de mezclilla de $298 con más de 250 mil vendi
 
 ## 8. Cuestionario (versión texto)
 
-Contéstalo en la página interactiva; tus respuestas se guardan solas. También puedes mandarlas en el chat en este formato: `1B 2C 3A …` y los temas.
+Contéstalo en la página interactiva. Con tus respuestas calcula tu compatibilidad con 18 caminos (11 físicos y 7 digitales) y te dice dónde conviene venderlo. Tus respuestas se guardan solas. También puedes mandarlas en el chat en este formato: `1B 2C 3A …` y los temas.
 
 1. ¿Cuánto puedes invertir para arrancar sin que te duela? A) Menos de $3,000 · B) $3,000 a $10,000 · C) $10,000 a $30,000 · D) Más de $30,000
 2. ¿Cuántas horas a la semana le puedes meter? A) Menos de 5 · B) De 5 a 10 · C) De 10 a 20 · D) Más de 20
@@ -282,5 +367,11 @@ Contéstalo en la página interactiva; tus respuestas se guardan solas. También
 - Gumroad: https://gumroad.com/pricing
 - Link de pago de Mercado Pago: https://www.mercadopago.com.mx/herramientas-para-vender/link-de-pago
 - Mi derecho, mi lugar (sustituye a COMIPEMS): https://www.miderechomilugar.gob.mx/
+
+**Amazon y Facebook**
+- Amazon, precios para vendedores: https://vender.amazon.com.mx/precios
+- Amazon, términos de la promoción para nuevos vendedores: https://vender.amazon.com.mx/terminos/promocion
+- Meta, productos digitales en comercio: https://www.facebook.com/policies_center/commerce/subscriptions_and_digital_products
+- Holográfico, costos de anuncios en México 2026: https://holografico.mx/cuanto-cuesta-publicidad-facebook-mexico-2026
 
 La lista completa de fuentes está en la página interactiva.
