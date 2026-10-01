@@ -1,0 +1,290 @@
+[
+ {
+  "t": "Agenda para salones y barberías",
+  "sub": "AgendaPro, WeiBook y SalonAppy",
+  "n": 77,
+  "bajas": 69,
+  "rating": 2.51,
+  "apps": [
+   [
+    "AgendaPro Business",
+    38
+   ],
+   [
+    "WeiBook: Agenda y gestión",
+    24
+   ],
+   [
+    "SalonAppy Agendar Citas y ",
+    15
+   ]
+  ],
+  "bars": [
+   [
+    "falta una función",
+    40
+   ],
+   [
+    "fallas",
+    36
+   ],
+   [
+    "cobros y suscripción",
+    30
+   ],
+   [
+    "soporte",
+    17
+   ]
+  ],
+  "q": [
+   {
+    "r": 1,
+    "y": "2025",
+    "t": "Se traba, no se registran las citas, no se pueden modificar las citas, las notificaciones te llegan días después de que se atendió la cita, se traba, tiene funciones que ni siquiera abre ¡Horrible!"
+   },
+   {
+    "r": 1,
+    "y": "2025",
+    "t": "Perdí todas mis citas debido a que ya no me dejó acceder a mi cuenta, ya teniendo pagado mi paquete y jamás me resolvieron nada. No lo recomiendo tenía citas de meses"
+   }
+  ],
+  "nota": null
+ },
+ {
+  "t": "Inventario y punto de venta",
+  "sub": "Kyte y Loyverse",
+  "n": 397,
+  "bajas": 35,
+  "rating": 3.66,
+  "apps": [
+   [
+    "Kyte: POS, Inventario y Ti",
+    250
+   ],
+   [
+    "Loyverse TPV -  Punto de v",
+    147
+   ]
+  ],
+  "bars": [
+   [
+    "fallas",
+    36
+   ],
+   [
+    "falta una función",
+    30
+   ],
+   [
+    "cobros y suscripción",
+    26
+   ],
+   [
+    "cuenta o registro",
+    11
+   ]
+  ],
+  "q": [
+   {
+    "r": 1,
+    "y": "2025",
+    "t": "Compré la versión pro y no me deja acceder a las funciones pro me dice felicitaciones eres kyte free y su soporte bien gracias"
+   },
+   {
+    "r": 1,
+    "y": "2025",
+    "t": "No deja imprimir, ya cambié impresoras, cajas, tabletas y empezó a fallar, llamé a soporte pero no me dieron una solución. Que debo hacer para que mejore? O están en mantenimiento??"
+   }
+  ],
+  "nota": null
+ },
+ {
+  "t": "Rastreo de paquetes",
+  "sub": "Paquetería, Parcel y Rastreo de Paquetes & Pedidos",
+  "n": 108,
+  "bajas": 48,
+  "rating": 3.15,
+  "apps": [
+   [
+    "Parcel",
+    50
+   ],
+   [
+    "Paquetería: Rastreo de pedidos",
+    51
+   ],
+   [
+    "Rastreo de Paquetes & Pedidos",
+    7
+   ]
+  ],
+  "bars": [
+   [
+    "cobros y suscripción",
+    31
+   ],
+   [
+    "falta una función",
+    15
+   ],
+   [
+    "fallas",
+    8
+   ],
+   [
+    "soporte",
+    4
+   ]
+  ],
+  "q": [
+   {
+    "r": 1,
+    "y": "2025",
+    "t": "No sirve para nada, no se puede usar si no pagas y aún pagando no arroja datos de los paquetes ESTAFA TOTAL!!"
+   },
+   {
+    "r": 1,
+    "y": "2026",
+    "t": "Ya pagué, hice un pedido, no me ha llegado y no puedo rastrearlo porque la aplicación para rastrearlo está en inglés."
+   }
+  ],
+  "nota": "La app con más ingresos de Compras tiene 1.75★ en sus últimas 51 reseñas, aunque en la tienda aparece con 4.54★. Parcel, otra app de rastreo, mantiene 4.58★ en sus últimas 50."
+ },
+ {
+  "t": "Cruce de garitas",
+  "sub": "Cruce Directo Garitas",
+  "n": 29,
+  "bajas": 86,
+  "rating": 1.93,
+  "apps": [
+   [
+    "Cruce Directo Garitas",
+    29
+   ]
+  ],
+  "bars": [
+   [
+    "cobros y suscripción",
+    44
+   ],
+   [
+    "fallas",
+    36
+   ],
+   [
+    "falta una función",
+    12
+   ],
+   [
+    "anuncios",
+    4
+   ]
+  ],
+  "q": [
+   {
+    "r": 1,
+    "y": "2023",
+    "t": "Pague suscripción por un año y hoy pasó un mes y no me deja ver ninguna cámara y me dice que me suscriba, a pesar de que en ajustes me sale que mi suscripción se vence hasta el otro año."
+   },
+   {
+    "r": 3,
+    "y": "2023",
+    "t": "Tienen que mejorar la app si van estar cobrando No aparece el tiempo de espera por línea Sentri ( tiempo ) Normal (tiempo ) Ready (tiempo ) Como estaba en la web"
+   }
+  ],
+  "nota": null
+ },
+ {
+  "t": "Facturar la gasolina",
+  "sub": "FacturaGAS",
+  "n": 250,
+  "bajas": 99,
+  "rating": 1.04,
+  "apps": [
+   [
+    "FacturaGAS",
+    250
+   ]
+  ],
+  "bars": [
+   [
+    "fallas",
+    69
+   ],
+   [
+    "falta una función",
+    19
+   ],
+   [
+    "cuenta o registro",
+    7
+   ],
+   [
+    "pierde datos o no sincroniza",
+    2
+   ]
+  ],
+  "q": [
+   {
+    "r": 1,
+    "y": "2025",
+    "t": "No te deja facturar, ni si quiera añadir tus datos fiscales. Es muy lenta, y en la ventanilla de facturación nunca atienden. No recomendó si quiera cargar gasolina en las gasolineras de esa cadena"
+   },
+   {
+    "r": 1,
+    "y": "2026",
+    "t": "La aplicación no sirve de nada, revisen su api porque ni en web ni en app pasan las peticiones. Si vas a desarrollar y publicar una aplicación en appstore o cualquier plataforma, PRUEBALA Y ASEGÚRATE QUE SIRVA"
+   }
+  ],
+  "nota": "Es la app de una sola cadena de gasolineras: un tercero no puede arreglarla, porque depende del sistema de cada estación."
+ },
+ {
+  "t": "Facturación CFDI",
+  "sub": "ecofactura y Fotofacturas",
+  "n": 76,
+  "bajas": 38,
+  "rating": 3.64,
+  "apps": [
+   [
+    "ecofactura",
+    43
+   ],
+   [
+    "Fotofacturas - Factura fác",
+    33
+   ]
+  ],
+  "bars": [
+   [
+    "fallas",
+    41
+   ],
+   [
+    "falta una función",
+    21
+   ],
+   [
+    "cuenta o registro",
+    14
+   ],
+   [
+    "complicada",
+    10
+   ]
+  ],
+  "q": [
+   {
+    "r": 1,
+    "y": "2024",
+    "t": "Cuidado, te venden una versión premium de 100 tickets y a la mera hora solo son 30 tickets por mes. Publicidad engañosa."
+   },
+   {
+    "r": 1,
+    "y": "2025",
+    "t": "Requiere registrarme para funcionar pero no funciona el registro al mandar mensaje a mi celular"
+   }
+  ],
+  "nota": null
+ }
+]

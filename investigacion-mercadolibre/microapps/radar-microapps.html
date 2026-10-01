@@ -1,0 +1,434 @@
+<title>Radar de microapps</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600..800&family=Instrument+Sans:wght@400..700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Concepto: un tablero de mediciones. Papel, grafito y un azul; el naranja solo marca lo que se está llenando. */
+:root{
+  --bg:#F2F3EF;--surface:#FFFFFF;--surface-2:#E7E9E2;--ink:#15171C;--ink-2:#464C57;--muted:#5B6170;--line:#D6D9D1;
+  --accent:#2340E0;--accent-ink:#FFFFFF;--accent-soft:#E3E8FD;--ok:#1B7A4B;--ok-soft:#DCF0E4;--warn-soft:#FBE7DD;
+  --s-new:#eb6834;--s-old:#2a78d6;
+  --shadow:0 1px 2px rgba(21,23,28,.06),0 8px 22px rgba(21,23,28,.07);--r:12px;
+  --f-display:"Bricolage Grotesque","Instrument Sans",system-ui,sans-serif;
+  --f-body:"Instrument Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#0F1114;--surface:#171A1F;--surface-2:#1F2329;--ink:#ECEEF2;--ink-2:#B7BDC9;--muted:#8E95A3;--line:#2A2F37;
+  --accent:#8FA0FF;--accent-ink:#0F1114;--accent-soft:#1E2444;--ok:#6FD3A0;--ok-soft:#173226;--warn-soft:#3A2418;
+  --s-new:#d95926;--s-old:#3987e5;--shadow:0 1px 2px rgba(0,0,0,.4),0 8px 22px rgba(0,0,0,.35);color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0F1114;--surface:#171A1F;--surface-2:#1F2329;--ink:#ECEEF2;--ink-2:#B7BDC9;--muted:#8E95A3;--line:#2A2F37;
+  --accent:#8FA0FF;--accent-ink:#0F1114;--accent-soft:#1E2444;--ok:#6FD3A0;--ok-soft:#173226;--warn-soft:#3A2418;
+  --s-new:#d95926;--s-old:#3987e5;--shadow:0 1px 2px rgba(0,0,0,.4),0 8px 22px rgba(0,0,0,.35);color-scheme:dark}
+
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font:400 16px/1.55 var(--f-body);-webkit-text-size-adjust:100%}
+h1,h2,h3,h4{text-wrap:balance}
+p{margin:0}
+a{color:var(--accent)}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:4px}
+.wrap{max-width:1080px;margin-inline:auto;padding-inline:16px}
+@media (min-width:720px){.wrap{padding-inline:24px}}
+.small{font-size:.86rem;color:var(--muted)}
+.eyebrow{font:500 .72rem/1.3 var(--f-mono);letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.sec{display:grid;gap:14px;grid-template-columns:minmax(0,1fr);padding-block:26px 6px;scroll-margin-top:56px}
+.sec>.head{display:grid;gap:6px;grid-template-columns:minmax(0,1fr)}
+.sec h2{margin:0;font:800 clamp(1.4rem,3.4vw,1.95rem)/1.1 var(--f-display);letter-spacing:-.015em}
+.lede{font-size:1.05rem;color:var(--ink-2);max-width:66ch}
+
+/* cabecera */
+.top{padding-block:30px 8px;display:grid;gap:12px;grid-template-columns:minmax(0,1fr)}
+.top h1{margin:0;font:800 clamp(2rem,5.4vw,3.3rem)/1.04 var(--f-display);letter-spacing:-.022em;max-width:20ch}
+.nav{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--bg);border-bottom:1px solid var(--line)}
+.nav .in{display:flex;gap:6px;overflow-x:auto;padding-block:8px;scrollbar-width:none}
+.nav .in::-webkit-scrollbar{display:none}
+.nav a{flex:0 0 auto;min-height:40px;display:inline-flex;align-items:center;padding:0 14px;border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:99px;font:600 .88rem var(--f-body);text-decoration:none;white-space:nowrap}
+.nav a:hover{border-color:var(--accent);color:var(--accent)}
+
+/* cifras */
+.tiles{display:grid;gap:12px;grid-template-columns:repeat(4,minmax(0,1fr))}
+@media (max-width:900px){.tiles{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.tile{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:14px 16px;min-width:0;display:grid;gap:4px;align-content:start}
+.tile .v{font:800 2.2rem/1 var(--f-display);letter-spacing:-.02em}
+.tile .l{font-size:.92rem;color:var(--ink);line-height:1.3}
+.tile .d{font-size:.8rem;color:var(--muted);line-height:1.35}
+
+/* tarjetas y tablas */
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:16px 18px;display:grid;gap:10px;min-width:0;grid-template-columns:minmax(0,1fr);align-content:start}
+.card h3{margin:0;font:700 1.12rem/1.2 var(--f-display)}
+.card ul,.card ol{margin:0;padding-left:1.15rem;display:grid;gap:6px}
+.card li b,.card p b{font-weight:650}
+.grid2{display:grid;gap:14px;grid-template-columns:repeat(2,minmax(0,1fr))}
+.grid3{display:grid;gap:14px;grid-template-columns:repeat(3,minmax(0,1fr))}
+@media (max-width:900px){.grid2,.grid3{grid-template-columns:minmax(0,1fr)}}
+.tbl-wrap{overflow-x:auto;border:1px solid var(--line);border-radius:var(--r);background:var(--surface)}
+table{border-collapse:collapse;width:100%;font-size:.92rem}
+th,td{padding:10px 12px;text-align:left;vertical-align:top;border-top:1px solid var(--line)}
+thead th{border-top:0;font:500 .72rem var(--f-mono);letter-spacing:.06em;text-transform:uppercase;color:var(--muted);white-space:nowrap}
+td.n,th.n{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+td small{display:block;color:var(--muted);font-size:.78rem}
+.note{border-left:3px solid var(--accent);background:var(--accent-soft);padding:12px 14px;border-radius:0 8px 8px 0}
+.pill{justify-self:start;display:inline-flex;align-items:center;gap:6px;font-size:.76rem;font-weight:600;padding:2px 9px;border-radius:99px;background:var(--surface-2);color:var(--ink-2);white-space:nowrap}
+.pill.go{background:var(--accent-soft);color:var(--accent)}
+.pill.ola{background:var(--warn-soft);color:var(--ink)}
+.pill.ola::before{content:"";width:8px;height:8px;border-radius:2px;background:var(--s-new)}
+.steps{counter-reset:s;display:grid;gap:10px;margin:0;padding:0;list-style:none}
+.steps li{counter-increment:s;display:grid;grid-template-columns:34px minmax(0,1fr);gap:10px;background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:12px 16px}
+.steps li::before{content:counter(s);font:500 .95rem var(--f-mono);color:var(--accent);padding-top:2px}
+.steps b{font-weight:650}
+
+/* gráfica */
+.viz{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:16px 18px;min-width:0}
+.viz h3{margin:0 0 2px;font:700 1.08rem/1.2 var(--f-display)}
+.legend{display:flex;flex-wrap:wrap;gap:6px 18px;font-size:.84rem;color:var(--ink-2);margin:10px 0 12px}
+.legend span{display:inline-flex;align-items:center;gap:8px}
+.legend i{width:12px;height:12px;border-radius:2px;display:inline-block}
+.bars{display:grid;gap:10px;position:relative}
+.brow{display:grid;grid-template-columns:minmax(120px,210px) minmax(0,1fr);gap:8px 14px;align-items:center}
+.brow .nm{font-size:.88rem;line-height:1.25;color:var(--ink)}
+.track{position:relative;display:flex;align-items:center;height:20px}
+.seg{height:20px;min-width:3px;outline-offset:2px}
+.seg.new{background:var(--s-new)}
+.seg.old{background:var(--s-old);margin-left:2px;border-radius:0 4px 4px 0}
+.seg.new:last-child{border-radius:0 4px 4px 0}
+.seg:hover,.seg:focus-visible{filter:brightness(1.12)}
+.tip{position:fixed;z-index:50;pointer-events:none;background:var(--ink);color:var(--bg);padding:7px 10px;border-radius:8px;font-size:.82rem;line-height:1.3;max-width:240px;opacity:0;transition:opacity .08s}
+.tip b{display:block;font-size:.95rem;font-weight:700}
+.tip.on{opacity:1}
+.tick{position:absolute;top:0;bottom:0;width:1px;background:var(--line);pointer-events:none;z-index:0}
+.bars{isolation:isolate}
+.track{z-index:1}
+.axis{display:grid;grid-template-columns:minmax(120px,210px) minmax(0,1fr);gap:8px 14px;margin-top:2px}
+.axis .sc{position:relative;height:18px}
+.axis .sc span{position:absolute;transform:translateX(-50%);font:400 .7rem var(--f-mono);color:var(--muted)}
+.brow .nm small{display:block;color:var(--muted);font-size:.76rem;font-variant-numeric:tabular-nums}
+details.tv{margin-top:12px}
+details.tv summary{cursor:pointer;font-size:.88rem;color:var(--ink-2);min-height:36px;display:flex;align-items:center}
+
+/* filtros y tabla de nichos */
+.filters{display:grid;gap:10px;grid-template-columns:repeat(3,minmax(0,1fr))}
+@media (max-width:700px){.filters{grid-template-columns:minmax(0,1fr)}}
+.fld{display:grid;gap:4px;min-width:0}
+.fld label{font:500 .72rem var(--f-mono);letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+select{min-height:44px;width:100%;border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:8px;padding:0 10px;font:500 .95rem var(--f-body)}
+.count{font-size:.86rem;color:var(--muted)}
+.btn{min-height:44px;padding:0 18px;border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:99px;font:600 .92rem var(--f-body);cursor:pointer}
+.btn:hover{border-color:var(--accent);color:var(--accent)}
+@media (max-width:760px){
+  table.stk thead{display:none}
+  table.stk,table.stk tbody,table.stk tr,table.stk td{display:block;width:100%}
+  table.stk tr{padding:10px 0 8px;border-top:1px solid var(--line)}
+  table.stk tbody tr:first-child{border-top:0}
+  table.stk td{border-top:0;padding:3px 14px;text-align:left}
+  table.stk td.n{text-align:left}
+  table.g3 tr{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:4px 10px;padding:12px 14px 10px}
+  table.g3 td{padding:0}
+  table.g3 td:nth-child(1),table.g3 td:nth-child(5),table.g3 td:nth-child(6){grid-column:1/-1}
+  table.stk td[data-l]::before{content:attr(data-l);display:block;font:500 .66rem var(--f-mono);letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-bottom:1px}
+}
+
+/* reseñas */
+.rev{display:grid;gap:10px;grid-template-columns:minmax(0,1fr)}
+.rev .meta{font-size:.84rem;color:var(--muted)}
+.rev .meta b{color:var(--ink)}
+.bar{display:grid;grid-template-columns:minmax(0,150px) minmax(0,1fr) 40px;gap:8px;align-items:center;font-size:.84rem}
+.bar .b{height:8px;background:var(--surface-2);border-radius:99px;overflow:hidden}
+.bar .b i{display:block;height:100%;background:var(--accent);border-radius:99px}
+.bar .pc{text-align:right;font-variant-numeric:tabular-nums;color:var(--ink-2)}
+blockquote{margin:0;padding:8px 12px;border-left:2px solid var(--line);font-size:.9rem;line-height:1.45;color:var(--ink)}
+blockquote cite{display:block;font-style:normal;font:500 .72rem var(--f-mono);color:var(--muted);margin-top:4px}
+
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chips span{font-size:.86rem;padding:4px 10px;border:1px solid var(--line);border-radius:99px;background:var(--surface);color:var(--ink-2)}
+footer.wrap{padding-block:26px 48px}
+</style>
+
+<header class="wrap top">
+  <p class="eyebrow">Radar de microapps · App Store de México · datos del <span id="fecha"></span></p>
+  <h1>Dónde sí hay hueco para una microapp</h1>
+  <p class="lede">Esta página mide 65 nichos de apps en México. Los que se le ocurren a cualquiera ya están llenos de apps gratis y de copias recién lanzadas. El hueco que queda es más angosto: apps que ya cobran y la gente odia, y herramientas para negocios chicos cuyo líder está mal calificado. Programarlas es lo fácil; lo difícil es que te encuentren.</p>
+</header>
+
+<nav class="nav" aria-label="Secciones"><div class="wrap in">
+  <a href="#panorama">Panorama</a><a href="#llenos">Nichos llenos</a><a href="#dinero">Dónde se paga</a><a href="#nichos">Los 65 nichos</a><a href="#quejas">Quejas</a><a href="#odiadas">Populares y odiadas</a><a href="#haria">Qué haría</a><a href="#probar">Cómo probar</a><a href="#metodo">Método</a>
+</div></nav>
+
+<main class="wrap">
+
+<section class="sec" id="panorama" aria-labelledby="h-panorama">
+  <div class="head"><h2 id="h-panorama">Panorama</h2></div>
+  <div class="tiles" id="tiles"></div>
+</section>
+
+<section class="sec" id="llenos" aria-labelledby="h-llenos">
+  <div class="head">
+    <h2 id="h-llenos">Los nichos que se le ocurren a todos ya están llenos</h2>
+    <p class="lede" id="llenos-lede"></p>
+  </div>
+  <div class="viz">
+    <h3>Apps nuevas y anteriores en los 13 nichos con más recién llegadas</h3>
+    <p class="small">Cada barra es un nicho. Su largo es el número de apps relevantes que encontré en la App Store de México.</p>
+    <div class="legend" aria-hidden="true"><span><i style="background:var(--s-new)"></i>Lanzadas en los últimos 12 meses</span><span><i style="background:var(--s-old)"></i>Lanzadas antes</span></div>
+    <div id="chart" role="img" aria-label="Barras apiladas: apps lanzadas en los últimos 12 meses y apps anteriores en 13 nichos"></div>
+    <details class="tv"><summary>Ver como tabla</summary><div class="tbl-wrap" style="margin-top:8px"><table id="chart-table"></table></div></details>
+  </div>
+  <p class="small">Las apps nuevas casi no tienen calificaciones: es más probable que haya muchos desarrolladores probando el mismo nicho a que ya haya muchos usuarios. Y 99% de las apps de los 65 nichos se descarga gratis.</p>
+</section>
+
+<section class="sec" id="dinero" aria-labelledby="h-dinero">
+  <div class="head">
+    <h2 id="h-dinero">Dónde sí se paga en México</h2>
+    <p class="lede">En las listas de más ingresos de la App Store de México aparecen apps chicas, con pocas calificaciones. Eso muestra que se puede cobrar. El lugar en la lista no dice cuánto dinero es.</p>
+  </div>
+  <div class="tbl-wrap"><table class="stk">
+    <thead><tr><th>Tipo de app</th><th>Ejemplos</th><th>Lo que enseña</th></tr></thead>
+    <tbody>
+      <tr><td data-l="Tipo de app"><b>Rastreo de paquetes</b></td><td data-l="Ejemplos">“Paquetería: Rastreo de pedidos” es la #1 en ingresos de Compras, con 1,524 calificaciones. “Rastreo de Paquetes &amp; Pedidos” es la #3 y TrackPack, con 9 calificaciones, la #6.</td><td data-l="Lo que enseña">3 de las 6 apps con más ingresos de Compras son rastreadores. Los usuarios se quejan de que cobran antes de mostrar el paquete y de que están en inglés.</td></tr>
+      <tr><td data-l="Tipo de app"><b>Finanzas y negocio chico</b></td><td data-l="Ejemplos">Treinta es la #1 de Finanzas. Quanto, lanzada hace 8 meses con 51 calificaciones, es la #8. Finno es la #9 y Kelo la #25.</td><td data-l="Lo que enseña">Una app nueva en español puede entrar a la lista con pocas calificaciones. Treinta levantó US$46 millones en 2022: no compitas con ella de frente.</td></tr>
+      <tr><td data-l="Tipo de app"><b>Escáneres y PDF</b></td><td data-l="Ejemplos">Scanner App, Scan Hero, Scan Guru y TapScanner están entre las 14 de más ingresos de Negocios.</td><td data-l="Lo que enseña">Utilidad simple con suscripción. Es un mercado donde gana quien más gasta en anuncios.</td></tr>
+      <tr><td data-l="Tipo de app"><b>Examen en México</b></td><td data-l="Ejemplos">ENARMaster, para el examen de residencias médicas, es la #6 de Educación: 5,176 calificaciones y 4.90★. La lanzó un desarrollador individual en 2020.</td><td data-l="Lo que enseña">Una necesidad urgente y contenido experto. La ventaja es el contenido, no el código.</td></tr>
+      <tr><td data-l="Tipo de app"><b>Hiperlocal</b></td><td data-l="Ejemplos">Cruce Directo Garitas es la #8 de Viajes con 12 calificaciones y 2.75★.</td><td data-l="Lo que enseña">Un nicho chico con usuarios que pagan y un producto flojo.</td></tr>
+      <tr><td data-l="Tipo de app"><b>Utilidades de pago semanal</b></td><td data-l="Ejemplos">Casi todo el top 14 de Utilidades son controles remotos de TV, limpiadores de espacio y VPN.</td><td data-l="Lo que enseña">Hay dinero, pero depende de pagar muchos anuncios y de muros de pago que los usuarios califican mal.</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section class="sec" id="nichos" aria-labelledby="h-nichos">
+  <div class="head">
+    <h2 id="h-nichos">Los 65 nichos medidos</h2>
+    <p class="lede">Filtra por grupo o por señal. “Relevantes” son las apps cuyo nombre y descripción corresponden al nicho, de hasta 30 resultados por búsqueda.</p>
+  </div>
+  <div class="filters">
+    <div class="fld"><label for="f-g">Grupo</label><select id="f-g"></select></div>
+    <div class="fld"><label for="f-s">Señal</label><select id="f-s"></select></div>
+    <div class="fld"><label for="f-o">Ordenar por</label><select id="f-o">
+      <option value="nw">Más apps nuevas</option><option value="k1">Más apps con 1,000 o más calificaciones</option><option value="lr">Líder con menos estrellas</option><option value="lc">Líder con más calificaciones</option><option value="t">Nicho, de la A a la Z</option></select></div>
+  </div>
+  <p class="count" id="count" aria-live="polite"></p>
+  <div class="tbl-wrap"><table class="stk g3" id="nichos-table">
+    <thead><tr><th>Nicho</th><th class="n">Relevantes</th><th class="n">Con 1,000+ cal.</th><th class="n">Nuevas, 12 m</th><th>App líder</th><th>Señal</th></tr></thead>
+    <tbody id="nichos-body"></tbody>
+  </table></div>
+  <div><button type="button" class="btn" id="more" hidden></button></div>
+  <div class="grid2">
+    <div class="card"><h3>Cómo leer la señal</h3><ul>
+      <li><b>Líder fuerte:</b> la app líder tiene 1,000 calificaciones o más y 4.6★ o más.</li>
+      <li><b>Líder descontento:</b> la app líder tiene 4.35★ o menos y 200 calificaciones o más.</li>
+      <li><b>Sin demanda visible:</b> la app líder tiene menos de 50 calificaciones.</li>
+      <li><b>Mixto:</b> el resto.</li>
+      <li><b>Ola de copias:</b> 8 o más apps lanzadas en los últimos 12 meses.</li></ul></div>
+    <div class="card"><h3>Lo que muestran</h3><p id="resumen-senales"></p></div>
+  </div>
+</section>
+
+<section class="sec" id="quejas" aria-labelledby="h-quejas">
+  <div class="head">
+    <h2 id="h-quejas">De qué se quejan los usuarios</h2>
+    <p class="lede">Reseñas recientes de México de las apps con líderes débiles o con más ingresos. Cada barra es el porcentaje de las reseñas de 1 a 3 estrellas que mencionan ese tema.</p>
+  </div>
+  <div class="grid2" id="cards"></div>
+</section>
+
+<section class="sec" id="odiadas" aria-labelledby="h-odiadas">
+  <div class="head">
+    <h2 id="h-odiadas">Populares y odiadas, pero con dueño fijo</h2>
+    <p class="lede">Son apps con más de 1,500 calificaciones y 4.2★ o menos. Casi todas son de bancos, afores, telefónicas, servicios y gobierno. Los usuarios las odian, pero un tercero no puede hacer el trámite por ellos: dependen de la cuenta de cada persona con la empresa.</p>
+  </div>
+  <div class="tbl-wrap"><table class="stk"><thead><tr><th>App</th><th>Tipo</th><th class="n">Calificaciones</th><th class="n">Estrellas</th></tr></thead><tbody id="pop-body"></tbody></table></div>
+  <p class="small">Sirven para ver qué les duele a los usuarios, no como hueco para una microapp.</p>
+</section>
+
+<section class="sec" id="google" aria-labelledby="h-google">
+  <div class="head">
+    <h2 id="h-google">Lo que escribe la gente en Google México</h2>
+    <p class="lede">Frases que Google sugiere cuando alguien escribe “necesito una app para…”, “app para llevar…” o “app para controlar…”. Muestran lo que más se busca, no cuántas veces.</p>
+  </div>
+  <div class="grid3">
+    <div class="card"><h3>Para el negocio</h3><div class="chips"><span>llevar inventario y ventas</span><span>llevar control de ventas</span><span>llevar gastos de negocio</span><span>llevar la contabilidad de mi negocio</span><span>llevar facturas</span><span>llevar agenda de citas</span><span>llevar control de obra</span><span>llevar asistencia</span><span>llevar horas extras</span><span>controlar fechas de caducidad</span></div></div>
+    <div class="card"><h3>Para la casa y el dinero</h3><div class="chips"><span>llevar control de gastos personales</span><span>llevar presupuesto familiar</span><span>llevar finanzas en pareja</span><span>controlar deudas</span><span>llevar los gastos de la casa</span><span>pagar el agua</span></div></div>
+    <div class="card"><h3>Trámites y temporada</h3><div class="chips"><span>la beca Rita Cetina</span><span>el Banco del Bienestar</span><span>meter saldo a la tarjeta de movilidad</span><span>llevar el control del álbum del Mundial</span><span>medir la presión arterial</span><span>medir la glucosa</span></div></div>
+  </div>
+</section>
+
+<section class="sec" id="haria" aria-labelledby="h-haria">
+  <div class="head">
+    <h2 id="h-haria">Qué haría</h2>
+    <p class="lede">Son hipótesis para probar, no resultados. Con estos datos, el orden que recomiendo es este.</p>
+  </div>
+  <div class="card">
+    <span class="pill go">Plan principal</span>
+    <h3>Tu servicio de contenido, más herramientas a la medida para esos mismos clientes</h3>
+    <ul>
+      <li><b>Por qué:</b> con un negocio que ya te conoce no gastas en anuncios para conseguirlo. Conseguir usuarios nuevos para una app es la parte difícil.</li>
+      <li><b>Qué cobrarías:</b> un blog de agencias (<a href="https://togrowagencia.com/software-a-medida-mexico-precios/" target="_blank" rel="noopener">Togrow, 29 sep 2026</a>) pone un sistema acotado entre $80,000 y $250,000. A un negocio chico le sirve algo más simple. Mi hipótesis es que una herramienta de un solo proceso, hecha en días, se puede vender desde unos $10,000 más una mensualidad de mantenimiento. No está validado.</li>
+      <li><b>Primer paso:</b> en tus conversaciones del servicio, pregunta qué llevan hoy en hojas de cálculo o en WhatsApp. Si 3 de 10 dicen que lo pagarían, lo construyes.</li>
+    </ul>
+  </div>
+  <div class="grid2">
+    <div class="card">
+      <span class="pill">Prueba 1 · para consumidores</span>
+      <h3>Rastreador de paquetes en español</h3>
+      <ul>
+        <li><b>Evidencia:</b> 3 de las 6 apps con más ingresos de Compras son rastreadores. En las últimas 51 reseñas de la #1 el promedio es 1.75★: se quejan de que cobran antes de mostrar el paquete y de que está en inglés. Parcel, otra app de rastreo, mantiene 4.58★ en sus últimas 50 reseñas: no todas las del nicho están mal calificadas.</li>
+        <li><b>Idea:</b> que el estado del paquete se vea sin pagar, y cobrar por avisos y por varios paquetes. Cubrir paqueterías mexicanas, Mercado Libre, Amazon y compras de China.</li>
+        <li><b>Revisa primero:</b> si existe un servicio de rastreo que cubra esas paqueterías y cuánto cobra por paquete. No lo verifiqué.</li>
+        <li><b>Riesgo:</b> dependes de datos de terceros, y las tiendas y paqueterías ya muestran el rastreo. Tendrías que ganar en comodidad y en idioma.</li>
+      </ul>
+    </div>
+    <div class="card">
+      <span class="pill">Prueba 2 · para negocios</span>
+      <h3>Agenda para estéticas y barberías, con recordatorios por WhatsApp</h3>
+      <ul>
+        <li><b>Evidencia:</b> en sus reseñas recientes, AgendaPro tiene 2.45★, WeiBook 2.21★ y SalonAppy 3.13★. Se quejan de que se traba con equipos, de citas perdidas, de soporte lento y de presión para pagar.</li>
+        <li><b>Idea:</b> un link de reservas y un calendario por equipo que no se trabe. Los recordatorios los manda el dueño con un toque por WhatsApp, sin la API.</li>
+        <li><b>Competencia:</b> hay 10 apps nuevas en 12 meses, y apps de agenda de uñas con 4.66 a 4.90★ y entre 132 y 315 calificaciones. Te diferencias por soporte en español y por precio claro en pesos.</li>
+        <li><b>Primer paso:</b> pide ver cómo agendan 5 estéticas o barberías de tu ciudad.</li>
+      </ul>
+    </div>
+  </div>
+  <div class="card">
+    <h3>Lo que no haría</h3>
+    <ul>
+      <li><b>Tienditas, fiado y punto de venta.</b> Treinta, Abona, tiendita.app y Tiendatek ya cubren ese nicho, varias con versión gratuita, y Treinta levantó US$46 millones.</li>
+      <li><b>Finanzas personales genéricas, calorías, hábitos e inglés.</b> Los líderes tienen decenas de miles de calificaciones.</li>
+      <li><b>Costeo de recetas, cotizaciones, cuentas por cobrar, inventario para Mercado Libre y tandas.</b> Cada uno tiene de 8 a 20 apps nuevas, casi sin calificaciones.</li>
+      <li><b>Apps para arreglar bancos, telefónicas, afores o gobierno.</b> Un tercero no puede hacer el trámite por el usuario.</li>
+      <li><b>Utilidades de pago semanal</b> (controles remotos, limpiadores). Hay dinero, pero depende de anuncios caros y de muros de pago.</li>
+    </ul>
+  </div>
+</section>
+
+<section class="sec" id="probar" aria-labelledby="h-probar">
+  <div class="head">
+    <h2 id="h-probar">Cómo probar antes de programar</h2>
+    <p class="lede">Programar cuesta días; llegar a la gente es lo caro. Prueba el mensaje primero.</p>
+  </div>
+  <ol class="steps">
+    <li><div><b>Escribe la hipótesis en una frase.</b> Por ejemplo: “las barberías pagarían $299 al mes por una agenda que no se traba”.</div></li>
+    <li><div><b>Pon una página con la promesa y un botón a WhatsApp o a un correo.</b> Sin app todavía.</div></li>
+    <li><div><b>Lleva gente.</b> Para consumidores, un reel y $1,000 en anuncios: a $4 a $10 por clic son de 100 a 250 clics, y si la página convence al 20% son de 20 a 50 registros. Los costos son de la investigación de Facebook y el 20% es un supuesto. Para negocios, 10 conversaciones directas.</div></li>
+    <li><div><b>Define el umbral antes de empezar.</b> Ejemplo: menos de 20 registros en 7 días, o menos de 3 de 10 negocios que aceptan un piloto de 30 días, significa que no se construye.</div></li>
+    <li><div><b>Construye lo mínimo con Claude Code en 2 o 3 días</b> y cobra desde el primer mes.</div></li>
+    <li><div><b>A los 30 días decide:</b> seguir, cambiar el mensaje o cerrar.</div></li>
+  </ol>
+</section>
+
+<section class="sec" id="metodo" aria-labelledby="h-metodo">
+  <div class="head"><h2 id="h-metodo">Método y límites</h2></div>
+  <div class="card"><ul>
+    <li><b>Fuente:</b> la búsqueda pública de iTunes, las listas públicas de más ingresos y más descargadas por categoría, y el feed público de reseñas de México. No salté ningún bloqueo.</li>
+    <li><b>Solo iPhone.</b> En México es 22% de los celulares (<a href="https://gs.statcounter.com/os-market-share/mobile/mexico" target="_blank" rel="noopener">StatCounter, junio 2026</a>). Google Play no ofrece datos públicos de reseñas sin scraping, así que Android no está cubierto.</li>
+    <li><b>Las calificaciones son un indicador indirecto de uso.</b> No son descargas ni ingresos, y el lugar en la lista de ingresos no dice cuánto dinero es.</li>
+    <li><b>La relevancia es una regla simple:</b> una app cuenta para un nicho si su nombre y descripción mencionan al menos 60% de sus palabras clave.</li>
+    <li><b>Las reseñas son una muestra chica:</b> las más recientes del feed, hasta 250 por app. En algunas llegan a años atrás.</li>
+    <li><b>Las ideas de “Qué haría” son hipótesis.</b> Los scripts están en la carpeta <code>investigacion-mercadolibre/microapps</code> de tu repositorio, para repetir la medición.</li>
+  </ul></div>
+</section>
+
+</main>
+
+<footer class="wrap"><p class="small">Fuentes: <a href="https://www.revenuecat.com/state-of-subscription-apps" target="_blank" rel="noopener">RevenueCat, State of Subscription Apps 2026</a> · <a href="https://gs.statcounter.com/os-market-share/mobile/mexico" target="_blank" rel="noopener">StatCounter México</a> · <a href="https://forbes.pe/negocios/2022-04-04/esta-app-gratuita-que-ayuda-a-elevar-las-ventas-a-pequenos-negocios-de-latinoamerica-capta-us46-millones/" target="_blank" rel="noopener">Forbes sobre Treinta, 2022</a> · <a href="https://togrowagencia.com/software-a-medida-mexico-precios/" target="_blank" rel="noopener">Togrow, software a medida 2026</a> · API de búsqueda, listas y reseñas de la App Store de México.</p></footer>
+
+<div class="tip" id="tip" role="status"></div>
+
+<script>
+const D={"fecha":"30 sep al 1 oct 2026","rows":[{"g":"Negocio chico","t":"recibos de pago","rel":15,"k1":1,"c100":3,"nw":4,"ola":false,"sig":"líder fuerte","ln":"CFE Contigo","ls":"CFE Suministrador de Servicios Basicos","lc":381533,"lr":4.84},{"g":"Dinero personal","t":"calculadora de propinas","rel":18,"k1":0,"c100":2,"nw":4,"ola":false,"sig":"mixto","ln":"Calculadora: Propinas y Cuenta","ls":"Rome Rock LLC","lc":897,"lr":4.8},{"g":"Auto y casa","t":"hoy no circula","rel":9,"k1":1,"c100":2,"nw":5,"ola":false,"sig":"líder fuerte","ln":"iVerifica","ls":"Onclickmx, S.A. De C.V.","lc":2679,"lr":4.78},{"g":"Salud","t":"seguimiento de hábitos","rel":15,"k1":1,"c100":3,"nw":4,"ola":false,"sig":"líder fuerte","ln":"Daily Planner routine schedule","ls":"Inner Grow Limited","lc":14452,"lr":4.83},{"g":"Negocio chico","t":"control de inventario","rel":17,"k1":1,"c100":7,"nw":3,"ola":false,"sig":"líder descontento","ln":"Kyte: POS, Inventario y Tienda","ls":"Kyte Tecnologia de Software ltda.","lc":1101,"lr":4.24},{"g":"Fiestas y eventos","t":"organizador de eventos","rel":6,"k1":0,"c100":2,"nw":1,"ola":false,"sig":"mixto","ln":"Eventbrite Organizer","ls":"Eventbrite","lc":668,"lr":4.88},{"g":"Fiestas y eventos","t":"invitaciones digitales","rel":17,"k1":2,"c100":10,"nw":4,"ola":false,"sig":"líder fuerte","ln":"Crear Invitaciones Digitales","ls":"CONTENT ARCADE (UK) LTD.","lc":3867,"lr":4.75},{"g":"Día a día","t":"recetas de cocina","rel":22,"k1":7,"c100":11,"nw":2,"ola":false,"sig":"líder fuerte","ln":"Official Cookidoo App","ls":"Vorwerk International & Co. KmG","lc":48740,"lr":4.9},{"g":"Día a día","t":"control de servicios luz agua","rel":5,"k1":1,"c100":1,"nw":2,"ola":false,"sig":"líder fuerte","ln":"Pagos Digitales","ls":"Autopagos Digitales S.A. de C.V.","lc":3994,"lr":4.81},{"g":"Dinero personal","t":"presupuesto personal","rel":12,"k1":4,"c100":7,"nw":2,"ola":false,"sig":"líder fuerte","ln":"Registro Contable : Gastos","ls":"Realbyte Inc.","lc":10352,"lr":4.89},{"g":"Salud","t":"recordatorio de medicamentos","rel":22,"k1":4,"c100":7,"nw":1,"ola":false,"sig":"líder fuerte","ln":"Recordatorios de Medicina","ls":"MediSafe Inc.","lc":15608,"lr":4.81},{"g":"Salud","t":"conteo de calorías","rel":16,"k1":9,"c100":11,"nw":1,"ola":false,"sig":"líder fuerte","ln":"Fitia: Contador de Calorías","ls":"Nutrition Technologies SAC","lc":67060,"lr":4.88},{"g":"Escuela","t":"vocabulario inglés","rel":20,"k1":5,"c100":10,"nw":0,"ola":false,"sig":"líder fuerte","ln":"ELSA Speak - Aprende Inglés","ls":"ELSA, Corp.","lc":32881,"lr":4.81},{"g":"Negocio chico","t":"punto de venta tienda","rel":18,"k1":1,"c100":5,"nw":6,"ola":false,"sig":"líder descontento","ln":"Kyte: POS, Inventario y Tienda","ls":"Kyte Tecnologia de Software ltda.","lc":1101,"lr":4.24},{"g":"Día a día","t":"lista de compras","rel":24,"k1":2,"c100":8,"nw":4,"ola":false,"sig":"líder fuerte","ln":"Bring! Lista de compras","ls":"Bring! Labs AG","lc":4556,"lr":4.87},{"g":"Dinero personal","t":"control de deudas","rel":10,"k1":0,"c100":1,"nw":2,"ola":false,"sig":"mixto","ln":"Control de Deudas: Mis deudas","ls":"David Serrano Canales","lc":115,"lr":4.77},{"g":"Salud","t":"control de glucosa","rel":21,"k1":1,"c100":1,"nw":7,"ola":false,"sig":"líder fuerte","ln":"Aplicación OneTouch Reveal®","ls":"LifeScan, Inc.","lc":4949,"lr":4.85},{"g":"Salud","t":"rutina de gimnasio","rel":15,"k1":5,"c100":7,"nw":5,"ola":false,"sig":"líder fuerte","ln":"Symmetry: Gym Tracker con IA","ls":"SymmetryClub LLC","lc":17194,"lr":4.86},{"g":"Salud","t":"embarazo semanas","rel":21,"k1":6,"c100":11,"nw":2,"ola":false,"sig":"líder fuerte","ln":"BabyCenter - Embarazo y bebé","ls":"Everyday Health, Inc.","lc":20620,"lr":4.91},{"g":"SAT e impuestos","t":"facturación cfdi","rel":14,"k1":0,"c100":1,"nw":6,"ola":false,"sig":"mixto","ln":"ecofactura","ls":"Uriel Salmon","lc":942,"lr":4.87},{"g":"Auto y casa","t":"control de gasolina","rel":4,"k1":0,"c100":1,"nw":1,"ola":false,"sig":"líder descontento","ln":"GasApp","ls":"ESAU GUTIERREZ GOMEZ","lc":262,"lr":3.06},{"g":"Auto y casa","t":"verificación vehicular","rel":7,"k1":1,"c100":1,"nw":6,"ola":false,"sig":"líder fuerte","ln":"iVerifica","ls":"Onclickmx, S.A. De C.V.","lc":2679,"lr":4.78},{"g":"Salud","t":"presión arterial","rel":27,"k1":3,"c100":12,"nw":6,"ola":false,"sig":"líder fuerte","ln":"InPulse - Frecuencia Cardíaca","ls":"AIBY Incorporated","lc":9045,"lr":4.65},{"g":"Mascotas","t":"cuidado de mascotas","rel":19,"k1":8,"c100":12,"nw":1,"ola":false,"sig":"líder fuerte","ln":"CuidaMiMascota","ls":"CUIDA MI MASCOTA SAPI DE CV","lc":7291,"lr":4.83},{"g":"Salud","t":"ayuno intermitente","rel":25,"k1":10,"c100":14,"nw":4,"ola":false,"sig":"líder fuerte","ln":"BodyFast: Ayuno Intermitente","ls":"BodyFast GmbH","lc":22318,"lr":4.75},{"g":"Día a día","t":"agenda familiar","rel":5,"k1":0,"c100":1,"nw":1,"ola":false,"sig":"mixto","ln":"Calendario Simple - Agenda día","ls":"Komorebi Inc.","lc":162,"lr":4.7},{"g":"Servicios y citas","t":"citas salón de belleza","rel":21,"k1":0,"c100":3,"nw":10,"ola":true,"sig":"mixto","ln":"AgendaPro Business","ls":"Gunei Investment SPA","lc":388,"lr":4.61},{"g":"Servicios y citas","t":"administrar gimnasio socios","rel":0,"k1":0,"c100":0,"nw":0,"ola":false,"sig":"sin demanda visible","ln":"","ls":"","lc":0,"lr":0},{"g":"Servicios y citas","t":"cotizador de eventos","rel":0,"k1":0,"c100":0,"nw":0,"ola":false,"sig":"sin demanda visible","ln":"","ls":"","lc":0,"lr":0},{"g":"Auto y casa","t":"gastos del hogar","rel":4,"k1":0,"c100":1,"nw":3,"ola":false,"sig":"mixto","ln":"Gastos compartidos y finanzas","ls":"takaaki ono","lc":140,"lr":4.9},{"g":"Escuela","t":"planeación didáctica","rel":0,"k1":0,"c100":0,"nw":0,"ola":false,"sig":"sin demanda visible","ln":"","ls":"","lc":0,"lr":0},{"g":"Día a día","t":"tandas y cundinas","rel":0,"k1":0,"c100":0,"nw":0,"ola":false,"sig":"sin demanda visible","ln":"","ls":"","lc":0,"lr":0},{"g":"Dinero personal","t":"control de gastos","rel":21,"k1":7,"c100":11,"nw":7,"ola":false,"sig":"líder fuerte","ln":"Gestor de gastos, ingresos","ls":"Orange dog d.o.o.","lc":11989,"lr":4.94},{"g":"Dinero personal","t":"recordatorio de pagos","rel":3,"k1":0,"c100":0,"nw":1,"ola":false,"sig":"mixto","ln":"Organizador de las Facturas","ls":"Dennis Kruta","lc":57,"lr":4.58},{"g":"SAT e impuestos","t":"calculadora isr resico","rel":1,"k1":0,"c100":0,"nw":1,"ola":false,"sig":"sin demanda visible","ln":"Calculadoras Fiscales MX","ls":"Jorge Aguilar","lc":0,"lr":0},{"g":"SAT e impuestos","t":"declaración de impuestos sat","rel":2,"k1":0,"c100":0,"nw":1,"ola":false,"sig":"sin demanda visible","ln":"taxer","ls":"Taxerapp, S.A.P.I. de C.V.","lc":6,"lr":3},{"g":"Servicios y citas","t":"control de pacientes consultorio","rel":1,"k1":0,"c100":0,"nw":1,"ola":false,"sig":"sin demanda visible","ln":"PsiControle: para Psicólogos","ls":"Gabriel Souza","lc":0,"lr":0},{"g":"Servicios y citas","t":"crm clientes","rel":22,"k1":0,"c100":3,"nw":7,"ola":false,"sig":"mixto","ln":"Bitrix24","ls":"Bitrix, Inc.","lc":425,"lr":4.65},{"g":"Trabajo por cuenta propia","t":"control de ingresos repartidor","rel":1,"k1":0,"c100":0,"nw":1,"ola":false,"sig":"sin demanda visible","ln":"Driver Mudanzer","ls":"PANDIX SOFT LTD","lc":0,"lr":0},{"g":"Trabajo por cuenta propia","t":"gastos de chofer uber","rel":1,"k1":0,"c100":0,"nw":1,"ola":false,"sig":"sin demanda visible","ln":"SeyirLog","ls":"UGUR ARAL","lc":0,"lr":0},{"g":"Escuela","t":"tareas escolares","rel":3,"k1":0,"c100":0,"nw":1,"ola":false,"sig":"sin demanda visible","ln":"Horario de Clases y Agenda","ls":"Oleksii Diachenko","lc":49,"lr":4.51},{"g":"Negocio chico","t":"cuaderno de fiado","rel":2,"k1":0,"c100":0,"nw":2,"ola":false,"sig":"sin demanda visible","ln":"COfiado","ls":"VERLEIDIS VARILLA VASQUEZ","lc":0,"lr":0},{"g":"Vender en línea","t":"calculadora mercado libre","rel":10,"k1":0,"c100":0,"nw":2,"ola":false,"sig":"mixto","ln":"FX Calculators","ls":"Alpinetic","lc":83,"lr":4.83},{"g":"Vender en línea","t":"control de pedidos en línea","rel":2,"k1":0,"c100":0,"nw":2,"ola":false,"sig":"sin demanda visible","ln":"Catálogo y Tienda Online Vendo","ls":"Eduardo Salazar L","lc":2,"lr":5},{"g":"Fiestas y eventos","t":"lista de invitados","rel":17,"k1":0,"c100":0,"nw":4,"ola":false,"sig":"mixto","ln":"Organizador de Eventos Lite","ls":"Patrick Eysoldt","lc":55,"lr":4.56},{"g":"Auto y casa","t":"mantenimiento de auto","rel":20,"k1":0,"c100":2,"nw":11,"ola":true,"sig":"mixto","ln":"Carly Escáner OBD2 para autos","ls":"Carly Solutions GmbH Co KG","lc":242,"lr":4.73},{"g":"Auto y casa","t":"administrar rentas propiedades","rel":2,"k1":0,"c100":0,"nw":2,"ola":false,"sig":"sin demanda visible","ln":"Barrel - Gestión de Rentas","ls":"Jair Said Hernandez Reyes","lc":2,"lr":5},{"g":"Mascotas","t":"cartilla de vacunación mascotas","rel":5,"k1":0,"c100":0,"nw":2,"ola":false,"sig":"sin demanda visible","ln":"DigiPet","ls":"PetEdge Solutions, S.A.S. de C.V.","lc":6,"lr":3.83},{"g":"Servicios y citas","t":"agenda de citas","rel":21,"k1":2,"c100":10,"nw":6,"ola":false,"sig":"líder fuerte","ln":"Doctoralia para especialistas","ls":"Docplanner Italy S.R.L.","lc":11937,"lr":4.83},{"g":"Fiestas y eventos","t":"costeo de recetas","rel":23,"k1":0,"c100":1,"nw":20,"ola":true,"sig":"mixto","ln":"Calcular Costos Recetas","ls":"Andreia Assis Soares da Conceicao","lc":363,"lr":4.84},{"g":"Trabajo por cuenta propia","t":"control de horas trabajadas","rel":29,"k1":0,"c100":0,"nw":6,"ola":false,"sig":"mixto","ln":"atWork: Registro de horas","ls":"Sergej Steinbach","lc":94,"lr":4.74},{"g":"Escuela","t":"examen de admisión","rel":16,"k1":0,"c100":1,"nw":9,"ola":true,"sig":"mixto","ln":"Zofia","ls":"Carlos Cerritos Lira","lc":161,"lr":4.89},{"g":"Escuela","t":"calificaciones maestros","rel":8,"k1":0,"c100":0,"nw":5,"ola":false,"sig":"sin demanda visible","ln":"Teacher Aide (nube)","ls":"Glen Botha","lc":7,"lr":4.86},{"g":"Dinero personal","t":"ahorro tanda","rel":6,"k1":0,"c100":0,"nw":6,"ola":false,"sig":"sin demanda visible","ln":"Mi Cadena. Ahorro Entre Amigos","ls":"pablo sandoval","lc":0,"lr":0},{"g":"Trabajo por cuenta propia","t":"nómina empleados","rel":9,"k1":0,"c100":0,"nw":6,"ola":false,"sig":"mixto","ln":"CONTPAQi® Colabora","ls":"COMPUTACION EN ACCION SA DE CV","lc":55,"lr":4.53},{"g":"Negocio chico","t":"cuentas por cobrar clientes","rel":14,"k1":0,"c100":0,"nw":13,"ola":true,"sig":"sin demanda visible","ln":"Libreta de Deudas y Clientes","ls":"Muhammed Nur WALI","lc":9,"lr":5},{"g":"Negocio chico","t":"cotizaciones pdf","rel":20,"k1":0,"c100":0,"nw":13,"ola":true,"sig":"mixto","ln":"Recibo de Pago y Cotizacion","ls":"Mateus Rocha Baviera","lc":89,"lr":4.76},{"g":"Negocio chico","t":"control de ventas diarias","rel":8,"k1":0,"c100":0,"nw":7,"ola":false,"sig":"sin demanda visible","ln":"Tacontando: Ventas y Caja","ls":"Karolina Kazmierska","lc":4,"lr":5},{"g":"Negocio chico","t":"catálogo de productos whatsapp","rel":13,"k1":0,"c100":0,"nw":10,"ola":true,"sig":"sin demanda visible","ln":"Redi. Catálogo y red de ventas","ls":"RediRedi Servicos Tecnologicos Ltda","lc":24,"lr":3.75},{"g":"Negocio chico","t":"pedidos por whatsapp","rel":9,"k1":0,"c100":0,"nw":8,"ola":true,"sig":"sin demanda visible","ln":"Miga: Agenda Repostera","ls":"Vincenzo Gagliano","lc":2,"lr":4},{"g":"Vender en línea","t":"inventario mercado libre","rel":12,"k1":0,"c100":0,"nw":11,"ola":true,"sig":"sin demanda visible","ln":"VendStats: Control de Ventas","ls":"CODEWERX LLC","lc":2,"lr":5},{"g":"Vender en línea","t":"etiquetas de envío","rel":13,"k1":0,"c100":0,"nw":10,"ola":true,"sig":"sin demanda visible","ln":"Escáner Código de Barras X QR","ls":"DIGITALNAUTS INC.","lc":9,"lr":5},{"g":"Fiestas y eventos","t":"presupuesto de boda","rel":17,"k1":0,"c100":0,"nw":8,"ola":true,"sig":"sin demanda visible","ln":"Organizador de fiestas/eventos","ls":"Vasil Kuryanovich","lc":20,"lr":4.85},{"g":"Auto y casa","t":"calculadora de materiales construcción","rel":14,"k1":0,"c100":0,"nw":12,"ola":true,"sig":"sin demanda visible","ln":"Calculadora Construcción: Pro²","ls":"Oleg Shapkin, IE","lc":4,"lr":5},{"g":"Auto y casa","t":"presupuesto de obra","rel":10,"k1":0,"c100":0,"nw":9,"ola":true,"sig":"sin demanda visible","ln":"SnapPlan: Presupuestos de obra","ls":"Tapnetic LLC","lc":1,"lr":5}],"cards":[{"t":"Agenda para salones y barberías","sub":"AgendaPro, WeiBook y SalonAppy","n":77,"bajas":69,"rating":2.51,"apps":[["AgendaPro Business",38],["WeiBook: Agenda y gestión",24],["SalonAppy Agendar Citas y ",15]],"bars":[["falta una función",40],["fallas",36],["cobros y suscripción",30],["soporte",17]],"q":[{"r":1,"y":"2025","t":"Se traba, no se registran las citas, no se pueden modificar las citas, las notificaciones te llegan días después de que se atendió la cita, se traba, tiene funciones que ni siquiera abre ¡Horrible!"},{"r":1,"y":"2025","t":"Perdí todas mis citas debido a que ya no me dejó acceder a mi cuenta, ya teniendo pagado mi paquete y jamás me resolvieron nada. No lo recomiendo tenía citas de meses"}],"nota":null},{"t":"Inventario y punto de venta","sub":"Kyte y Loyverse","n":397,"bajas":35,"rating":3.66,"apps":[["Kyte: POS, Inventario y Ti",250],["Loyverse TPV -  Punto de v",147]],"bars":[["fallas",36],["falta una función",30],["cobros y suscripción",26],["cuenta o registro",11]],"q":[{"r":1,"y":"2025","t":"Compré la versión pro y no me deja acceder a las funciones pro me dice felicitaciones eres kyte free y su soporte bien gracias"},{"r":1,"y":"2025","t":"No deja imprimir, ya cambié impresoras, cajas, tabletas y empezó a fallar, llamé a soporte pero no me dieron una solución. Que debo hacer para que mejore? O están en mantenimiento??"}],"nota":null},{"t":"Rastreo de paquetes","sub":"Paquetería, Parcel y Rastreo de Paquetes & Pedidos","n":108,"bajas":48,"rating":3.15,"apps":[["Parcel",50],["Paquetería: Rastreo de pedidos",51],["Rastreo de Paquetes & Pedidos",7]],"bars":[["cobros y suscripción",31],["falta una función",15],["fallas",8],["soporte",4]],"q":[{"r":1,"y":"2025","t":"No sirve para nada, no se puede usar si no pagas y aún pagando no arroja datos de los paquetes ESTAFA TOTAL!!"},{"r":1,"y":"2026","t":"Ya pagué, hice un pedido, no me ha llegado y no puedo rastrearlo porque la aplicación para rastrearlo está en inglés."}],"nota":"La app con más ingresos de Compras tiene 1.75★ en sus últimas 51 reseñas, aunque en la tienda aparece con 4.54★. Parcel, otra app de rastreo, mantiene 4.58★ en sus últimas 50."},{"t":"Cruce de garitas","sub":"Cruce Directo Garitas","n":29,"bajas":86,"rating":1.93,"apps":[["Cruce Directo Garitas",29]],"bars":[["cobros y suscripción",44],["fallas",36],["falta una función",12],["anuncios",4]],"q":[{"r":1,"y":"2023","t":"Pague suscripción por un año y hoy pasó un mes y no me deja ver ninguna cámara y me dice que me suscriba, a pesar de que en ajustes me sale que mi suscripción se vence hasta el otro año."},{"r":3,"y":"2023","t":"Tienen que mejorar la app si van estar cobrando No aparece el tiempo de espera por línea Sentri ( tiempo ) Normal (tiempo ) Ready (tiempo ) Como estaba en la web"}],"nota":null},{"t":"Facturar la gasolina","sub":"FacturaGAS","n":250,"bajas":99,"rating":1.04,"apps":[["FacturaGAS",250]],"bars":[["fallas",69],["falta una función",19],["cuenta o registro",7],["pierde datos o no sincroniza",2]],"q":[{"r":1,"y":"2025","t":"No te deja facturar, ni si quiera añadir tus datos fiscales. Es muy lenta, y en la ventanilla de facturación nunca atienden. No recomendó si quiera cargar gasolina en las gasolineras de esa cadena"},{"r":1,"y":"2026","t":"La aplicación no sirve de nada, revisen su api porque ni en web ni en app pasan las peticiones. Si vas a desarrollar y publicar una aplicación en appstore o cualquier plataforma, PRUEBALA Y ASEGÚRATE QUE SIRVA"}],"nota":"Es la app de una sola cadena de gasolineras: un tercero no puede arreglarla, porque depende del sistema de cada estación."},{"t":"Facturación CFDI","sub":"ecofactura y Fotofacturas","n":76,"bajas":38,"rating":3.64,"apps":[["ecofactura",43],["Fotofacturas - Factura fác",33]],"bars":[["fallas",41],["falta una función",21],["cuenta o registro",14],["complicada",10]],"q":[{"r":1,"y":"2024","t":"Cuidado, te venden una versión premium de 100 tickets y a la mera hora solo son 30 tickets por mes. Publicidad engañosa."},{"r":1,"y":"2025","t":"Requiere registrarme para funcionar pero no funciona el registro al mandar mensaje a mi celular"}],"nota":null}],"pop":[["Mi Telcel","Telefonía",112908,3.0],["izzi","Telefonía",91497,4.15],["BanCoppel: Tu banca móvil","Banco",27658,3.38],["AforeMóvil Banamex","Afore",12153,3.48],["Banco del Bienestar Movil","Banco",7297,2.68],["Afore SURA: Ahorro y Retiro","Afore",4537,2.67],["Urbani","Servicios",3905,3.62],["Banregio","Banco",2949,3.22],["Naturgy Contigo","Servicios (gas)",2715,1.15],["bradescard","Tarjeta",2512,1.51],["AYD","Servicios (agua)",2342,1.36],["SAT Móvil","Gobierno",2159,2.63],["Buró de Crédito","Crédito",1746,1.38],["FacturaGAS","Gasolineras",1717,1.22],["App Crédito Fonacot","Gobierno",1517,1.56]],"tot":{"rel":784,"nw":302,"tiny":294,"nichos":65,"ola_new":144,"ola_new100":1,"free":99},"chart":[{"t":"costeo de recetas","rel":23,"nw":20,"n100":0},{"t":"cotizaciones pdf","rel":20,"nw":13,"n100":0},{"t":"cuentas por cobrar clientes","rel":14,"nw":13,"n100":0},{"t":"calculadora de materiales construcción","rel":14,"nw":12,"n100":0},{"t":"mantenimiento de auto","rel":20,"nw":11,"n100":0},{"t":"inventario mercado libre","rel":12,"nw":11,"n100":0},{"t":"citas salón de belleza","rel":21,"nw":10,"n100":0},{"t":"catálogo de productos whatsapp","rel":13,"nw":10,"n100":0},{"t":"etiquetas de envío","rel":13,"nw":10,"n100":0},{"t":"examen de admisión","rel":16,"nw":9,"n100":1},{"t":"presupuesto de obra","rel":10,"nw":9,"n100":0},{"t":"presupuesto de boda","rel":17,"nw":8,"n100":0},{"t":"pedidos por whatsapp","rel":9,"nw":8,"n100":0}]};
+(()=>{
+"use strict";
+const $=(s,r=document)=>r.querySelector(s);
+const h=(t,a,...k)=>{const e=document.createElement(t);if(a)for(const[n,v]of Object.entries(a)){if(v==null||v===false)continue;if(n==="class")e.className=v;else e.setAttribute(n,v);}for(const c of k.flat()){if(c==null||c===false)continue;e.append(c.nodeType?c:document.createTextNode(c));}return e;};
+const f0=new Intl.NumberFormat("es-MX");
+const star=v=>v?(Math.round(v*100)/100).toFixed(2)+"★":"—";
+
+$("#fecha").textContent=D.fecha;
+
+/* ---------- cifras ---------- */
+const T=D.tot;
+$("#tiles").append(
+  ...[[Math.round(100*T.nw/T.rel)+"%","de las apps de estos nichos son de los últimos 12 meses",`${f0.format(T.nw)} de ${f0.format(T.rel)} apps relevantes`],
+      [Math.round(100*T.tiny/T.nw)+"%","de esas recién llegadas tiene menos de 20 calificaciones",`${T.tiny} de ${T.nw}: casi nadie tiene tracción`],
+      ["4.6%","de las apps nuevas de suscripción llega a US$10 mil al mes en dos años","RevenueCat, 2026"],
+      ["22%","de los celulares en México son iPhone","StatCounter, junio 2026. Esta muestra solo cubre esa parte"]]
+   .map(([v,l,d])=>h("div",{class:"tile"},h("div",{class:"v"},v),h("div",{class:"l"},l),h("div",{class:"d"},d))));
+
+/* ---------- gráfica: apps nuevas y anteriores ---------- */
+$("#llenos-lede").textContent=`En estos 13 nichos hay 8 o más apps lanzadas en los últimos 12 meses. De las ${T.ola_new} apps nuevas, solo ${T.ola_new100} tiene 100 calificaciones o más.`;
+const tip=$("#tip");
+function showTip(e,seg){
+  tip.replaceChildren(h("b",null,seg.dataset.v),document.createTextNode(seg.dataset.l));
+  const r=e.currentTarget.getBoundingClientRect();
+  const x=e.clientX!=null&&e.type.startsWith("pointer")?e.clientX+12:r.left+r.width/2;
+  const y=e.clientY!=null&&e.type.startsWith("pointer")?e.clientY+12:r.bottom+8;
+  tip.style.left=Math.max(8,Math.min(innerWidth-250,x))+"px";tip.style.top=Math.max(8,Math.min(innerHeight-70,y))+"px";tip.classList.add("on");
+}
+const hideTip=()=>tip.classList.remove("on");
+function renderChart(){
+  const box=$("#chart");const MAX=25;
+  const bars=h("div",{class:"bars"});
+  D.chart.forEach(c=>{
+    const old=c.rel-c.nw;
+    const seg=(cls,n,txt)=>{const s=h("div",{class:"seg "+cls,tabindex:"0","data-v":`${n} apps`,"data-l":txt,style:`width:${n/MAX*100}%`});
+      s.addEventListener("pointermove",e=>showTip(e,s));s.addEventListener("pointerleave",hideTip);s.addEventListener("focus",e=>showTip(e,s));s.addEventListener("blur",hideTip);return s;};
+    const track=h("div",{class:"track"});
+    track.append(seg("new",c.nw,` lanzadas en los últimos 12 meses · ${c.t}`),seg("old",old,` lanzadas antes · ${c.t}`));
+    bars.append(h("div",{class:"brow"},h("div",{class:"nm"},c.t,h("small",null,`${c.nw} de ${c.rel} son nuevas`)),track));
+  });
+  // eje: 0, 5, 10, 15, 20, 25 apps
+  const sc=h("div",{class:"sc"});[0,5,10,15,20,25].forEach(v=>{const s=h("span",null,String(v));s.style.left=(v/MAX*100)+"%";sc.append(s);});
+  const axis=h("div",{class:"axis"},h("div"),sc);
+  box.replaceChildren(bars,axis);
+  // líneas guía finas detrás de las barras
+  requestAnimationFrame(()=>{
+    const tr=bars.querySelector(".track");if(!tr)return;
+    const left=tr.offsetLeft,w=tr.offsetWidth;
+    [0,5,10,15,20,25].forEach(v=>{const t=h("div",{class:"tick"});t.style.left=(left+v/MAX*w)+"px";bars.append(t);});
+  });
+  const tb=$("#chart-table");
+  tb.replaceChildren(h("thead",null,h("tr",null,h("th",null,"Nicho"),h("th",{class:"n"},"Nuevas, 12 m"),h("th",{class:"n"},"Anteriores"),h("th",{class:"n"},"Total"))),
+    h("tbody",null,D.chart.map(c=>h("tr",null,h("td",null,c.t),h("td",{class:"n"},String(c.nw)),h("td",{class:"n"},String(c.rel-c.nw)),h("td",{class:"n"},String(c.rel))))));
+}
+renderChart();
+let rt;addEventListener("resize",()=>{clearTimeout(rt);rt=setTimeout(renderChart,150);});
+
+/* ---------- tabla de nichos ---------- */
+const SIG={"líder fuerte":"Líder fuerte","líder descontento":"Líder descontento","sin demanda visible":"Sin demanda visible","mixto":"Mixto"};
+const gsel=$("#f-g"),ssel=$("#f-s"),osel=$("#f-o");
+gsel.append(h("option",{value:""},"Todos los grupos"),...[...new Set(D.rows.map(r=>r.g))].sort((a,b)=>a.localeCompare(b,"es")).map(g=>h("option",{value:g},g)));
+ssel.append(h("option",{value:""},"Todas las señales"),...Object.entries(SIG).map(([k,v])=>h("option",{value:k},v)),h("option",{value:"ola"},"Ola de copias"));
+let showAll=false;const LIM=15;
+function renderTable(){
+  let rows=D.rows.filter(r=>(!gsel.value||r.g===gsel.value)&&(!ssel.value||(ssel.value==="ola"?r.ola:r.sig===ssel.value)));
+  const k=osel.value;
+  rows.sort((a,b)=>k==="t"?a.t.localeCompare(b.t,"es"):k==="lr"?((a.lc>=50?a.lr:9)-(b.lc>=50?b.lr:9)):(b[k]-a[k])||(b.nw-a.nw));
+  const total=rows.length,more=$("#more");
+  const vis=(showAll||total<=LIM)?rows:rows.slice(0,LIM);
+  $("#count").textContent=vis.length<total?`Mostrando ${vis.length} de ${total} nichos`:`${total} de ${D.rows.length} nichos`;
+  more.hidden=total<=LIM;more.textContent=showAll?"Mostrar menos":`Ver los ${total} nichos`;
+  $("#nichos-body").replaceChildren(...vis.map(r=>h("tr",null,
+    h("td",{"data-l":"Nicho"},h("b",null,r.t),h("small",null,r.g)),
+    h("td",{class:"n","data-l":"Apps"},String(r.rel)),
+    h("td",{class:"n","data-l":"1,000+ cal."},String(r.k1)),
+    h("td",{class:"n","data-l":"Nuevas"},String(r.nw)),
+    h("td",{"data-l":"App líder"},r.ln?[document.createTextNode(r.ln),h("small",null,`${f0.format(r.lc)} cal. · ${star(r.lr)}`)]:"—"),
+    h("td",{"data-l":"Señal"},h("span",{class:"pill"+(r.sig==="líder descontento"?" go":"")},SIG[r.sig]),r.ola?[document.createTextNode(" "),h("span",{class:"pill ola"},"Ola de copias")]:null))));
+}
+[gsel,ssel,osel].forEach(s=>s.addEventListener("change",()=>{showAll=false;renderTable();}));
+$("#more").addEventListener("click",()=>{showAll=!showAll;renderTable();});
+renderTable();
+const cnt=s=>D.rows.filter(r=>r.sig===s).length;
+$("#resumen-senales").textContent=`De 65 nichos, ${cnt("sin demanda visible")} no muestran demanda visible en la tienda, ${cnt("líder fuerte")} tienen un líder fuerte, ${cnt("mixto")} son mixtos y solo ${cnt("líder descontento")} tienen un líder descontento. ${D.rows.filter(r=>r.ola).length} están llenos de copias recientes. Casi nunca hay a la vez demanda visible, un líder débil y poca competencia nueva.`;
+
+/* ---------- reseñas ---------- */
+$("#cards").append(...D.cards.map(c=>h("article",{class:"card rev"},
+  h("h3",null,c.t),
+  h("p",{class:"meta"},c.sub),
+  h("p",{class:"meta"},h("b",null,f0.format(c.n)+" reseñas recientes"),` · ${c.bajas}% son de 1 a 3★ · promedio ${(Math.round(c.rating*100)/100).toFixed(2)}★`),
+  ...c.bars.map(([k,v])=>h("div",{class:"bar"},h("span",null,k),h("div",{class:"b"},h("i",{style:`width:${v}%`})),h("span",{class:"pc"},v+"%"))),
+  ...c.q.map(q=>h("blockquote",null,"“"+q.t+"”",h("cite",null,`${q.r}★ · ${q.y}`))),
+  c.nota?h("p",{class:"small"},c.nota):null)));
+
+/* ---------- populares y odiadas ---------- */
+$("#pop-body").replaceChildren(...D.pop.map(p=>h("tr",null,h("td",{"data-l":"App"},h("b",null,p[0])),h("td",{"data-l":"Tipo"},p[1]),h("td",{class:"n","data-l":"Calificaciones"},f0.format(p[2])),h("td",{class:"n","data-l":"Estrellas"},star(p[3])))));
+})();
+</script>
